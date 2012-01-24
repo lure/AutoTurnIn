@@ -12,3 +12,5 @@ For quick help type /au
 that's all for now. 
 If you feel yourself in a mood to make localization to another language, let me know through 
 curseforge site. 
+
+http://wow.curseforge.com/wiki/repositories/repository-faq/
