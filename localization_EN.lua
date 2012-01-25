@@ -28,8 +28,19 @@ AutoTurnin.quests = {
 --Lower City
 
 --Aldor
-
+["More Marks of Kil'jaeden"]={item="Mark of Kil'jaeden", amount=10, currency=false},
+["More Marks of Sargeras"]={item="Mark of Sargeras", amount=10, currency=false},
+["Fel Armaments"]={item="Fel Armaments", amount=10, currency=false},
+["Single Mark of Kil'jaeden"]={item="Mark of Kil'jaeden", amount=1, currency=false},
+["Single Mark of Sargeras"]={item="Mark of Sargeras", amount=1, currency=false},
+["More Venom Sacs"]={item="Dreadfang Venom Sac", amount=8, currency=false},
 --Scryer
+["More Firewing Signets"]={item="Firewing Signet", amount=10, currency=false},
+["More Sunfury Signets"]={item="Sunfury Signet", amount=10, currency=false},
+["Arcane Tomes"]={item="Arcane Tome", amount=1, currency=false},
+["Single Firewing Signet"]={item="Firewing Signet", amount=1, currency=false},
+["Single Sunfury Signet"]={item="Sunfury Signet", amount=1, currency=false},
+["More Basilisk Eyes"]={item="Dampscale Basilisk Eye", amount=8, currency=false},
 
 --Cenarion Exp
 
@@ -122,11 +133,13 @@ AutoTurnin.quests = {
 -- Firelands Invasion
 ["A Bitter Pill"]="",
 ["Aggressive Growth"]="",
+["Additional Armaments"]={item=416, amount=125, currency=true},
 ["Between the Trees"]="",
 ["Breach in the Defenses"]="",
 ["Burn Victims"]="",
 ["Bye Bye Burdy"]="",
 ["Call the Flock"]="",
+["Calling the Ancients"]={item=416, amount=125, currency=true},
 ["Caught Unawares"]="",
 ["Echoes of Nemesis"]="",
 ["Egg-stinction"]="",
@@ -135,12 +148,13 @@ AutoTurnin.quests = {
 ["Fandral's Methods"]="",
 ["Fire Flowers"]="",
 ["Fire in the Skies"]="",
+["Filling the Moonwell"]={item=416, amount=125, currency=true},
 ["Flamewakers of the Molten Flow"]="",
 ["Hostile Elements"]="",
 ["Hounds of Shannox"]="",
 ["How Hot"]="",
 ["Into the Depths"]="",
-["Into the Fire"]="",
+--["Into the Fire"]="",
 ["Little Lasher"]="",
 ["Living Obsidium"]="",
 ["Mother's Malice"]="",
@@ -165,7 +179,7 @@ AutoTurnin.quests = {
 ["The Call of the Pack"]="",
 ["The Dogs of War"]="",
 ["The Flame Spider Queen"]="",
-["The Forlorn Spire"]="",
+--["The Forlorn Spire"]="",
 ["The Harder They Fall"]="",
 ["The Power of Malorne"]="",
 ["The Protectors of Hyjal"]="",
