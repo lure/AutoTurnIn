@@ -1,6 +1,7 @@
+local addonName, privateTable = ...
 if (GetLocale() == "enUS") or (GetLocale() == "enGB") then
-AutoTurnin.L = setmetatable({
-	["usage1"]="usage: 'on'/'off' to enable or disable addon",
+privateTable.L = setmetatable({
+	["usage1"]="'on'/'off' to enable or disable addon",
 	["usage2"]="'all'/'list' to handle any quest or just specified in a list",
 	["usage3"]="'loot' do not complete quests with a list of rewards or complete it and choose most expensive one of rewards",
 	["all"]="ready to handle every quest",
@@ -9,7 +10,7 @@ AutoTurnin.L = setmetatable({
 	["lootfalse"]="quest with item rewards will not be finished by addon"},
 	{__index = function(table, index) return index end})
 	
-AutoTurnin.quests = {
+privateTable.L.quests = {
 -- AV Repetive Quests
 
 -- Alliance AV Quests

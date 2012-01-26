@@ -1,8 +1,9 @@
-## Interface: 40300
+﻿## Interface: 40300
 ## Title: AutoTurnin
 ## Version: 1.0
 ## Author: Lur
-## Notes: Auto accepting and autocomplete daily quests (may be reworked to auto every quest)
+## Notes: Auto accepting and autocomplete daily quests
+## Notes-ruRU: Автоматический приниматель и сдаватель квестов.
 ## OptionalDeps: Ace3
 ## SavedVariables: AutoTurninDB
 ## SavedVariablesPerCharacter: AutoTurninCharacterDB
@@ -11,6 +12,7 @@
 ## X-Embeds: Ace3
 
 embeds.xml
-AutoTurnin.lua
 localization_RU.lua
 localization_EN.lua
+options.lua
+AutoTurnIn.lua
