@@ -39,7 +39,7 @@ local p2 = {
 
 function AutoTurnIn:ConsoleComand(arg)	
 	if (#arg == 0) then
-		InterfaceOptionsFrame_OpenToCategory(AutoTurnInOptionsPanel)
+		InterfaceOptionsFrame_OpenToCategory(_G[addonName.."OptionsPanel"])
 	elseif arg == "on" then 
 		if (not AutoTurnInCharacterDB.enabled) then 
 			AutoTurnInCharacterDB.enabled = true
@@ -78,17 +78,19 @@ function AutoTurnIn:GOSSIP_SHOW()
 			if (gaq[i+3]) then 
 				local quest = L.quests[gaq[i]]
 				if AutoTurnInCharacterDB.all or quest then 
-					if quest and quest.amount then 
-						local has = 0
-						if quest.currency then 
-							_, has = GetCurrencyInfo(quest.item)
-						else 
-							has = GetItemCount(quest.item, nil, true)
-						end
-						if has > quest.amount then 
-							SelectGossipActiveQuest(math.floor(i/4)+1)
-							return						
-						end
+					if quest then 
+						if quest.amount then 
+							local has = 0
+							if quest.currency then 
+								_, has = GetCurrencyInfo(quest.item)
+							else 
+								has = GetItemCount(quest.item, nil, true)
+							end
+							if has > quest.amount then 
+								SelectGossipActiveQuest(math.floor(i/4)+1)
+								return						
+							end
+						end 
 					else
 						SelectGossipActiveQuest(math.floor(i/4)+1)
 						return
@@ -101,7 +103,8 @@ function AutoTurnIn:GOSSIP_SHOW()
 	if (GetGossipAvailableQuests()) then
 		gaq={GetGossipAvailableQuests()}
 		for i=1, #gaq, 5 do
-			if AutoTurnInCharacterDB.all or L.quests[gaq[i]] then 
+			local quest = L.quests[gaq[i]] 
+			if AutoTurnInCharacterDB.all or (quest and (not quest.donotaccept)) then 				
 				SelectGossipAvailableQuest(math.floor(i/5)+1)
 				return
 			end

@@ -1,5 +1,5 @@
 ﻿## Interface: 40300
-## Title: AutoTurnin
+## Title: AutoTurnIn
 ## Version: 1.0
 ## Author: Lur
 ## Notes: Auto accepting and autocomplete daily quests
