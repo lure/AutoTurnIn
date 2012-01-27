@@ -3,7 +3,7 @@
 ## Version: 1.0
 ## Author: Lur
 ## Notes: Auto accepting and autocomplete daily quests
-## Notes-ruRU: Автоматический приниматель и сдаватель квестов.
+## Notes-ruRU: Автоматически принимает и сдает ежедневные (либо все) задания
 ## OptionalDeps: Ace3
 ## SavedVariables: AutoTurninDB
 ## SavedVariablesPerCharacter: AutoTurninCharacterDB

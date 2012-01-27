@@ -76,21 +76,19 @@ function AutoTurnIn:GOSSIP_SHOW()
 	
 		for i=1, #gaq, 4 do
 			if (gaq[i+3]) then 
-				local quest = L.quests[gaq[i]]
-				if AutoTurnInCharacterDB.all or quest then 
-					if quest then 
-						if quest.amount then 
-							local has = 0
-							if quest.currency then 
-								_, has = GetCurrencyInfo(quest.item)
-							else 
-								has = GetItemCount(quest.item, nil, true)
-							end
-							if has > quest.amount then 
-								SelectGossipActiveQuest(math.floor(i/4)+1)
-								return						
-							end
-						end 
+				local quest = L.quests[gaq[i]]				
+				if AutoTurnInCharacterDB.all or quest  then 
+					if quest and quest.amount then 
+						local has = 0
+						if quest.currency then 
+							_, has = GetCurrencyInfo(quest.item)
+						else 
+							has = GetItemCount(quest.item, nil, true)
+						end
+						if has > quest.amount then 
+							SelectGossipActiveQuest(math.floor(i/4)+1)
+							return						
+						end
 					else
 						SelectGossipActiveQuest(math.floor(i/4)+1)
 						return
