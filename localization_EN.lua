@@ -27,7 +27,7 @@ privateTable.L.quests = {
 
 --[[Burning Crusade]]--
 --Lower City
-
+["More Feathers"]={item="Arakkoa Feather", amount=30, currency=false},
 --Aldor
 ["More Marks of Kil'jaeden"]={item="Mark of Kil'jaeden", amount=10, currency=false},
 ["More Marks of Sargeras"]={item="Mark of Sargeras", amount=10, currency=false},
@@ -46,9 +46,15 @@ privateTable.L.quests = {
 --Cenarion Exp
 
 --Skettis
-
+["Escape from Skettis"]="",
+["Fires Over Skettis"]="",
+["More Shadow Dust"]={item="Shadow Dust", amount=6, currency=false},
 --SporeGar
-
+["More Fertile Spores"]={item="Fertile Spores", amount=6, currency=false},
+["More Glowcaps"]={item="Glowcap", amount=10, currency=false},
+["More Spore Sacs"]={item="Mature Spore Sac", amount=10, currency=false},
+["More Tendrils!"]={item="Bog Lord Tendril", amount=6, currency=false},
+["Now That We're Still Friends..."]="",
 -- Consortium
 
 -- Halaa
