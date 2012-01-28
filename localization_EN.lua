@@ -406,6 +406,36 @@ privateTable.L.quests = {
 ["The Race to Restock"]="",
 ["The Ring's the Thing"]="",
 ["Time for Slime"]="",
-
+--Darkmoon Faire
+["He Shoots, He Scores!"]="",
+["It's Hammer Time"]="",
+["Target: Turtle"]="",
+["The Humanoid Cannonball"]="",
+["Tonk Commander"]="",
+--Love is in the Air
+["A Cloudlet of Classy Cologne"]="",
+["A Gift for a Lord of Ironforge"]="",
+["A Gift for the Banshee Queen"]="",
+["A Gift for the High Chieftain"]="",
+["A Gift for the High Priestess of Elune"]="",
+["A Gift for the King of Stormwind"]="",
+["A Gift for the Prophet"]="",
+["A Gift for the Regent Lord of Quel'Thalas"]="",
+["A Gift for the Warchief"]="",
+["A Perfect Puff of Perfume"]="",
+["Bonbon Blitz"]="",
+["Crushing the Crown"]="",
+["You've Been Served"]="",
+--Noblegarden
+["A Tisket, a Tasket, a Noblegarden Basket"]="",
+["Egg Basket"]="",
+["Spring Collectors"]="",
+["Spring Gatherers"]="",
+["The Great Egg Hunt"]="",
+--Midsummer Fire Festival
+["More Torch Catching"]="",
+["More Torch Tossing"]="",
+["Striking Back"]="",
+["Summon Ahune"]="",
 }
 end
