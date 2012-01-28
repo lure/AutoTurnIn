@@ -5,8 +5,8 @@
 ## Notes: Auto accepting and autocomplete daily quests
 ## Notes-ruRU: Автоматически принимает и сдает ежедневные (либо все) задания
 ## OptionalDeps: Ace3
-## SavedVariables: AutoTurninDB
-## SavedVariablesPerCharacter: AutoTurninCharacterDB
+## SavedVariables: AutoTurnInDB
+## SavedVariablesPerCharacter: AutoTurnInCharacterDB
 ## X-Date: 2012-01-16
 ## X-Category: Quest
 ## X-Embeds: Ace3

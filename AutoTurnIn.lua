@@ -1,11 +1,16 @@
 local addonName, ptable = ...
 local L = ptable.L
+local AutoTurnInCharacterDB
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
+
+local defaults = {enabled = true, all = false, lootMostExpensive = false}
 
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
+	AutoTurnInCharacterDB = _G.AutoTurnInCharacterDB
 	if not AutoTurnInCharacterDB then 
-		AutoTurnInCharacterDB = {enabled = true, all = false, loot = false}
+		_G.AutoTurnInCharacterDB = CopyTable(defaults)
+		AutoTurnInCharacterDB = _G.AutoTurnInCharacterDB
 	end
 	if AutoTurnInCharacterDB.enabled then 
 		self:RegisterGossipEvents()

@@ -1,8 +1,7 @@
 local addonName, ptable = ...
 local L = ptable.L
-
 --[[ 
-	Thanks to LoseControl author for ideas and direction 
+	Thanks to LoseControl author Kouri for ideas and direction 
 	http://forums.wowace.com/showthread.php?t=15763
 	http://www.wowwiki.com/UI_Object_UIDropDownMenu
 ]]-- 
@@ -90,7 +89,6 @@ OptionsPanel.refresh = function()
 end
 
 OptionsPanel.default = function() 
-
 	AutoTurnInCharacterDB.enabled = true
 	AutoTurnInCharacterDB.all = false
 	AutoTurnInCharacterDB.lootMostExpensive = false
