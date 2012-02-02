@@ -20,9 +20,17 @@ privateTable.L.quests = {
 -- Timbermaw Quests
 
 -- Cenarion
-
+['Encrypted Twilight Texts']={item="Encrypted Twilight Text", amount=10, currency=false},
+['Still Believing']={item="Encrypted Twilight Text", amount=10, currency=false},
 -- Thorium Brotherhood
-
+['Favor Amongst the Brotherhood, Blood of the Mountain']={item="Blood of the Mountain", amount=1, currency=false},
+['Favor Amongst the Brotherhood, Core Leather']={item="Core Leather", amount=2, currency=false},
+['Favor Amongst the Brotherhood, Dark Iron Ore']={item="Dark Iron Ore", amount=10, currency=false},
+['Favor Amongst the Brotherhood, Fiery Core']={item="Fiery Core", amount=1, currency=false},
+['Favor Amongst the Brotherhood, Lava Core']={item="Lava Core", amount=1, currency=false},
+['Gaining Acceptance']={item="Dark Iron Residue", amount=4, currency=false},
+['Gaining Even More Acceptance']={item="Dark Iron Residue", amount=100, currency=false},
+['Twilight Collars']={item="Twilight Collar", amount=20, currency=false},
 
 
 --[[Burning Crusade]]--
@@ -42,9 +50,7 @@ privateTable.L.quests = {
 ["Single Firewing Signet"]={item="Firewing Signet", amount=1, currency=false},
 ["Single Sunfury Signet"]={item="Sunfury Signet", amount=1, currency=false},
 ["More Basilisk Eyes"]={item="Dampscale Basilisk Eye", amount=8, currency=false},
-
 --Cenarion Exp
-
 --Skettis
 ["Escape from Skettis"]="",
 ["Fires Over Skettis"]="",
@@ -56,9 +62,8 @@ privateTable.L.quests = {
 ["More Tendrils!"]={item="Bog Lord Tendril", amount=6, currency=false},
 ["Now That We're Still Friends..."]="",
 -- Consortium
-
 -- Halaa
-
+["Oshu'gun Crystal Powder"]={item="Oshu'gun Crystal Powder Sample", amount=10, currency=false},
 -- Sunwell
 ["A Charitable Donation"]="",
 ["Arm the Wards!"]="",
@@ -428,7 +433,6 @@ privateTable.L.quests = {
 ["You've Been Served"]="",
 --Noblegarden
 ["A Tisket, a Tasket, a Noblegarden Basket"]="",
-["Egg Basket"]="",
 ["Spring Collectors"]="",
 ["Spring Gatherers"]="",
 ["The Great Egg Hunt"]="",

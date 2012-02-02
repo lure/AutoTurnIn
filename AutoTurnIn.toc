@@ -2,8 +2,10 @@
 ## Title: AutoTurnIn
 ## Version: 1.0
 ## Author: Lur
-## Notes: Auto accepting and autocomplete daily quests
+## Notes: Auto accept and complete daily (or all) quests
 ## Notes-ruRU: Автоматически принимает и сдает ежедневные (либо все) задания
+## Notes-enUS: Auto accept and complete daily (or all) quests
+## Notes-deDE: Auto akzeptieren und komplett täglich (oder alle) Quests
 ## OptionalDeps: Ace3
 ## SavedVariables: AutoTurnInDB
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
@@ -14,5 +16,6 @@
 embeds.xml
 localization_RU.lua
 localization_EN.lua
+localization_DE.lua
 options.lua
 AutoTurnIn.lua
