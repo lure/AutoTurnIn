@@ -18,7 +18,9 @@ privateTable.L.quests = {
 -- Horde AV Quests
 
 -- Timbermaw Quests
-
+['Feathers for Grazle']={item="Deadwood Headdress Feather", amount=5, currency=false},
+['Feathers for Nafien']={item="Deadwood Headdress Feather", amount=5, currency=false},
+['More Beads for Salfa']={item="Winterfall Spirit Beads", amount=5, currency=false},
 -- Cenarion
 ['Encrypted Twilight Texts']={item="Encrypted Twilight Text", amount=10, currency=false},
 ['Still Believing']={item="Encrypted Twilight Text", amount=10, currency=false},
@@ -56,6 +58,7 @@ privateTable.L.quests = {
 ["Fires Over Skettis"]="",
 ["More Shadow Dust"]={item="Shadow Dust", amount=6, currency=false},
 --SporeGar
+["Bring Me Another Shrubbery!"]={item="Sanguine Hibiscus", amount=5, currency=false},
 ["More Fertile Spores"]={item="Fertile Spores", amount=6, currency=false},
 ["More Glowcaps"]={item="Glowcap", amount=10, currency=false},
 ["More Spore Sacs"]={item="Mature Spore Sac", amount=10, currency=false},
@@ -214,6 +217,29 @@ privateTable.L.quests = {
 ["Making Repairs"]="",
 ["Overwhelmed!"]="",
 ["Shred the Alliance"]="",
+--Jewelcrafting
+['Finish the Shipment']="",
+['Shipment: Blood Jade Amulet ']="",
+['Shipment: Bright Armor Relic']="",
+['Shipment: Glowing Ivory Figurine']="",
+['Shipment: Intricate Bone Figurine']="",
+['Shipment: Shifting Sun Curio ']="",
+['Shipment: Wicked Sun Brooch']="",
+['Necklace Repair']="",
+--Fishing
+['Better Luck Next Time']="",
+['Blood Is Thicker']="",
+['Dangerously Delicious']="",
+['Disarmed!']="",
+['Jewel Of The Sewers']="",
+['The Ghostfish']="",
+--Cooking
+['Cheese for Glowergold']="",
+['Convention at the Legerdemain']="",
+['Infused Mushroom Meatloaf']="",
+['Mustard Dogs!']="",
+['Sewer Stew']="",
+['Waterlogged Recipe']="",
 
 --[[ Cataclysm]]--
 -- Firelands Invasion

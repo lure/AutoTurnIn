@@ -5,7 +5,7 @@
 ## Notes: Auto accept and complete daily (or all) quests
 ## Notes-ruRU: Автоматически принимает и сдает ежедневные (либо все) задания
 ## Notes-enUS: Auto accept and complete daily (or all) quests
-## Notes-deDE: Auto akzeptieren und komplett täglich (oder alle) Quests
+## Notes-deDE: Auto akzeptieren und komplett täglich (oder alle) Quests (Google Translate :[ )
 ## OptionalDeps: Ace3
 ## SavedVariables: AutoTurnInDB
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB

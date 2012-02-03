@@ -1,13 +1,15 @@
 ﻿local addonName, privateTable = ...
 if (GetLocale() == "deDE") then
 privateTable.L = setmetatable({
-	["usage1"]="'on'/'off' to enable or disable addon",
-	["usage2"]="'all'/'list' to handle any quest or just specified in a list",
+	["usage1"]="'on' / 'off' zu aktivieren oder deaktivieren Addon",
+	["usage2"]="'all'/'list' um alle Aufgaben bewältigen oder Liste",
 	["usage3"]="'loot' do not complete quests with a list of rewards or complete it and choose most expensive one of rewards",
-	["all"]="ready to handle every quest",
-	["list"]="only specified quests will be handled",
-	["loottrue"]="addon automatically loots most expensive reward",
-	["lootfalse"]="quest with item rewards will not be finished by addon"},
+	["enabled"]="einschalten",
+	["disabled"]="abschalten",
+	["all"]="bedient alle Quests",
+	["list"]="diente nur die ausgewählten Quests",
+	["loottrue"]="Addon übergibt den Job, und wählen Sie die teuerste Belohnung",
+	["lootfalse"]="Quests mit Belohnungen werden nicht von Addon fertig sein"},
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {
@@ -15,9 +17,12 @@ privateTable.L.quests = {
 --Alliance AV Quests
 --Horde AV Quests
 --Timbermaw Quests
+['Federn für Grazle']={item="Kopfputzfeder der Totenwaldfelle", amount=5, currency=false},
+['Federn für Nafien']={item="Kopfputzfeder der Totenwaldfelle", amount=5, currency=false},
+['Mehr Perlen für Salfa']={item="Geisterperlen der Winterfelle", amount=5, currency=false},
 --Cenarion
-['Fester Glauben']={item="Verschlüsselter Schattenhammertext ", amount=10, currency=false},
-['Verschlüsselte Schattenhammertexte']={item="Verschlüsselter Schattenhammertext ", amount=10, currency=false},
+['Fester Glauben']={item="Verschlüsselter Schattenhammertext", amount=10, currency=false},
+['Verschlüsselte Schattenhammertexte']={item="Verschlüsselter Schattenhammertext", amount=10, currency=false},
 --Thorium Brotherhood
 ['Gunst der Bruderschaft, Blut des Berges']={item="Blut des Berges", amount=1, currency=false},
 ['Gunst der Bruderschaft, Dunkeleisenerz']={item="Dunkeleisenerz", amount=10, currency=false},
@@ -27,16 +32,41 @@ privateTable.L.quests = {
 ['Anerkennung erlangen']={item="Dunkeleisenrückstände", amount=4, currency=false},
 ['Noch mehr Anerkennung erlangen']={item="Dunkeleisenrückstände", amount=100, currency=false},
 ['Zwielichthalsbänder']={item="Zwielichthalsband", amount=20, currency=false},
+
 --[[Burning Crusade]]--
 --Lower City
+["Mehr Federn"]={item="Arakkoafeder", amount=30, currency=false},
 --Aldor
+["Ein reinigendes Licht"]={item="Teuflische Waffen", amount=1, currency=false},
+['Einzelne Male des Sargeras']={item="Mal des Sargeras", amount=1, currency=false},
+["Einzelne Male von Kil'jaeden"]={item="Mal von Kil'jaeden", amount=1, currency=false},
+['Male des Sargeras']={item="Mal des Sargeras", amount=10, currency=false},
+["Male von Kil'jaeden"]={item="Mal von Kil'jaeden", amount=10, currency=false},
+['Mehr Male des Sargeras']={item="Mal des Sargeras", amount=10, currency=false},
+["Mehr Male von Kil'jaeden"]={item="Mal von Kil'jaeden", amount=10, currency=false},
+["Mehr Giftbeutel"]={item="Schreckensgiftbeutel", amount=8, currency=false},
 --Scryer
+['Arkane Folianten']={item="Arkaner Foliant", amount=1, currency=false},
+['Einzelne Siegel der Feuerschwingen']={item="Siegel der Feuerschwingen", amount=1, currency=false},
+['Einzelne Siegel des Sonnenzorns']={item="Siegel des Sonnenzorns", amount=1, currency=false},
+['Mehr Basiliskenaugen']={item="Auge eines Dunstschuppenbasilisken", amount=8, currency=false},
+['Mehr Siegel der Feuerschwingen']={item="Siegel der Feuerschwingen", amount=10, currency=false},
+['Mehr Siegel des Sonnenzorns']={item="Siegel des Sonnenzorns", amount=10, currency=false},
+['Siegel der Feuerschwingen']={item="Siegel der Feuerschwingen", amount=10, currency=false},
+['Siegel des Sonnenzorns']={item="Siegel des Sonnenzorns", amount=10, currency=false},
 --Cenarion Exp
+['Pflanzenteile identifizieren']={item="Unbekannte Pflanzenteile", amount=10, currency=false},
 --Skettis
 ['Feuer über Skettis']="",
 ['Flucht aus Skettis']="",
 ['Mehr Schattenstaub']={item="Schattenstaub", amount=6, currency=false},
---SporeGar
+--SporeGar 
+['Bringt mir ein weiteres Gebüsch!']={item="Bluthibiskus", amount=5, currency=false},
+['Jetzt, da wir immer noch Freunde sind...']="",
+['Mehr Ranken!']={item="Sumpflordranke", amount=6, currency=false},
+['Noch ein paar Sporensäcke']={item="Reifer Sporenbeutel", amount=6, currency=false},
+['Noch mehr fruchtbare Sporen']={item="Fruchtbare Sporen", amount=6, currency=false},
+['Noch mehr Glühkappen']={item="Glühkappe", amount=10, currency=false},
 --Consortium
 --Halaa
 ["Kristallpulver von Oshu'gun"]={item="Kristallpulverprobe von Oshu'gun", amount=10, currency=false},
@@ -90,7 +120,15 @@ privateTable.L.quests = {
 ['Netherstaubpollen']="",
 ['Schwächt das Portal des Zwielichts']="",
 --Fishing daily
+['Der Eine, der entkam']="",
+['Garnelenfangen ist nicht einfach']="",
+['Köderbanditen']="",
+['Teufelsblutfilet']="",
 --Cooking daily
+['Manaziös']="",
+['Rache ist süß']="",
+['Superheißes Ragout']="",
+['Suppe für die Seele']="",
 
 --[[ WOtLK]]--
 --Kalu'ak
@@ -185,6 +223,29 @@ privateTable.L.quests = {
 ['Reparaturen']="",
 ['Schreddert die Allianz']="",
 ['Überfordert!']="",
+--Juwelenschleifen
+['Halskettenreparatur']="",
+['Lieferung: aufwändige Knochenfigur']="",
+['Lieferung: Blutrotes Nephritamulett']="",
+['Lieferung: helles Rüstungsrelikt']="",
+['Lieferung: leuchtende Elfenbeinfigur']="",
+['Lieferung: tückische Sonnenbrosche']="",
+['Lieferung: unbeständige Sonnenkuriosität']="",
+['Die Lieferung abfertigen']="",
+--Angeln
+['Arm dran, Arm ab!']="",
+['Blut ist dicker']="",
+['Der Geisterfisch']="",
+['Gefährlich köstlich']="",
+['Mehr Glück beim nächsten Mal']="",
+['Perle der Kanalisation']="",
+--Kochkunst
+['Durchnässtes Rezept']="",
+['Energieerfüllter Pilzhackbraten']="",
+['Kanaleintopf']="",
+['Käse für Leuchtegold']="",
+['Senfwürstchen!']="",
+['Versammlung im Zauberkasten']="",
 
 --[[ Cataclysm]]--
 --Firelands Invasion
@@ -316,14 +377,6 @@ privateTable.L.quests = {
 ['Greifhaken']="",
 ['Vernichtet die Wildhämmer']="",
 --Jewelcrafter
-['Halskettenreparatur']="",
-['Lieferung: aufwändige Knochenfigur']="",
-['Lieferung: Blutrotes Nephritamulett']="",
-['Lieferung: helles Rüstungsrelikt']="",
-['Lieferung: leuchtende Elfenbeinfigur']="",
-['Lieferung: tückische Sonnenbrosche']="",
-['Lieferung: unbeständige Sonnenkuriosität']="",
-['Die Lieferung abfertigen']="",
 ['Der letzte Schrei!']="",
 ['Ein Geschenk für Lila']="",
 ['Elementarglibber']="",
