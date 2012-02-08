@@ -141,7 +141,9 @@ function AutoTurnIn:QUEST_COMPLETE()
 						index = i
 					end
 				end
-				GetQuestReward(index)
+				if money > 0 then  -- some quests, like tournament ones, offer reputation rewards and they have no cost.
+					GetQuestReward(index)
+				end
 			end
 		else
 			GetQuestReward(index)
