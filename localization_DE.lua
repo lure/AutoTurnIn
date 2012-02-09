@@ -1,15 +1,28 @@
 ﻿local addonName, privateTable = ...
 if (GetLocale() == "deDE") then
 privateTable.L = setmetatable({
+	["reset"]="zurücksetzen",
 	["usage1"]="'on' / 'off' zu aktivieren oder deaktivieren Addon",
-	["usage2"]="'all'/'list' um alle Aufgaben bewältigen oder Liste",
+	["usage2"]="'all'/'list' um alle Aufgaben bewältigen oder Täglich",
 	["usage3"]="'loot' do not complete quests with a list of rewards or complete it and choose most expensive one of rewards",
 	["enabled"]="einschalten",
 	["disabled"]="abschalten",
 	["all"]="bedient alle Quests",
 	["list"]="diente nur die ausgewählten Quests",
-	["loottrue"]="Addon übergibt den Job, und wählen Sie die teuerste Belohnung",
-	["lootfalse"]="Quests mit Belohnungen werden nicht von Addon fertig sein"},
+	["dontlootfalse"]="Addon übergibt den Job, und wählen Sie die teuerste Belohnung",
+	["dontloottrue"]="Quests mit Belohnungen werden nicht von Addon fertig sein",
+		
+	["questTypeLabel"] = "quests", 
+	["questTypeAll"] = "alle", 
+	["questTypeList"] = "Täglich", 
+
+	["lootTypeLabel"]="Jobs mit Auszeichnungen",
+	["lootTypeFalse"]="nicht abgeschlossen",
+	["lootTypeTrue"]="nehmen Sie die teuerste, was",
+	
+	["tournamentLabel"]="Turnier", 
+	["tournamentWrit"]="Verfügung des Champions", -- 46114
+	["tournamentPurse"]="Geldbeutel des Champions"},  -- 45724
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {
@@ -162,12 +175,12 @@ privateTable.L.quests = {
 ['Setzt ein Zeichen']="",
 --Tournament
 ['Auf Winters Schneide']="",
-['Bedrohung von oben']="",
+['Bedrohung von oben']="tournament",
 ['Todesritter']="",
 ['Das Schicksal der Gefallenen']="",
 ['Der große Arenakampf']="",
 ['Die Barmherzigkeit des Lichts']="",
-['Die Schlacht zum Gegner tragen']="",
+['Die Schlacht zum Gegner tragen']="tournament",
 ['Die Überreste identifizieren']="",
 ['Diesmal habt Ihr Euch wirklich selbst übertroffen, Kul']="",
 ['Drottinn Hrothgar']="",
@@ -185,9 +198,9 @@ privateTable.L.quests = {
 ['Ornolf der Vernarbte']="",
 ['Reitgrundlagen']="",
 ['Rettungseinsatz auf See']="",
-['Schlacht vor der Zitadelle']="",
+['Schlacht vor der Zitadelle']="tournament",
 ['Todessprecher Kharos']="",
-['Unter Champions']="",
+['Unter Champions']="tournament",
 ['Vor den Toren des Feindes']="",
 ['Vor den Toren des Feindes']="",
 ['Was fressen eigentlich Yetis?']="",

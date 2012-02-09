@@ -1,17 +1,25 @@
 local addonName, ptable = ...
 local L = ptable.L
-local AutoTurnInCharacterDB
+local AutoTurnInCharacterDB, AutoTurnInDB
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 
-local defaults = {enabled = true, all = false, lootMostExpensive = false}
+AutoTurnIn.defaults = {enabled = true, all = false, dontloot = false, tournament = 2}
 
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
+	AutoTurnInDB = _G.AutoTurnInDB
 	AutoTurnInCharacterDB = _G.AutoTurnInCharacterDB
-	if not AutoTurnInCharacterDB then 
-		_G.AutoTurnInCharacterDB = CopyTable(defaults)
-		AutoTurnInCharacterDB = _G.AutoTurnInCharacterDB
+	local vers = GetAddOnMetadata(addonName, "Version")
+	
+	if not AutoTurnInDB or AutoTurnInDB.version < vers then 
+		AutoTurnInCharacterDB = nil
+		AutoTurnInDB = {version = vers}
+		self:Print(L["reset"])
 	end
+	if not AutoTurnInCharacterDB then 
+		_G.AutoTurnInCharacterDB = CopyTable(AutoTurnIn.defaults)
+		AutoTurnInCharacterDB = _G.AutoTurnInCharacterDB
+	end	
 	if AutoTurnInCharacterDB.enabled then 
 		self:RegisterGossipEvents()
 	end
@@ -44,7 +52,7 @@ local p2 = {
 
 function AutoTurnIn:ConsoleComand(arg)	
 	if (#arg == 0) then
-		InterfaceOptionsFrame_OpenToCategory(_G[addonName.."OptionsPanel"])
+		InterfaceOptionsFrame_OpenToCategory(_G["AutoTurnInOptionsPanel"])
 	elseif arg == "on" then 
 		if (not AutoTurnInCharacterDB.enabled) then 
 			AutoTurnInCharacterDB.enabled = true
@@ -64,12 +72,12 @@ function AutoTurnIn:ConsoleComand(arg)
 		AutoTurnInCharacterDB.all = false
 		self:Print(L["list"])
 	elseif arg == "loot" then 
-		AutoTurnInCharacterDB.lootMostExpensive = not AutoTurnInCharacterDB.lootMostExpensive 
-		self:Print(L["loot"..tostring(AutoTurnInCharacterDB.lootMostExpensive)])
+		AutoTurnInCharacterDB.dontloot = not AutoTurnInCharacterDB.dontloot 
+		self:Print(L["dontloot"..tostring(AutoTurnInCharacterDB.dontloot)])
 	elseif arg == "help" then 
-		self:Print(L["usage1"] .. " | " .. p1[AutoTurnInCharacterDB.enabled]) 		
-		self:Print(L["usage2"] .. " | " .. p2[AutoTurnInCharacterDB.all])
-		self:Print(L["usage3"] .. " | " .. L["loot"..tostring(AutoTurnInCharacterDB.lootMostExpensive)])		
+		self:Print(p1[AutoTurnInCharacterDB.enabled]) 		
+		self:Print(p2[AutoTurnInCharacterDB.all])
+		self:Print(L["dontloot"..tostring(AutoTurnInCharacterDB.dontloot)])		
 	end
 end
 
@@ -130,10 +138,14 @@ function AutoTurnIn:QUEST_PROGRESS()
 end
 
 function AutoTurnIn:QUEST_COMPLETE()
-    if AutoTurnInCharacterDB.all or L.quests[GetTitleText()] then
+	local quest = L.quests[GetTitleText()] 
+    if AutoTurnInCharacterDB.all or quest then
 		local index, money = 0, 0; 
 		if GetNumQuestChoices() > 0 then 
-			if AutoTurnInCharacterDB.lootMostExpensive then
+			if not AutoTurnInCharacterDB.dontloot then
+				if (quest == "tournament") then
+					GetQuestReward(AutoTurnInCharacterDB.tournament)					
+				end				
 				for i=1, GetNumQuestChoices() do
 					local m = select(11, GetItemInfo(GetQuestItemLink("choice", i)))
 					if m > money then

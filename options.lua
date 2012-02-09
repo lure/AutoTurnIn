@@ -12,85 +12,107 @@ OptionsPanel.name=addonName
 local title = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetText(addonName)
 -- Description
-local subText = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 local notes = GetAddOnMetadata(addonName, "Notes-" .. GetLocale())
-if not notes then
-	notes = GetAddOnMetadata(addonName, "Notes")
-end
+notes = notes or GetAddOnMetadata(addonName, "Notes")
+local subText = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 subText:SetText(notes)
 
--- Enable CheckBox
+-- 'Enable' CheckBox
 local Enable = CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[O.."EnableText"]:SetText(L["enabled"])
 Enable:SetScript("OnClick", function(self) AutoTurnInCharacterDB.enabled = self:GetChecked() end)
 
 -- Quest types to handle 
-
-local QuestType = CreateFrame("Frame", O.."QuestTypes", OptionsPanel, "UIDropDownMenuTemplate")
-UIDropDownMenu_Initialize(QuestType, function (self, level)
-    local info
-    for k, v in pairs({["all"] = L["all"],["list"] = L["list"]}) do
-        info = UIDropDownMenu_CreateInfo()
-        info.text = v
-        info.value = k
+local QuestLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+QuestLabel:SetText(L["questTypeLabel"])
+local QuestConst = {L["questTypeAll"], L["questTypeList"]}
+local QuestDropDown = CreateFrame("Frame", O.."QuestDropDown", OptionsPanel, "UIDropDownMenuTemplate")
+UIDropDownMenu_Initialize(QuestDropDown, function (self, level)   
+    for k, v in ipairs(QuestConst) do
+        local info = UIDropDownMenu_CreateInfo()
+        info.text, info.value = v, k
         info.func = function(self) 
-						UIDropDownMenu_SetSelectedID(QuestType, self:GetID())
-						AutoTurnInCharacterDB.all = (self:GetID() == 2) 
+						UIDropDownMenu_SetSelectedID(QuestDropDown, self:GetID())
+						AutoTurnInCharacterDB.all = (self:GetID() == 1) 
 					end
         UIDropDownMenu_AddButton(info, level)
     end
 end)
-UIDropDownMenu_SetWidth(QuestType,400 );
-UIDropDownMenu_JustifyText(QuestType, "LEFT")
+UIDropDownMenu_SetWidth(QuestDropDown, 200);
+UIDropDownMenu_JustifyText(QuestDropDown, "LEFT")
 
--- Loot type 
-local LootType = CreateFrame("Frame", O.."LootTypes", OptionsPanel, "UIDropDownMenuTemplate")
-UIDropDownMenu_Initialize(LootType, function (self, level)
-    local info
-    for k, v in pairs({["loottrue"] = L["loottrue"],["lootfalse"] = L["lootfalse"]}) do
-        info = UIDropDownMenu_CreateInfo()
-        info.text = v
-        info.value = k
-        info.func = function(self) 
-						UIDropDownMenu_SetSelectedID(LootType, self:GetID())
-						AutoTurnInCharacterDB.lootMostExpensive = (self:GetID() == 2) 
+-- Tournament loot type 
+local TournamentDropDownLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+TournamentDropDownLabel:SetText(L["tournamentLabel"])
+local TournamentConst = {L["tournamentWrit"], L["tournamentPurse"]};
+local TournamentDropDown = CreateFrame("Frame", O.."TournamentDropDown", OptionsPanel, "UIDropDownMenuTemplate")
+function TournamentDropDown:initialize ()	
+    for k, v in ipairs(TournamentConst) do
+        local info = UIDropDownMenu_CreateInfo()
+        info.text, info.value = v, k
+        info.func = function(self)
+						UIDropDownMenu_SetSelectedID(TournamentDropDown, self:GetID())
+						AutoTurnInCharacterDB.tournament = self:GetID() 
+					end		
+        UIDropDownMenu_AddButton(info, level)
+    end
+end
+UIDropDownMenu_SetWidth(TournamentDropDown, 200);
+UIDropDownMenu_JustifyText(TournamentDropDown, "LEFT")
+
+-- How to loot
+local LootLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+LootLabel:SetText(L["lootTypeLabel"])
+local LootConst = {L["lootTypeFalse"], L["lootTypeTrue"]}
+local LootDropDown = CreateFrame("Frame", O.."LootDropDown", OptionsPanel, "UIDropDownMenuTemplate")
+UIDropDownMenu_Initialize(LootDropDown, function (self, level)   
+    for k, v in ipairs(LootConst) do
+        local info = UIDropDownMenu_CreateInfo()
+		info.text, info.value = v, k
+        info.func = function(self)
+						UIDropDownMenu_SetSelectedID(LootDropDown, self:GetID())
+						AutoTurnInCharacterDB.dontloot = (self:GetID() == 1)
+						if AutoTurnInCharacterDB.dontloot then 
+							UIDropDownMenu_DisableDropDown(TournamentDropDown)
+						else 
+							UIDropDownMenu_EnableDropDown(TournamentDropDown)
+						end
 					end
         UIDropDownMenu_AddButton(info, level)
     end
 end)
-UIDropDownMenu_SetWidth(LootType,400 );
-UIDropDownMenu_JustifyText(LootType, "LEFT")
+UIDropDownMenu_SetWidth(LootDropDown, 200);
+UIDropDownMenu_JustifyText(LootDropDown, "LEFT")
 
 -- Control placement
 title:SetPoint("TOPLEFT", 16, -16)
 subText:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 Enable:SetPoint("TOPLEFT", subText, "BOTTOMLEFT", 0, -16)
-QuestType:SetPoint("TOPLEFT", Enable, "BOTTOMLEFT", -15, -16)
-LootType:SetPoint("TOPLEFT", QuestType, "BOTTOMLEFT", 0, -16)
+QuestLabel:SetPoint("BOTTOMLEFT", QuestDropDown, "TOPLEFT", 18, 0)
+QuestDropDown:SetPoint("TOPLEFT", Enable, "BOTTOMLEFT", -15, -35)
+LootLabel:SetPoint("BOTTOMLEFT", LootDropDown, "TOPLEFT", 18, 0)
+LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -35)
+TournamentDropDownLabel:SetPoint("BOTTOMLEFT", TournamentDropDown, "TOPLEFT", 18, 0)
+TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
 
 OptionsPanel.refresh = function()
 	Enable:SetChecked(AutoTurnInCharacterDB.enabled)
 
-	if AutoTurnInCharacterDB.all then 
-		UIDropDownMenu_SetSelectedID(QuestType, 2)
-		UIDropDownMenu_SetText(QuestType, L["all"])
-	else 
-		UIDropDownMenu_SetSelectedID(QuestType, 1)
-		UIDropDownMenu_SetText(QuestType, L["list"])
-	end
+	UIDropDownMenu_SetSelectedID(QuestDropDown, AutoTurnInCharacterDB.all and 1 or 2)
+	UIDropDownMenu_SetText(QuestDropDown, AutoTurnInCharacterDB.all and L["questTypeAll"] or L["questTypeList"]  )
 
-	if AutoTurnInCharacterDB.lootMostExpensive then 
-		UIDropDownMenu_SetSelectedID(LootType, 2)
-		UIDropDownMenu_SetText(LootType, L["loottrue"])
-	else 
-		UIDropDownMenu_SetSelectedID(LootType, 1)
-		UIDropDownMenu_SetText(LootType, L["lootfalse"])
+	UIDropDownMenu_SetSelectedID(LootDropDown, AutoTurnInCharacterDB.dontloot and 1 or 2)
+	UIDropDownMenu_SetText(LootDropDown, AutoTurnInCharacterDB.dontloot and L["lootTypeFalse"] or L["lootTypeTrue"])
+	
+	UIDropDownMenu_SetSelectedID(TournamentDropDown, AutoTurnInCharacterDB.tournament)
+	UIDropDownMenu_SetText(TournamentDropDown,TournamentConst[AutoTurnInCharacterDB.tournament])
+	if (AutoTurnInCharacterDB.dontloot) then 
+		UIDropDownMenu_DisableDropDown(TournamentDropDown)
 	end
 end
 
 OptionsPanel.default = function() 
-	AutoTurnInCharacterDB.enabled = true
-	AutoTurnInCharacterDB.all = false
-	AutoTurnInCharacterDB.lootMostExpensive = false
+	AutoTurnInCharacterDB = CopyTable(AutoTurnIn.defaults)
 end
+
 InterfaceOptions_AddCategory(OptionsPanel)
