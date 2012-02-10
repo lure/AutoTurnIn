@@ -11,7 +11,7 @@ function AutoTurnIn:OnEnable()
 	AutoTurnInCharacterDB = _G.AutoTurnInCharacterDB
 	local vers = GetAddOnMetadata(addonName, "Version")
 	
-	if not AutoTurnInDB or AutoTurnInDB.version < vers then 
+	if (not AutoTurnInDB) or (not AutoTurnInDB.version or (AutoTurnInDB.version < vers)) then 
 		AutoTurnInCharacterDB = nil
 		AutoTurnInDB = {version = vers}
 		self:Print(L["reset"])
@@ -155,7 +155,9 @@ function AutoTurnIn:QUEST_COMPLETE()
 				end
 				if money > 0 then  -- some quests, like tournament ones, offer reputation rewards and they have no cost.
 					GetQuestReward(index)
-				end
+				else
+					self:Print("rewards have no cost! Send a message to author please.")
+				end 
 			end
 		else
 			GetQuestReward(index)
