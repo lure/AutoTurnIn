@@ -2,7 +2,7 @@
 if (GetLocale() == "deDE") then
 privateTable.L = setmetatable({
 	["reset"]="zurücksetzen",
-	["usage1"]="'on' / 'off' zu aktivieren oder deaktivieren Addon",
+	["usage1"]="'on'/'off' zu aktivieren oder deaktivieren Addon",
 	["usage2"]="'all'/'list' um alle Aufgaben bewältigen oder Täglich",
 	["usage3"]="'loot' do not complete quests with a list of rewards or complete it and choose most expensive one of rewards",
 	["enabled"]="einschalten",
