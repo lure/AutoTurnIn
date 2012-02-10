@@ -13,7 +13,8 @@ function AutoTurnIn:OnEnable()
 	
 	if (not AutoTurnInDB) or (not AutoTurnInDB.version or (AutoTurnInDB.version < vers)) then 
 		AutoTurnInCharacterDB = nil
-		AutoTurnInDB = {version = vers}
+		_G.AutoTurnInDB = {version = vers}
+		AutoTurnInDB = _G.AutoTurnInDB
 		self:Print(L["reset"])
 	end
 	if not AutoTurnInCharacterDB then 
