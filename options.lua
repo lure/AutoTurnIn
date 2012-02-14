@@ -20,7 +20,7 @@ subText:SetText(notes)
 -- 'Enable' CheckBox
 local Enable = CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[O.."EnableText"]:SetText(L["enabled"])
-Enable:SetScript("OnClick", function(self) AutoTurnInCharacterDB.enabled = self:GetChecked() end)
+Enable:SetScript("OnClick", function(self) AutoTurnInCharacterDB.enabled = self:GetChecked() == 1 end)
 
 -- Quest types to handle 
 local QuestLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
