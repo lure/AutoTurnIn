@@ -204,8 +204,10 @@ privateTable.L.quests = {
 --Sons of Hodir
 ["Blowing Hodir's Horn"]="",
 ["Feeding Arngrim"]="",
+["Hodir's Tribute"]={item="Relic of Ulduar", amount=10, currency=false},
 ["Hot and Cold"]="",
 ["Polishing the Helm"]="",
+["Remember Everfrost!"]={item="Everfrost Chip", amount=1, currency=false},
 ["Spy Hunter"]="",
 ["Thrusting Hodir's Spear"]="",
 --The Wyrmrest Accord

@@ -209,10 +209,12 @@ privateTable.L.quests = {
 --Sons of Hodir
 ['Arngrim füttern']="",
 ['Den Helm polieren']="",
+['Jagd auf Spione']="",
 ['Heiß und kalt']="",
+['Hodirs Tribut']={item="Relikt von Ulduar", amount=10, currency=false},
 ['Hodirs Horn blasen']="",
 ['Hodirs Speer werfen']="",
-['Jagd auf Spione']="",
+['Vergesst das Immerfrosteis nicht!']={item="Immerfrostsplitter", amount=1, currency=false},
 --The Wyrmrest Accord
 ['Drachenjagd']="",
 ['Mysterium der Unendlichkeit']="",

@@ -87,14 +87,16 @@ local function GetItemAmount(isCurrency, item)
 	return amount and amount or 0
 end 
 
--- (gaq[i+3]) equals "1" if quest is complete, "nil" otherwise
-function AutoTurnIn:GOSSIP_SHOW()
 
-	if (GetGossipActiveQuests()) then  
-		local gaq = {GetGossipActiveQuests()}	
-		for i=1, #gaq, 4 do
-			if (gaq[i+3]) then  -- complete status 
-				local quest = L.quests[gaq[i]]				
+-- (gaq[i+3]) equals "1" if quest is complete, "nil" otherwise
+-- why not 	gaq={GetGossipAvailableQuests()}? Well, tables in lua are truncated for values with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
+function AutoTurnIn:GOSSIP_SHOW()	
+	local function VarArgForActiveQuests(...)	
+		for i=1, select("#", ...), 4 do
+			local completeStatus = select(i+3, ...) 
+			if (completeStatus) then  -- complete status 
+				local questname = select(i, ...)
+				local quest = L.quests[questname]				
 				if AutoTurnInCharacterDB.all or quest  then 
 					if quest and quest.amount then 
 						if GetItemAmount(quest.currency, quest.item) > quest.amount then 
@@ -109,11 +111,11 @@ function AutoTurnIn:GOSSIP_SHOW()
 			end		
 		end
 	end
-	
-	if (GetGossipAvailableQuests()) then
-		gaq={GetGossipAvailableQuests()}
-		for i=1, #gaq, 5 do
-			local quest = L.quests[gaq[i]] 
+
+	local function VarArgForAvailableQuests(...)
+		for i=1, select("#", ...), 5 do
+			local questname = select(i, ...)
+			local quest = L.quests[questname] 
 			if AutoTurnInCharacterDB.all or (quest and (not quest.donotaccept)) then			
 				if quest and quest.amount then 
 					if GetItemAmount(quest.currency, quest.item) > quest.amount then 
@@ -127,6 +129,8 @@ function AutoTurnIn:GOSSIP_SHOW()
 			end
 		end
 	end
+	VarArgForActiveQuests(GetGossipActiveQuests())
+	VarArgForAvailableQuests(GetGossipAvailableQuests())
 end
 
 function AutoTurnIn:QUEST_DETAIL()
