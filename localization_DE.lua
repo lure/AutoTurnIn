@@ -494,5 +494,15 @@ privateTable.L.quests = {
 ['Noch einmal Fackeln fangen']="",
 ['Noch einmal Fackeln werfen']="",
 ['Zurückschlagen']="",
+
+--Anglerwettbewerb im Schlingendorntal
+['Anglerlehrling']="",
+['Anglermeister']="",
+['Besonderer Fisch - Braunells blaugestreifter Flitzerfisch']="",
+['Besonderer Fisch - Dezianischer Königinnenfisch']="",
+['Besonderer Fisch - Kiefers Engelfisch']="",
+--Angelwettstreit der Kalu'ak
+["Angelwettstreit der Kalu'ak"]="",
+['Mehr Glück beim nächsten Mal']="",
 }
 end

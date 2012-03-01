@@ -481,5 +481,15 @@ privateTable.L.quests = {
 ["More Torch Tossing"]="",
 ["Striking Back"]="",
 ["Summon Ahune"]="",
+
+--Stranglethorn Fishing Extravaganza
+['Apprentice Angler']="",
+['Master Angler']="",
+["Rare Fish - Brownell's Blue Striped Racer"]="",
+['Rare Fish - Dezian Queenfish']="",
+["Rare Fish - Keefer's Angelfish"]="",
+--Kalu'ak Fishing Derby
+['Better Luck Next Time']="",
+["Kalu'ak Fishing Derby"]="",
 }
 end
