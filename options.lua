@@ -1,10 +1,6 @@
 local addonName, ptable = ...
 local L = ptable.L
---[[ 
-	Thanks to LoseControl author Kouri for ideas and direction 
-	http://forums.wowace.com/showthread.php?t=15763
-	http://www.wowwiki.com/UI_Object_UIDropDownMenu
-]]-- 
+ 
 local O = addonName .. "OptionsPanel"
 local OptionsPanel = CreateFrame("Frame", O)
 OptionsPanel.name=addonName
@@ -20,7 +16,14 @@ subText:SetText(notes)
 -- 'Enable' CheckBox
 local Enable = CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[O.."EnableText"]:SetText(L["enabled"])
-Enable:SetScript("OnClick", function(self) AutoTurnInCharacterDB.enabled = self:GetChecked() == 1 end)
+Enable:SetScript("OnClick", function(self) 
+	AutoTurnInCharacterDB.enabled = self:GetChecked() == 1 
+	if (AutoTurnInCharacterDB.enabled) then 
+		AutoTurnIn:RegisterGossipEvents()
+	else
+		AutoTurnIn:UnregisterAllEvents()
+	end
+end)
 
 -- Quest types to handle 
 local QuestLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
