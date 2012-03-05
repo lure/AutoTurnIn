@@ -49,7 +49,7 @@ privateTable.L.quests = {
 ["Перья для Нафиэна"]={item="Перо из головного убора Мертвого Леса", amount=5, currency=false},
 ["Четки для Сальфы"]={item="Бусы духов Зимней Спячки", amount=5, currency=false},
 -- Cenarion
-["Зашифрованные Сумеречные тексты"]={item="Зашифрованные Сумеречные тексты", amount=10, currency=false},
+["Зашифрованные Сумеречные тексты"]={item="Зашифрованный Сумеречный текст", amount=10, currency=false},
 ["Не теряя веры"]={item="Зашифрованные Сумеречные тексты", amount=10, currency=false},
 -- Thorium Brotherhood 
 ["Завоевать еще большую благосклонность"]={item="Окалина черного железа", amount=100, currency=false},

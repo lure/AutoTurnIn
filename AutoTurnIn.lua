@@ -99,7 +99,7 @@ function AutoTurnIn:GOSSIP_SHOW()
 				local quest = L.quests[questname]				
 				if AutoTurnInCharacterDB.all or quest  then 
 					if quest and quest.amount then 
-						if GetItemAmount(quest.currency, quest.item) > quest.amount then 
+						if GetItemAmount(quest.currency, quest.item) >= quest.amount then 
 							SelectGossipActiveQuest(math.floor(i/4)+1)
 							return						
 						end
@@ -118,7 +118,7 @@ function AutoTurnIn:GOSSIP_SHOW()
 			local quest = L.quests[questname] 
 			if AutoTurnInCharacterDB.all or (quest and (not quest.donotaccept)) then			
 				if quest and quest.amount then 
-					if GetItemAmount(quest.currency, quest.item) > quest.amount then 
+					if GetItemAmount(quest.currency, quest.item) >= quest.amount then 
 						SelectGossipAvailableQuest(math.floor(i/5)+1)
 						return						
 					end
