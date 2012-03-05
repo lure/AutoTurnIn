@@ -2,10 +2,10 @@
 ## Title: AutoTurnIn
 ## Version: 2.0
 ## Author: Lur
-## Notes: Auto accept and complete daily (or all) quests
-## Notes-ruRU: Автоматически принимает и сдает ежедневные (либо все) задания
-## Notes-enUS: Auto accept and complete daily (or all) quests
-## Notes-deDE: Auto akzeptieren und komplett täglich (oder alle) Quests (Google Translate :[ )
+## Notes: Auto accept and complete daily or any quests
+## Notes-ruRU: Автоматически принимает и сдает ежедневные либо все задания
+## Notes-enUS: Auto accept and complete daily or any quests 
+## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests (send your translation to luraddon@gmail.com pls)
 ## OptionalDeps: Ace3
 ## SavedVariables: AutoTurnInDB
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
