@@ -76,7 +76,7 @@ function AutoTurnIn:ConsoleComand(arg)
 		AutoTurnInCharacterDB.dontloot = not AutoTurnInCharacterDB.dontloot 
 		self:Print(L["dontloot"..tostring(AutoTurnInCharacterDB.dontloot)])
 	elseif arg == "help" then 
-		self:Print(p1[AutoTurnInCharacterDB.enabled]) 		
+		self:Print(p1[AutoTurnInCharacterDB.enabled == true]) 		
 		self:Print(p2[AutoTurnInCharacterDB.all])
 		self:Print(L["dontloot"..tostring(AutoTurnInCharacterDB.dontloot)])		
 	end
