@@ -154,7 +154,8 @@ function AutoTurnIn:QUEST_COMPLETE()
 		if GetNumQuestChoices() > 0 then 
 			if not AutoTurnInCharacterDB.dontloot then
 				if (quest == "tournament") then
-					GetQuestReward(AutoTurnInCharacterDB.tournament)					
+					GetQuestReward(AutoTurnInCharacterDB.tournament)
+					return
 				end				
 				for i=1, GetNumQuestChoices() do
 					local m = select(11, GetItemInfo(GetQuestItemLink("choice", i)))
@@ -165,6 +166,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 				end
 				if money > 0 then  -- some quests, like tournament ones, offer reputation rewards and they have no cost.
 					GetQuestReward(index)
+					return
 				else
 					self:Print("rewards have no cost! Send a message to author please.")
 				end 
