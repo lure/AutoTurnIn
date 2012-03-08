@@ -52,6 +52,7 @@ local p2 = {
 
 
 function AutoTurnIn:ConsoleComand(arg)	
+	arg = strlower(arg)
 	if (#arg == 0) then
 		InterfaceOptionsFrame_OpenToCategory(_G["AutoTurnInOptionsPanel"])
 	elseif arg == "on" then 

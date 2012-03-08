@@ -1,5 +1,6 @@
 local addonName, ptable = ...
 local L = ptable.L
+local TempConfig = nil
  
 local O = addonName .. "OptionsPanel"
 local OptionsPanel = CreateFrame("Frame", O)
@@ -17,8 +18,8 @@ subText:SetText(notes)
 local Enable = CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[O.."EnableText"]:SetText(L["enabled"])
 Enable:SetScript("OnClick", function(self) 
-	AutoTurnInCharacterDB.enabled = self:GetChecked() == 1 
-	if (AutoTurnInCharacterDB.enabled) then 
+	TempConfig.enabled = self:GetChecked() == 1 
+	if (TempConfig.enabled) then 
 		AutoTurnIn:RegisterGossipEvents()
 	else
 		AutoTurnIn:UnregisterAllEvents()
@@ -36,7 +37,7 @@ UIDropDownMenu_Initialize(QuestDropDown, function (self, level)
         info.text, info.value = v, k
         info.func = function(self) 
 						UIDropDownMenu_SetSelectedID(QuestDropDown, self:GetID())
-						AutoTurnInCharacterDB.all = (self:GetID() == 1) 
+						TempConfig.all = (self:GetID() == 1) 
 					end
         UIDropDownMenu_AddButton(info, level)
     end
@@ -55,7 +56,7 @@ function TournamentDropDown:initialize ()
         info.text, info.value = v, k
         info.func = function(self)
 						UIDropDownMenu_SetSelectedID(TournamentDropDown, self:GetID())
-						AutoTurnInCharacterDB.tournament = self:GetID() 
+						TempConfig.tournament = self:GetID() 
 					end		
         UIDropDownMenu_AddButton(info, level)
     end
@@ -74,8 +75,8 @@ UIDropDownMenu_Initialize(LootDropDown, function (self, level)
 		info.text, info.value = v, k
         info.func = function(self)
 						UIDropDownMenu_SetSelectedID(LootDropDown, self:GetID())
-						AutoTurnInCharacterDB.dontloot = (self:GetID() == 1)
-						if AutoTurnInCharacterDB.dontloot then 
+						TempConfig.dontloot = (self:GetID() == 1)
+						if TempConfig.dontloot then 
 							UIDropDownMenu_DisableDropDown(TournamentDropDown)
 						else 
 							UIDropDownMenu_EnableDropDown(TournamentDropDown)
@@ -99,23 +100,30 @@ TournamentDropDownLabel:SetPoint("BOTTOMLEFT", TournamentDropDown, "TOPLEFT", 18
 TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
 
 OptionsPanel.refresh = function()
-	Enable:SetChecked(AutoTurnInCharacterDB.enabled)
+	TempConfig = CopyTable(AutoTurnInCharacterDB)
 
-	UIDropDownMenu_SetSelectedID(QuestDropDown, AutoTurnInCharacterDB.all and 1 or 2)
-	UIDropDownMenu_SetText(QuestDropDown, AutoTurnInCharacterDB.all and L["questTypeAll"] or L["questTypeList"]  )
+	Enable:SetChecked(TempConfig.enabled)
 
-	UIDropDownMenu_SetSelectedID(LootDropDown, AutoTurnInCharacterDB.dontloot and 1 or 2)
-	UIDropDownMenu_SetText(LootDropDown, AutoTurnInCharacterDB.dontloot and L["lootTypeFalse"] or L["lootTypeTrue"])
+	UIDropDownMenu_SetSelectedID(QuestDropDown, TempConfig.all and 1 or 2)
+	UIDropDownMenu_SetText(QuestDropDown, TempConfig.all and L["questTypeAll"] or L["questTypeList"]  )
+
+	UIDropDownMenu_SetSelectedID(LootDropDown, TempConfig.dontloot and 1 or 2)
+	UIDropDownMenu_SetText(LootDropDown, TempConfig.dontloot and L["lootTypeFalse"] or L["lootTypeTrue"])
 	
-	UIDropDownMenu_SetSelectedID(TournamentDropDown, AutoTurnInCharacterDB.tournament)
-	UIDropDownMenu_SetText(TournamentDropDown,TournamentConst[AutoTurnInCharacterDB.tournament])
-	if (AutoTurnInCharacterDB.dontloot) then 
+	UIDropDownMenu_SetSelectedID(TournamentDropDown, TempConfig.tournament)
+	UIDropDownMenu_SetText(TournamentDropDown,TournamentConst[TempConfig.tournament])
+	if (TempConfig.dontloot) then 
 		UIDropDownMenu_DisableDropDown(TournamentDropDown)
 	end
 end
 
 OptionsPanel.default = function() 
-	AutoTurnInCharacterDB = CopyTable(AutoTurnIn.defaults)
+	TempConfig = CopyTable(AutoTurnIn.defaults)
 end
+
+OptionsPanel.okay = function()
+	AutoTurnInCharacterDB = CopyTable(TempConfig)
+end
+
 
 InterfaceOptions_AddCategory(OptionsPanel)
