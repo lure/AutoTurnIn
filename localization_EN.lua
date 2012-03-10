@@ -19,16 +19,33 @@ privateTable.L = setmetatable({
 	
 	["tournamentLabel"]="tournament", 
 	["tournamentWrit"]="Champion's Writ", -- 46114
-	["tournamentPurse"]="Champion's Purse"},  -- 45724	
+	["tournamentPurse"]="Champion's Purse",  -- 45724
+	
+	["DarkmoonTeleLabel"]="Darkmoon: teleport to the cannon",
+	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub"},
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {
--- AV Repetive Quests
-
+-- AV both fractions
+['Empty Stables']={donotaccept=true},
 -- Alliance AV Quests
-
+['Crystal Cluster']={donotaccept=true},
+['Ivus the Forest Lord']={donotaccept=true},
+["Call of Air - Ichman's Fleet"]={donotaccept=true},
+["Call of Air - Slidore's Fleet"]={donotaccept=true},
+["Call of Air - Vipore's Fleet"]={donotaccept=true},
+['Armor Scraps']={donotaccept=true},
+['More Armor Scraps']={donotaccept=true},
+['Ram Riding Harnesses']={donotaccept=true},
 -- Horde AV Quests
-
+['A Gallon of Blood']={donotaccept=true},
+['Lokholar the Ice Lord']={donotaccept=true},
+["Call of Air - Guse's Fleet"]={donotaccept=true},
+["Call of Air - Jeztor's Fleet"]={donotaccept=true},
+["Call of Air - Mulverick's Fleet"]={donotaccept=true},
+['Enemy Booty']={donotaccept=true},
+['More Booty!']={donotaccept=true},
+['Ram Hide Harnesses']={donotaccept=true},
 -- Timbermaw Quests
 ['Feathers for Grazle']={item="Deadwood Headdress Feather", amount=5, currency=false},
 ['Feathers for Nafien']={item="Deadwood Headdress Feather", amount=5, currency=false},

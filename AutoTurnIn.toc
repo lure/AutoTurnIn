@@ -1,6 +1,6 @@
 ﻿## Interface: 40300
 ## Title: AutoTurnIn
-## Version: 2.0
+## Version: 2.1
 ## Author: Lur
 ## Notes: Auto accept and complete daily or any quests
 ## Notes-ruRU: Автоматически принимает и сдает ежедневные либо все задания

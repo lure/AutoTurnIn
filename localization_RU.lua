@@ -22,28 +22,33 @@ privateTable.L = setmetatable({
 	
 	["tournamentLabel"]="серебряный турнир", 
 	["tournamentWrit"]="Удостоверение чемпиона", -- 46114
-	["tournamentPurse"]="Кошелек чемпиона"},  -- 45724
+	["tournamentPurse"]="Кошелек чемпиона",  -- 45724
+	
+	["DarkmoonTeleLabel"]="Ярмарка Новолуния: телепортация к пушке",
+	["DarkmoonFaireTeleport"]="Телепортолог Фоцлебульб"},
 	{__index = function(table, index) return index end})
 
 privateTable.L.quests = {
+-- AV both fractions 
+["Пустые стойла"]={donotaccept=true},
 -- Alliance AV Quests
-["Друза"]={item="Кристалл Бури", amount=5, currency=false},
-["Ивус Лесной Властелин"]={item="Кристалл Бури", amount=1, currency=false},
-["Небо зовет – флот Слидора"]={item="Жетон солдата Северного Волка", amount=1, currency=false},
-["Небо зовет – флот Змейера"]={item="Жетон лейтенанта Северного Волка", amount=1, currency=false},
-["Небо зовет – флот Ромеона"]={item="Жетон командира Северного Волка", amount=1, currency=false},
-["Больше обломков брони"]={item="Обломки брони", amount=20, currency=false},
-["Обломки брони"]={item="Обломки брони", amount=20, currency=false},
-["Упряжь ездовых баранов"]={item="Шкура северного волка", amount=1, currency=false},
+["Друза"]={donotaccept=true},
+["Ивус Лесной Властелин"]={donotaccept=true},
+["Небо зовет – флот Слидора"]={donotaccept=true},
+["Небо зовет – флот Змейера"]={donotaccept=true},
+["Небо зовет – флот Ромеона"]={donotaccept=true},
+["Больше обломков брони"]={donotaccept=true},
+["Обломки брони"]={donotaccept=true},
+["Упряжь ездовых баранов"]={donotaccept=true},
 -- Horde AV Quests
-["Галлон крови"]={item="Кровь солдата Грозовой Вершины", amount=5, currency=false},
-["Локолар Владыка Льда"]={item="Кровь солдата Грозовой Вершины", amount=1, currency=false},
-["Небо зовет – флот Мааши"]={item="Плоть лейтенанта Грозовой Вершины", amount=1, currency=false},
-["Небо зовет – флот Маэстра"]={item="Плоть командира Грозовой Вершины", amount=1, currency=false}, 
-["Небо зовет – флот Смуггла"]={item="Плоть солдата Грозовой Вершины", amount=1, currency=false},
-["Больше добычи!"]={item="Обломки брони", amount=20, currency=false},
-["Вражеский трофей"]={item="Обломки брони", amount=20, currency=false},
-["Упряжь из бараньей кожи"]={item="Шкура альтеракского барана", amount=1, currency=false},
+["Галлон крови"]={donotaccept=true},
+["Локолар Владыка Льда"]={donotaccept=true},
+["Небо зовет – флот Мааши"]={donotaccept=true},
+["Небо зовет – флот Маэстра"]={donotaccept=true}, 
+["Небо зовет – флот Смуггла"]={donotaccept=true},
+["Больше добычи!"]={donotaccept=true},
+["Вражеский трофей"]={donotaccept=true},
+["Упряжь из бараньей кожи"]={donotaccept=true},
 -- Timbermaw Quests
 ["Перья для Гразла"]={item="Перо из головного убора Мертвого Леса", amount=5, currency=false},
 ["Перья для Нафиэна"]={item="Перо из головного убора Мертвого Леса", amount=5, currency=false},

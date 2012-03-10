@@ -3,7 +3,7 @@ local L = ptable.L
 local AutoTurnInCharacterDB, AutoTurnInDB
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 
-AutoTurnIn.defaults = {enabled = true, all = false, dontloot = true, tournament = 2}
+AutoTurnIn.defaults = {enabled = true, all = false, dontloot = true, tournament = 2, darkmoonteleport=true}
 
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
@@ -91,7 +91,13 @@ end
 
 -- (gaq[i+3]) equals "1" if quest is complete, "nil" otherwise
 -- why not 	gaq={GetGossipAvailableQuests()}? Well, tables in lua are truncated for values with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
-function AutoTurnIn:GOSSIP_SHOW()	
+function AutoTurnIn:GOSSIP_SHOW()
+	if (AutoTurnInCharacterDB.darkmoonteleport and (L["DarkmoonFaireTeleport"]==UnitName("target"))) then 
+		SelectGossipOption(1)
+		StaticPopup1Button1:Click()
+	end
+	
+	
 	local function VarArgForActiveQuests(...)	
 		for i=1, select("#", ...), 4 do
 			local completeStatus = select(i+3, ...) 
@@ -130,6 +136,8 @@ function AutoTurnIn:GOSSIP_SHOW()
 			end
 		end
 	end
+	
+	
 	VarArgForActiveQuests(GetGossipActiveQuests())
 	VarArgForAvailableQuests(GetGossipAvailableQuests())
 end

@@ -88,6 +88,13 @@ end)
 UIDropDownMenu_SetWidth(LootDropDown, 200);
 UIDropDownMenu_JustifyText(LootDropDown, "LEFT")
 
+-- DarkmoonTeleport
+local DarkMoonCannon = CreateFrame("CheckButton", O.."DarkMoonCannon", OptionsPanel, "OptionsCheckButtonTemplate")
+_G[O.."DarkMoonCannonText"]:SetText(L["DarkmoonTeleLabel"])
+DarkMoonCannon:SetScript("OnClick", function(self) 
+	TempConfig.darkmoonteleport = self:GetChecked() == 1 
+end)
+
 -- Control placement
 title:SetPoint("TOPLEFT", 16, -16)
 subText:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
@@ -98,6 +105,7 @@ LootLabel:SetPoint("BOTTOMLEFT", LootDropDown, "TOPLEFT", 18, 0)
 LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -35)
 TournamentDropDownLabel:SetPoint("BOTTOMLEFT", TournamentDropDown, "TOPLEFT", 18, 0)
 TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
+DarkMoonCannon:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -16)
 
 OptionsPanel.refresh = function()
 	TempConfig = CopyTable(AutoTurnInCharacterDB)
@@ -115,6 +123,7 @@ OptionsPanel.refresh = function()
 	if (TempConfig.dontloot) then 
 		UIDropDownMenu_DisableDropDown(TournamentDropDown)
 	end
+	DarkMoonCannon:SetChecked(TempConfig.darkmoonteleport)
 end
 
 OptionsPanel.default = function() 

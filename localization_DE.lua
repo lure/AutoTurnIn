@@ -22,13 +22,33 @@ privateTable.L = setmetatable({
 	
 	["tournamentLabel"]="Turnier", 
 	["tournamentWrit"]="Verfügung des Champions", -- 46114
-	["tournamentPurse"]="Geldbeutel des Champions"},  -- 45724
+	["tournamentPurse"]="Geldbeutel des Champions",  -- 45724
+	
+	["DarkmoonTeleLabel"]="Dunkelmond-Jahrmarkt: Zurück zur Kanone!",	 
+	["Teleportologe Fosselbab"]="Teleportologist Fozlebub"},
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {
---AV Repetive Quests
+-- AV both fractions
+["Verwaiste Ställe"]={donotaccept=true},
 --Alliance AV Quests
+["Haufenweise Kristalle"]={donotaccept=true},
+["Ivus der Waldfürst"]={donotaccept=true},
+["Ruf der Lüfte - Slidores Luftflotte"]={donotaccept=true},
+["Ruf der Lüfte - Ichmans Luftflotte"]={donotaccept=true},
+["Ruf der Lüfte - Vipores Luftflotte"]={donotaccept=true},
+["Rüstungsfetzen"]={donotaccept=true},
+["Mehr Rüstungsfetzen"]={donotaccept=true},
+["Widderzaumzeug"]={donotaccept=true},
 --Horde AV Quests
+["Eine Gallone Blut"]={donotaccept=true},
+["Lokholar der Eislord"]={donotaccept=true},
+["Ruf der Lüfte - Guses Luftflotte"]={donotaccept=true},
+["Ruf der Lüfte - Mulvericks Luftflotte"]={donotaccept=true},
+["Ruf der Lüfte - Jeztors Luftflotte"]={donotaccept=true},
+["Beutezug im Feindesland"]={donotaccept=true},
+["Mehr Beute!"]={donotaccept=true},
+["Widderledernes Zaumzeug"]={donotaccept=true},
 --Timbermaw Quests
 ['Federn für Grazle']={item="Kopfputzfeder der Totenwaldfelle", amount=5, currency=false},
 ['Federn für Nafien']={item="Kopfputzfeder der Totenwaldfelle", amount=5, currency=false},
