@@ -24,7 +24,7 @@ privateTable.L = setmetatable({
 	["tournamentWrit"]="Удостоверение чемпиона", -- 46114
 	["tournamentPurse"]="Кошелек чемпиона",  -- 45724
 	
-	["DarkmoonTeleLabel"]="Ярмарка Новолуния: телепортация к пушке",
+	["DarkmoonTeleLabel"]="Ярмарка Новолуния: телепортация к пушке", -- darkmoon
 	["DarkmoonFaireTeleport"]="Телепортолог Фоцлебульб"},
 	{__index = function(table, index) return index end})
 
