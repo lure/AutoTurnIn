@@ -27,10 +27,11 @@ function AutoTurnIn:OnEnable()
 end
 
 function AutoTurnIn:RegisterGossipEvents()
-	self:RegisterEvent("QUEST_PROGRESS")
-	self:RegisterEvent("QUEST_COMPLETE")
+	self:RegisterEvent("QUEST_GREETING")
 	self:RegisterEvent("GOSSIP_SHOW")
 	self:RegisterEvent("QUEST_DETAIL")
+	self:RegisterEvent("QUEST_PROGRESS")
+	self:RegisterEvent("QUEST_COMPLETE")
 end
 
 function AutoTurnIn:OnDisable()
@@ -88,6 +89,15 @@ local function GetItemAmount(isCurrency, item)
 	return amount and amount or 0
 end 
 
+-- OldGossip interaction system. Burn in hell See http://wowprogramming.com/docs/events/QUEST_GREETING
+function AutoTurnIn:QUEST_GREETING()
+	for index=1, GetNumActiveQuests() do 
+		local quest, completed = GetActiveTitle(index)		
+		if (AutoTurnInCharacterDB.all or L.quests[quest]) and (completed) then 
+			SelectActiveQuest(index)
+		end
+	end
+end
 
 -- (gaq[i+3]) equals "1" if quest is complete, "nil" otherwise
 -- why not 	gaq={GetGossipAvailableQuests()}? Well, tables in lua are truncated for values with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
@@ -96,7 +106,6 @@ function AutoTurnIn:GOSSIP_SHOW()
 		SelectGossipOption(1)
 		StaticPopup1Button1:Click()
 	end
-	
 	
 	local function VarArgForActiveQuests(...)	
 		for i=1, select("#", ...), 4 do
