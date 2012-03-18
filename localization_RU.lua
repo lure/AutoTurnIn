@@ -25,7 +25,9 @@ privateTable.L = setmetatable({
 	["tournamentPurse"]="Кошелек чемпиона",  -- 45724
 	
 	["DarkmoonTeleLabel"]="Ярмарка Новолуния: телепортация к пушке", -- darkmoon
-	["DarkmoonFaireTeleport"]="Телепортолог Фоцлебульб"},
+	["DarkmoonFaireTeleport"]="Телепортолог Фоцлебульб",
+	
+	["rewardtext"]="Показывать финальный текст задания"},
 	{__index = function(table, index) return index end})
 
 privateTable.L.quests = {

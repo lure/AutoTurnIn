@@ -22,7 +22,9 @@ privateTable.L = setmetatable({
 	["tournamentPurse"]="Champion's Purse",  -- 45724
 	
 	["DarkmoonTeleLabel"]="Darkmoon: teleport to the cannon",
-	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub"},
+	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub",
+	
+	["rewardtext"]="print quest reward text"},
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {

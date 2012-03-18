@@ -95,6 +95,13 @@ DarkMoonCannon:SetScript("OnClick", function(self)
 	TempConfig.darkmoonteleport = self:GetChecked() == 1 
 end)
 
+-- 'Enable' CheckBox
+local ShowRewardText = CreateFrame("CheckButton", O.."Reward", OptionsPanel, "OptionsCheckButtonTemplate")
+_G[ShowRewardText:GetName().."Text"]:SetText(L["rewardtext"])
+ShowRewardText:SetScript("OnClick", function(self) 
+	TempConfig.showrewardtext = self:GetChecked() == 1 
+end)
+
 -- Control placement
 title:SetPoint("TOPLEFT", 16, -16)
 subText:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
@@ -102,10 +109,11 @@ Enable:SetPoint("TOPLEFT", subText, "BOTTOMLEFT", 0, -16)
 QuestLabel:SetPoint("BOTTOMLEFT", QuestDropDown, "TOPLEFT", 18, 0)
 QuestDropDown:SetPoint("TOPLEFT", Enable, "BOTTOMLEFT", -15, -35)
 LootLabel:SetPoint("BOTTOMLEFT", LootDropDown, "TOPLEFT", 18, 0)
-LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -35)
+LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -30)
 TournamentDropDownLabel:SetPoint("BOTTOMLEFT", TournamentDropDown, "TOPLEFT", 18, 0)
 TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
 DarkMoonCannon:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -16)
+ShowRewardText:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -16)
 
 OptionsPanel.refresh = function()
 	TempConfig = CopyTable(AutoTurnInCharacterDB)
@@ -124,6 +132,7 @@ OptionsPanel.refresh = function()
 		UIDropDownMenu_DisableDropDown(TournamentDropDown)
 	end
 	DarkMoonCannon:SetChecked(TempConfig.darkmoonteleport)
+	ShowRewardText:SetChecked(TempConfig.showrewardtext)
 end
 
 OptionsPanel.default = function() 

@@ -144,8 +144,7 @@ function AutoTurnIn:GOSSIP_SHOW()
 				end
 			end
 		end
-	end
-	
+	end	
 	
 	VarArgForActiveQuests(GetGossipActiveQuests())
 	VarArgForAvailableQuests(GetGossipAvailableQuests())
@@ -159,13 +158,19 @@ function AutoTurnIn:QUEST_DETAIL()
 	end
 end
 
-function AutoTurnIn:QUEST_PROGRESS() 
+function AutoTurnIn:QUEST_PROGRESS()
     if (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) and IsQuestCompletable() then
 		CompleteQuest()
     end
 end
 
 function AutoTurnIn:QUEST_COMPLETE()
+	if (AutoTurnInCharacterDB.showrewardtext) then
+		local gossip = UnitName("target")
+		self:Print(gossip)
+		self:Print(GetRewardText())
+	end
+
 	local quest = L.quests[GetTitleText()] 
     if AutoTurnInCharacterDB.all or quest then
 		local index, money = 0, 0; 
