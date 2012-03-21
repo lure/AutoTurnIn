@@ -19,11 +19,6 @@ local Enable = CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsChe
 _G[O.."EnableText"]:SetText(L["enabled"])
 Enable:SetScript("OnClick", function(self) 
 	TempConfig.enabled = self:GetChecked() == 1 
-	if (TempConfig.enabled) then 
-		AutoTurnIn:RegisterGossipEvents()
-	else
-		AutoTurnIn:UnregisterAllEvents()
-	end
 end)
 
 -- Quest types to handle 
@@ -95,12 +90,32 @@ DarkMoonCannon:SetScript("OnClick", function(self)
 	TempConfig.darkmoonteleport = self:GetChecked() == 1 
 end)
 
--- 'Enable' CheckBox
+-- 'Show Reward Text' CheckBox
 local ShowRewardText = CreateFrame("CheckButton", O.."Reward", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[ShowRewardText:GetName().."Text"]:SetText(L["rewardtext"])
 ShowRewardText:SetScript("OnClick", function(self) 
 	TempConfig.showrewardtext = self:GetChecked() == 1 
 end)
+
+-- Auto toggle key
+local ToggleKeyLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+ToggleKeyLabel:SetText("Toggle AutoTurnIn key")
+local ToggleKeyConst = {NONE_KEY,ALT_KEY,CTRL_KEY,SHIFT_KEY}
+local ToggleKeyDropDown = CreateFrame("Frame", O.."ToggleKeyDropDown", OptionsPanel, "UIDropDownMenuTemplate")
+UIDropDownMenu_Initialize(ToggleKeyDropDown, function (self, level)   
+    for k, v in ipairs(ToggleKeyConst) do
+        local info = UIDropDownMenu_CreateInfo()
+		info.text, info.value = v, k
+        info.func = function(self)
+						UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, self:GetID())
+						TempConfig.togglekey = self:GetID()
+					end
+        UIDropDownMenu_AddButton(info, level)
+    end
+end)
+UIDropDownMenu_SetWidth(ToggleKeyDropDown, 200);
+UIDropDownMenu_JustifyText(ToggleKeyDropDown, "LEFT")
+
 
 -- Control placement
 title:SetPoint("TOPLEFT", 16, -16)
@@ -114,6 +129,9 @@ TournamentDropDownLabel:SetPoint("BOTTOMLEFT", TournamentDropDown, "TOPLEFT", 18
 TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
 DarkMoonCannon:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -16)
 ShowRewardText:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -16)
+
+ToggleKeyLabel:SetPoint("BOTTOMLEFT", ToggleKeyDropDown, "TOPLEFT", 18, 0)
+ToggleKeyDropDown:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", -15, -30)
 
 OptionsPanel.refresh = function()
 	TempConfig = CopyTable(AutoTurnInCharacterDB)
@@ -133,6 +151,10 @@ OptionsPanel.refresh = function()
 	end
 	DarkMoonCannon:SetChecked(TempConfig.darkmoonteleport)
 	ShowRewardText:SetChecked(TempConfig.showrewardtext)
+
+	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, TempConfig.togglekey)
+	UIDropDownMenu_SetText(ToggleKeyDropDown,  ToggleKeyConst[TempConfig.togglekey])
+
 end
 
 OptionsPanel.default = function() 
@@ -140,6 +162,13 @@ OptionsPanel.default = function()
 end
 
 OptionsPanel.okay = function()
+	if (AutoTurnInCharacterDB.enabled ~= TempConfig.enabled) then 
+		if TempConfig.enabled then 
+			AutoTurnIn:RegisterGossipEvents()
+		else 
+			AutoTurnIn:UnregisterAllEvents()
+		end
+	end
 	AutoTurnInCharacterDB = CopyTable(TempConfig)
 end
 
