@@ -99,7 +99,7 @@ end)
 
 -- Auto toggle key
 local ToggleKeyLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-ToggleKeyLabel:SetText("Toggle AutoTurnIn key")
+ToggleKeyLabel:SetText(L["togglekey"])
 local ToggleKeyConst = {NONE_KEY, ALT_KEY, CTRL_KEY, SHIFT_KEY}
 local ToggleKeyDropDown = CreateFrame("Frame", O.."ToggleKeyDropDown", OptionsPanel, "UIDropDownMenuTemplate")
 UIDropDownMenu_Initialize(ToggleKeyDropDown, function (self, level)   

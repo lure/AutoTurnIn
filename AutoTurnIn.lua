@@ -12,9 +12,14 @@ function AutoTurnIn:OnEnable()
 		_G.AutoTurnInDB = {version = vers}
 		self:Print(L["reset"])
 	end
+	
 	if not AutoTurnInCharacterDB then 
 		_G.AutoTurnInCharacterDB = CopyTable(AutoTurnIn.defaults)	
-	end		
+	end
+	if (AutoTurnInCharacterDB.togglekey == nil) then 
+		AutoTurnInCharacterDB.togglekey = 1
+	end
+	
 	self:RegisterGossipEvents()
 end
 

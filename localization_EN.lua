@@ -24,7 +24,8 @@ privateTable.L = setmetatable({
 	["DarkmoonTeleLabel"]="Darkmoon: teleport to the cannon",
 	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub",
 	
-	["rewardtext"]="print quest reward text"},
+	["rewardtext"]="print quest reward text",
+	["togglekey"]="Enable/disable key"},
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {
