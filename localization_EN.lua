@@ -1,5 +1,5 @@
 local addonName, privateTable = ...
-if (GetLocale() == "enUS") or (GetLocale() == "enGB") then
+if (GetLocale() == "enUS")  then
 privateTable.L = setmetatable({
 	["usage1"]="'on'/'off' to enable or disable addon",
 	["usage2"]="'all'/'list' to handle any quest or just specified in a list",
