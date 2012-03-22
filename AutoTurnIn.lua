@@ -1,13 +1,12 @@
 local addonName, ptable = ...
 local L = ptable.L
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
-
 AutoTurnIn.defaults = {enabled = true, all = false, dontloot = true, tournament = 2, darkmoonteleport=true, togglekey=1}
 
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
 	local vers = GetAddOnMetadata(addonName, "Version")
-	
+
 	if (not AutoTurnInDB) or (not AutoTurnInDB.version or (AutoTurnInDB.version < vers)) then 
 		AutoTurnInCharacterDB = nil
 		_G.AutoTurnInDB = {version = vers}
@@ -15,10 +14,8 @@ function AutoTurnIn:OnEnable()
 	end
 	if not AutoTurnInCharacterDB then 
 		_G.AutoTurnInCharacterDB = CopyTable(AutoTurnIn.defaults)	
-	end	
-	if AutoTurnInCharacterDB.enabled then 
-		self:RegisterGossipEvents()
-	end
+	end		
+	self:RegisterGossipEvents()
 end
 
 function AutoTurnIn:RegisterGossipEvents()
@@ -37,15 +34,9 @@ function AutoTurnIn:OnInitialize()
 	self:RegisterChatCommand("au", "ConsoleComand")
 end
 
-local p1 = {
-	[true]=L["enabled"],
-	[false]=L["disabled"]
-}
-local p2 = {
-	[true]=L["all"],
-	[false]=L["list"]
-}
-
+local p1 = {[true]=L["enabled"], [false]=L["disabled"]}
+local p2 = {[true]=L["all"], [false]=L["list"]}
+local funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
 
 function AutoTurnIn:ConsoleComand(arg)	
 	arg = strlower(arg)
@@ -84,8 +75,20 @@ local function GetItemAmount(isCurrency, item)
 	return amount and amount or 0
 end 
 
+local function AllowedToHandle()
+	-- Double 'not' converts possible 'nil' to boolean representation
+	local IsModifiedClick = not not funcList[AutoTurnInCharacterDB.togglekey]()
+	-- it's a simple xor implementation (a ~= b) 
+	AutoTurnIn.allowed = (not not AutoTurnInCharacterDB.enabled) ~= (IsModifiedClick)
+	return AutoTurnIn.allowed
+end
+
 -- OldGossip interaction system. Burn in hell See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
+	if (not AllowedToHandle()) then 
+		return 
+	end 
+
 	for index=1, GetNumActiveQuests() do 
 		local quest, completed = GetActiveTitle(index)		
 		if (AutoTurnInCharacterDB.all or L.quests[quest]) and (completed) then 
@@ -96,12 +99,16 @@ end
 
 -- (gaq[i+3]) equals "1" if quest is complete, "nil" otherwise
 -- why not 	gaq={GetGossipAvailableQuests()}? Well, tables in lua are truncated for values with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
-function AutoTurnIn:GOSSIP_SHOW()
+function AutoTurnIn:GOSSIP_SHOW()	
+	if (not AllowedToHandle()) then 
+		return 
+	end
+
 	if (AutoTurnInCharacterDB.darkmoonteleport and (L["DarkmoonFaireTeleport"]==UnitName("target"))) then 
 		SelectGossipOption(1)
 		StaticPopup1Button1:Click()
 	end
-	
+
 	local function VarArgForActiveQuests(...)	
 		for i=1, select("#", ...), 4 do
 			local completeStatus = select(i+3, ...) 
@@ -140,13 +147,13 @@ function AutoTurnIn:GOSSIP_SHOW()
 			end
 		end
 	end	
-	
+
 	VarArgForActiveQuests(GetGossipActiveQuests())
 	VarArgForAvailableQuests(GetGossipAvailableQuests())
 end
 
 function AutoTurnIn:QUEST_DETAIL()
-	if AutoTurnInCharacterDB.all or L.quests[GetTitleText()] then
+	if AutoTurnIn.allowed and (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) then
 		QuestInfoDescriptionText:SetAlphaGradient(0, math.huge)
 		QuestInfoDescriptionText:SetAlpha(1)
 		AcceptQuest()
@@ -154,12 +161,16 @@ function AutoTurnIn:QUEST_DETAIL()
 end
 
 function AutoTurnIn:QUEST_PROGRESS()
-    if (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) and IsQuestCompletable() then
+    if  AutoTurnIn.allowed and (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) and IsQuestCompletable() then
 		CompleteQuest()
     end
 end
 
 function AutoTurnIn:QUEST_COMPLETE()
+	if not AutoTurnIn.allowed then 
+		return 
+	end
+
 	if (AutoTurnInCharacterDB.showrewardtext) then
 		local gossip = UnitName("target")
 		self:Print(gossip)

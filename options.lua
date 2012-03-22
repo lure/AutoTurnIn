@@ -100,7 +100,7 @@ end)
 -- Auto toggle key
 local ToggleKeyLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 ToggleKeyLabel:SetText("Toggle AutoTurnIn key")
-local ToggleKeyConst = {NONE_KEY,ALT_KEY,CTRL_KEY,SHIFT_KEY}
+local ToggleKeyConst = {NONE_KEY, ALT_KEY, CTRL_KEY, SHIFT_KEY}
 local ToggleKeyDropDown = CreateFrame("Frame", O.."ToggleKeyDropDown", OptionsPanel, "UIDropDownMenuTemplate")
 UIDropDownMenu_Initialize(ToggleKeyDropDown, function (self, level)   
     for k, v in ipairs(ToggleKeyConst) do
@@ -162,13 +162,6 @@ OptionsPanel.default = function()
 end
 
 OptionsPanel.okay = function()
-	if (AutoTurnInCharacterDB.enabled ~= TempConfig.enabled) then 
-		if TempConfig.enabled then 
-			AutoTurnIn:RegisterGossipEvents()
-		else 
-			AutoTurnIn:UnregisterAllEvents()
-		end
-	end
 	AutoTurnInCharacterDB = CopyTable(TempConfig)
 end
 
