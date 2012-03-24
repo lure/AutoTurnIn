@@ -210,3 +210,20 @@ function AutoTurnIn:QUEST_COMPLETE()
 		end
     end
 end
+
+
+local LDB = LibStub:GetLibrary("LibDataBroker-1.1")
+if LDB then 
+	local dataObj = LDB:NewDataObject("AutoTurnIn", {
+		type = "launcher",
+		icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
+		text="AutoTurnIn",
+		OnClick = function(clickedframe, button)
+			if InterfaceOptionsFrame:IsVisible() then 
+				InterfaceOptionsFrameCancel:Click()			
+			else
+				InterfaceOptionsFrame_OpenToCategory(_G["AutoTurnInOptionsPanel"])
+			end
+		end,
+	})
+end
