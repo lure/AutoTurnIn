@@ -212,7 +212,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 end
 
 
-local LDB = LibStub:GetLibrary("LibDataBroker-1.1")
+local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 if LDB then 
 	local dataObj = LDB:NewDataObject("AutoTurnIn", {
 		type = "launcher",
