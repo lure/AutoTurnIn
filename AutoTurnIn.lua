@@ -2,6 +2,20 @@ local addonName, ptable = ...
 local L = ptable.L
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 AutoTurnIn.defaults = {enabled = true, all = false, dontloot = true, tournament = 2, darkmoonteleport=true, togglekey=1}
+AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
+local ldbstruct = {
+		type = "data source",
+		icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
+		label = addonName,
+		text = addonName,
+		OnClick = function(clickedframe, button)
+			if InterfaceOptionsFrame:IsVisible() then 
+				InterfaceOptionsFrameCancel:Click()			
+			else
+				InterfaceOptionsFrame_OpenToCategory(_G["AutoTurnInOptionsPanel"])
+			end
+		end,
+	}
 
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
@@ -20,8 +34,18 @@ function AutoTurnIn:OnEnable()
 		AutoTurnInCharacterDB.togglekey = 1
 	end
 	
+	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
+	if LDB then 
+		AutoTurnIn.ldb = LDB:NewDataObject("AutoTurnIn", ldbstruct)
+	end
+
 	self:RegisterGossipEvents()
 end
+
+-- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
+-- sometimes some parts of this chain is skipped. For example, priest in Honor Hold show quest window directly. This is a trick to handle 'toggle key' 
+hooksecurefunc(QuestFrame, "Show", function() AutoTurnIn.allowed = AllowedToHandle() end)
+hooksecurefunc(QuestFrame, "Hide", function() AutoTurnIn.allowed = nil end)
 
 function AutoTurnIn:RegisterGossipEvents()
 	self:RegisterEvent("QUEST_GREETING")
@@ -41,23 +65,15 @@ end
 
 local p1 = {[true]=L["enabled"], [false]=L["disabled"]}
 local p2 = {[true]=L["all"], [false]=L["list"]}
-local funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
-
 function AutoTurnIn:ConsoleComand(arg)	
 	arg = strlower(arg)
 	if (#arg == 0) then
 		InterfaceOptionsFrame_OpenToCategory(_G["AutoTurnInOptionsPanel"])
 	elseif arg == "on" then 
-		if (not AutoTurnInCharacterDB.enabled) then 
-			AutoTurnInCharacterDB.enabled = true
-			self:RegisterGossipEvents()
-		end
+		AutoTurnInCharacterDB.enabled = true
 		self:Print(L["enabled"])
 	elseif arg == "off"  then
-		if AutoTurnInCharacterDB.enabled then 
-			AutoTurnInCharacterDB.enabled = false
-			self:UnregisterAllEvents()
-		end
+		AutoTurnInCharacterDB.enabled = false
 		self:Print(L["disabled"])
 	elseif arg == "all" then 
 		AutoTurnInCharacterDB.all = true
@@ -80,17 +96,20 @@ local function GetItemAmount(isCurrency, item)
 	return amount and amount or 0
 end 
 
-local function AllowedToHandle()
-	-- Double 'not' converts possible 'nil' to boolean representation
-	local IsModifiedClick = not not funcList[AutoTurnInCharacterDB.togglekey]()
-	-- it's a simple xor implementation (a ~= b) 
-	AutoTurnIn.allowed = (not not AutoTurnInCharacterDB.enabled) ~= (IsModifiedClick)
+local funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
+local function AllowedToHandle(forcecheck)
+	if ( AutoTurnIn.allowed == nil or forcecheck ) then 
+		-- Double 'not' converts possible 'nil' to boolean representation
+		local IsModifiedClick = not not funcList[AutoTurnInCharacterDB.togglekey]()
+		-- it's a simple xor implementation (a ~= b) 
+		AutoTurnIn.allowed = (not not AutoTurnInCharacterDB.enabled) ~= (IsModifiedClick)
+	end
 	return AutoTurnIn.allowed
 end
 
 -- OldGossip interaction system. Burn in hell See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
-	if (not AllowedToHandle()) then 
+	if (not AllowedToHandle(true)) then 
 		return 
 	end 
 
@@ -100,12 +119,26 @@ function AutoTurnIn:QUEST_GREETING()
 			SelectActiveQuest(index)
 		end
 	end
+
+	for index=1, GetNumAvailableQuests() do 
+		local quest = L.quests[GetAvailableTitle(index)]		
+		if (AutoTurnInCharacterDB.all or quest)then 
+			if quest and quest.amount then 
+				if GetItemAmount(quest.currency, quest.item) >= quest.amount then 
+					SelectAvailableQuest(index)
+					return						
+				end
+			else			
+				SelectAvailableQuest(index)
+			end
+		end
+	end
 end
 
 -- (gaq[i+3]) equals "1" if quest is complete, "nil" otherwise
 -- why not 	gaq={GetGossipAvailableQuests()}? Well, tables in lua are truncated for values with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
 function AutoTurnIn:GOSSIP_SHOW()	
-	if (not AllowedToHandle()) then 
+	if (not AllowedToHandle(true)) then 
 		return 
 	end
 
@@ -158,7 +191,7 @@ function AutoTurnIn:GOSSIP_SHOW()
 end
 
 function AutoTurnIn:QUEST_DETAIL()
-	if AutoTurnIn.allowed and (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) then
+	if AllowedToHandle() and (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) then
 		QuestInfoDescriptionText:SetAlphaGradient(0, math.huge)
 		QuestInfoDescriptionText:SetAlpha(1)
 		AcceptQuest()
@@ -166,19 +199,22 @@ function AutoTurnIn:QUEST_DETAIL()
 end
 
 function AutoTurnIn:QUEST_PROGRESS()
-    if  AutoTurnIn.allowed and (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) and IsQuestCompletable() then
+    if  AllowedToHandle() and (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) and IsQuestCompletable() then
 		CompleteQuest()
     end
 end
 
 function AutoTurnIn:QUEST_COMPLETE()
-	if not AutoTurnIn.allowed then 
+	-- blasted lands citadel wonderful NPC. They do not trigger any events except quest_complete. 
+	if not AllowedToHandle() then 
 		return 
 	end
-
+	
 	if (AutoTurnInCharacterDB.showrewardtext) then
 		local gossip = UnitName("target")
-		self:Print(gossip)
+		if (gossip) then 
+			self:Print(gossip)
+		end
 		self:Print(GetRewardText())
 	end
 
@@ -209,21 +245,4 @@ function AutoTurnIn:QUEST_COMPLETE()
 			GetQuestReward(index)
 		end
     end
-end
-
-
-local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
-if LDB then 
-	local dataObj = LDB:NewDataObject("AutoTurnIn", {
-		type = "launcher",
-		icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
-		text="AutoTurnIn",
-		OnClick = function(clickedframe, button)
-			if InterfaceOptionsFrame:IsVisible() then 
-				InterfaceOptionsFrameCancel:Click()			
-			else
-				InterfaceOptionsFrame_OpenToCategory(_G["AutoTurnInOptionsPanel"])
-			end
-		end,
-	})
 end

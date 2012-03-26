@@ -29,6 +29,11 @@ privateTable.L = setmetatable({
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {
+-- Steamwheedle Cartel
+['Making Amends']={item="Runecloth", amount=40, currency=false},
+['War at Sea']={item="Mageweave Cloth", amount=40, currency=false},
+['Traitor to the Bloodsail']={item="Silk Cloth", amount=40, currency=false},
+['Mending Old Wounds']={item="Linen Cloth", amount=40, currency=false},
 -- AV both fractions
 ['Empty Stables']={donotaccept=true},
 -- Alliance AV Quests

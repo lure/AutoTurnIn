@@ -32,6 +32,11 @@ privateTable.L = setmetatable({
 	{__index = function(table, index) return index end})
 
 privateTable.L.quests = {
+-- Steamwheedle Cartel
+['Восстановление добрых отношений']={item="Руническая ткань", amount=40, currency=false},
+['Морской бой']={item="Магическая ткань", amount=40, currency=false},
+['Предатель Кровавого Паруса']={item="Шелковый материал", amount=40, currency=false},
+['Исцеление старых ран']={item="Льняной материал", amount=40, currency=false},
 -- AV both fractions 
 ["Пустые стойла"]={donotaccept=true},
 -- Alliance AV Quests

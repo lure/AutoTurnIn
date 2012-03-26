@@ -31,6 +31,11 @@ privateTable.L = setmetatable({
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {
+-- Steamwheedle Cartel
+['Wiedergutmachung']={item="Runenstoff", amount=40, currency=false},
+['Krieg zur See']={item="Magiestoff", amount=40, currency=false},
+['Verrat am Blutsegel']={item="Seidenstoff", amount=40, currency=false},
+['Heilen alter Wunden']={item="Leinenstoff", amount=40, currency=false},
 -- AV both fractions
 ["Verwaiste Ställe"]={donotaccept=true},
 --Alliance AV Quests
