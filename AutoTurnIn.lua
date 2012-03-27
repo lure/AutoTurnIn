@@ -17,6 +17,14 @@ local ldbstruct = {
 		end,
 	}
 
+local caption = addonName ..' [%s]'
+function AutoTurnIn:SetEnabled(enabled)
+	AutoTurnInCharacterDB.enabled = not not enabled
+	if AutoTurnIn.ldb then 
+		AutoTurnIn.ldb.text = caption:format((AutoTurnInCharacterDB.enabled) and 'on' or 'off' )
+		AutoTurnIn.ldb.label = AutoTurnIn.ldb.text
+	end
+end
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
 	local vers = GetAddOnMetadata(addonName, "Version")
@@ -39,13 +47,9 @@ function AutoTurnIn:OnEnable()
 		AutoTurnIn.ldb = LDB:NewDataObject("AutoTurnIn", ldbstruct)
 	end
 
+	self:SetEnabled(AutoTurnInCharacterDB.enabled)
 	self:RegisterGossipEvents()
 end
-
--- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
--- sometimes some parts of this chain is skipped. For example, priest in Honor Hold show quest window directly. This is a trick to handle 'toggle key' 
-hooksecurefunc(QuestFrame, "Show", function() AutoTurnIn.allowed = AllowedToHandle() end)
-hooksecurefunc(QuestFrame, "Hide", function() AutoTurnIn.allowed = nil end)
 
 function AutoTurnIn:RegisterGossipEvents()
 	self:RegisterEvent("QUEST_GREETING")
@@ -69,11 +73,11 @@ function AutoTurnIn:ConsoleComand(arg)
 	arg = strlower(arg)
 	if (#arg == 0) then
 		InterfaceOptionsFrame_OpenToCategory(_G["AutoTurnInOptionsPanel"])
-	elseif arg == "on" then 
-		AutoTurnInCharacterDB.enabled = true
+	elseif arg == "on" then
+		self:SetEnabled(true)
 		self:Print(L["enabled"])
 	elseif arg == "off"  then
-		AutoTurnInCharacterDB.enabled = false
+		self:SetEnabled(false)
 		self:Print(L["disabled"])
 	elseif arg == "all" then 
 		AutoTurnInCharacterDB.all = true
@@ -205,7 +209,7 @@ function AutoTurnIn:QUEST_PROGRESS()
 end
 
 function AutoTurnIn:QUEST_COMPLETE()
-	-- blasted lands citadel wonderful NPC. They do not trigger any events except quest_complete. 
+	-- blasted Lands citadel wonderful NPC. They do not trigger any events except quest_complete. 
 	if not AllowedToHandle() then 
 		return 
 	end
@@ -246,3 +250,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 		end
     end
 end
+
+-- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
+-- sometimes some parts of this chain is skipped. For example, priest in Honor Hold show quest window directly. This is a trick to handle 'toggle key' 
+hooksecurefunc(QuestFrame, "Hide", function() AutoTurnIn.allowed = nil end)

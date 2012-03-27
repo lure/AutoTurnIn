@@ -163,7 +163,7 @@ end
 
 OptionsPanel.okay = function()
 	AutoTurnInCharacterDB = CopyTable(TempConfig)
+	AutoTurnIn:SetEnabled(AutoTurnInCharacterDB.enabled)
 end
-
 
 InterfaceOptions_AddCategory(OptionsPanel)
