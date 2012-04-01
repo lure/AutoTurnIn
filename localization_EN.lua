@@ -15,7 +15,8 @@ privateTable.L = setmetatable({
 
 	["lootTypeLabel"]="quests with rewards",
 	["lootTypeFalse"]="don't turn in",
-	["lootTypeTrue"]="loot most expensive reward",
+	["lootTypeGreed"]="loot most expensive reward",
+	["lootTypeNeed"]="loot by parameters",
 	
 	["tournamentLabel"]="tournament", 
 	["tournamentWrit"]="Champion's Writ", -- 46114

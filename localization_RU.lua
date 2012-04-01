@@ -18,7 +18,8 @@ privateTable.L = setmetatable({
 
 	["lootTypeLabel"]="задания с наградами",
 	["lootTypeFalse"]="не сдавать",
-	["lootTypeTrue"]="выбирать самую дорогую",
+	["lootTypeGreed"]="взять самую дорогую",
+	["lootTypeNeed"]="взять самую нужную",
 	
 	["tournamentLabel"]="серебряный турнир", 
 	["tournamentWrit"]="Удостоверение чемпиона", -- 46114

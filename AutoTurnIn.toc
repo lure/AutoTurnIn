@@ -17,5 +17,7 @@ embeds.xml
 localization_RU.lua
 localization_EN.lua
 localization_DE.lua
+rewards.lua
 AutoTurnIn.lua
 options.lua
+RewardOptions.lua

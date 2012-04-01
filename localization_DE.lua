@@ -18,7 +18,8 @@ privateTable.L = setmetatable({
 
 	["lootTypeLabel"]="Jobs mit Auszeichnungen",
 	["lootTypeFalse"]="nicht abgeschlossen",
-	["lootTypeTrue"]="nehmen Sie die teuerste, was",
+	["lootTypeGreed"]="nehmen Sie die teuerste, was",
+	["lootTypeNeed"]="Wahl Sie nach Parametern",
 	
 	["tournamentLabel"]="Turnier", 
 	["tournamentWrit"]="Verfügung des Champions", -- 46114

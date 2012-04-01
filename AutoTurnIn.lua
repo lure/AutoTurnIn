@@ -1,7 +1,9 @@
 local addonName, ptable = ...
 local L = ptable.L
+local C = ptable.CONST
+
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
-AutoTurnIn.defaults = {enabled = true, all = false, dontloot = true, tournament = 2, darkmoonteleport=true, togglekey=1}
+AutoTurnIn.defaults = {enabled = true, all = false, dontloot = 1, tournament = 2, darkmoonteleport=true, togglekey=1}
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 local ldbstruct = {
 		type = "data source",
@@ -38,8 +40,11 @@ function AutoTurnIn:OnEnable()
 	if not AutoTurnInCharacterDB then 
 		_G.AutoTurnInCharacterDB = CopyTable(AutoTurnIn.defaults)	
 	end
-	if (AutoTurnInCharacterDB.togglekey == nil) then 
+	if (tonumber(AutoTurnInCharacterDB.togglekey) == nil) then 
 		AutoTurnInCharacterDB.togglekey = 1
+	end
+	if ( AutoTurnInCharacterDB.items == nil ) then 
+		AutoTurnInCharacterDB.items = {}
 	end
 	
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
@@ -85,13 +90,9 @@ function AutoTurnIn:ConsoleComand(arg)
 	elseif arg == "list" then 
 		AutoTurnInCharacterDB.all = false
 		self:Print(L["list"])
-	elseif arg == "loot" then 
-		AutoTurnInCharacterDB.dontloot = not AutoTurnInCharacterDB.dontloot 
-		self:Print(L["dontloot"..tostring(AutoTurnInCharacterDB.dontloot)])
 	elseif arg == "help" then 
 		self:Print(p1[AutoTurnInCharacterDB.enabled == true]) 		
 		self:Print(p2[AutoTurnInCharacterDB.all])
-		self:Print(L["dontloot"..tostring(AutoTurnInCharacterDB.dontloot)])		
 	end
 end
 
@@ -226,24 +227,67 @@ function AutoTurnIn:QUEST_COMPLETE()
     if AutoTurnInCharacterDB.all or quest then
 		local index, money = 0, 0; 
 		if GetNumQuestChoices() > 0 then 
-			if not AutoTurnInCharacterDB.dontloot then
+			if AutoTurnInCharacterDB.dontloot > 1 then -- Auto Loot enabled! 
+			
+				-- Tournament quest found
 				if (quest == "tournament") then
 					GetQuestReward(AutoTurnInCharacterDB.tournament)
 					return
-				end				
-				for i=1, GetNumQuestChoices() do
-					local m = select(11, GetItemInfo(GetQuestItemLink("choice", i)))
-					if m > money then
-						money = m
-						index = i
+				end	
+				
+				-- G R E E D
+				if (AutoTurnInCharacterDB.dontloot == 2) then
+					for i=1, GetNumQuestChoices() do
+						local m = select(11, GetItemInfo(GetQuestItemLink("choice", i)))
+						if m > money then
+							money = m
+							index = i
+						end
+					end
+					if money > 0 then  -- some quests, like tournament ones, offer reputation rewards and they have no cost.
+						GetQuestReward(index)
+						return
 					end
 				end
-				if money > 0 then  -- some quests, like tournament ones, offer reputation rewards and they have no cost.
-					GetQuestReward(index)
-					return
-				else
-					self:Print("rewards have no cost! Send a message to author please.")
-				end 
+				-- #G R E E D
+				
+				-- N E E D
+				if (AutoTurnInCharacterDB.dontloot == 3) then
+					local found = {}
+					
+					for i=1, GetNumQuestChoices() do
+						local class, subclass, _, equipSlot = select(6, GetItemInfo(GetQuestItemLink("choice", i)))
+						-- relics and trinkets are out of autoloot
+						if C.STOPTOKENS[equipSlot] then
+							self:Print(INVTYPE_RELIC..' or ' .. INVTYPE_TRINKET .. 'found. Choose reward manually pls.')
+							return
+						end
+						
+						if  AutoTurnInCharacterDB.items[subclass] or (AutoTurnInCharacterDB.items['Ranged'] and 
+																	 (C.ITEMS['Crossbows'] == subclass or 
+																	  C.ITEMS['Guns'] == subclass or 
+																	  C.ITEMS['Bows'] == subclass)) then 
+							local stattable = GetItemStats(swordLink)
+							for stat, value in pairs(stattable) do
+								if ( C.STATS[stat] ) then
+									tinsert(found, i)
+								end
+							end
+						end
+					end
+					
+					-- HANDLE RESULT 
+					if #found > 1 then
+						for _, reward in pairs(found) do 
+						--_G["QuestInfoItem" .. index]
+						end
+					elseif(#found == 1) then
+						GetQuestReward(found[1])
+					end
+				end
+				-- #N E E D 
+				
+				
 			end
 		else
 			GetQuestReward(index)

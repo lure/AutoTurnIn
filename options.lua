@@ -1,7 +1,5 @@
 local addonName, ptable = ...
 local L = ptable.L
-local TempConfig = nil
- 
 local O = addonName .. "OptionsPanel"
 local OptionsPanel = CreateFrame("Frame", O)
 OptionsPanel.name=addonName
@@ -18,7 +16,7 @@ subText:SetText(notes)
 local Enable = CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[O.."EnableText"]:SetText(L["enabled"])
 Enable:SetScript("OnClick", function(self) 
-	TempConfig.enabled = self:GetChecked() == 1 
+	ptable.TempConfig.enabled = self:GetChecked() == 1
 end)
 
 -- Quest types to handle 
@@ -32,7 +30,7 @@ UIDropDownMenu_Initialize(QuestDropDown, function (self, level)
         info.text, info.value = v, k
         info.func = function(self) 
 						UIDropDownMenu_SetSelectedID(QuestDropDown, self:GetID())
-						TempConfig.all = (self:GetID() == 1) 
+						ptable.TempConfig.all = (self:GetID() == 1) 
 					end
         UIDropDownMenu_AddButton(info, level)
     end
@@ -51,7 +49,7 @@ function TournamentDropDown:initialize ()
         info.text, info.value = v, k
         info.func = function(self)
 						UIDropDownMenu_SetSelectedID(TournamentDropDown, self:GetID())
-						TempConfig.tournament = self:GetID() 
+						ptable.TempConfig.tournament = self:GetID() 
 					end		
         UIDropDownMenu_AddButton(info, level)
     end
@@ -62,7 +60,7 @@ UIDropDownMenu_JustifyText(TournamentDropDown, "LEFT")
 -- How to loot
 local LootLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 LootLabel:SetText(L["lootTypeLabel"])
-local LootConst = {L["lootTypeFalse"], L["lootTypeTrue"]}
+local LootConst = {L["lootTypeFalse"], L["lootTypeGreed"], L["lootTypeNeed"]}
 local LootDropDown = CreateFrame("Frame", O.."LootDropDown", OptionsPanel, "UIDropDownMenuTemplate")
 UIDropDownMenu_Initialize(LootDropDown, function (self, level)   
     for k, v in ipairs(LootConst) do
@@ -70,8 +68,8 @@ UIDropDownMenu_Initialize(LootDropDown, function (self, level)
 		info.text, info.value = v, k
         info.func = function(self)
 						UIDropDownMenu_SetSelectedID(LootDropDown, self:GetID())
-						TempConfig.dontloot = (self:GetID() == 1)
-						if TempConfig.dontloot then 
+						ptable.TempConfig.dontloot = self:GetID()
+						if ptable.TempConfig.dontloot == 1 then 
 							UIDropDownMenu_DisableDropDown(TournamentDropDown)
 						else 
 							UIDropDownMenu_EnableDropDown(TournamentDropDown)
@@ -87,14 +85,14 @@ UIDropDownMenu_JustifyText(LootDropDown, "LEFT")
 local DarkMoonCannon = CreateFrame("CheckButton", O.."DarkMoonCannon", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[O.."DarkMoonCannonText"]:SetText(L["DarkmoonTeleLabel"])
 DarkMoonCannon:SetScript("OnClick", function(self) 
-	TempConfig.darkmoonteleport = self:GetChecked() == 1 
+	ptable.TempConfig.darkmoonteleport = self:GetChecked() == 1 
 end)
 
 -- 'Show Reward Text' CheckBox
 local ShowRewardText = CreateFrame("CheckButton", O.."Reward", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[ShowRewardText:GetName().."Text"]:SetText(L["rewardtext"])
 ShowRewardText:SetScript("OnClick", function(self) 
-	TempConfig.showrewardtext = self:GetChecked() == 1 
+	ptable.TempConfig.showrewardtext = self:GetChecked() == 1 
 end)
 
 -- Auto toggle key
@@ -108,7 +106,7 @@ UIDropDownMenu_Initialize(ToggleKeyDropDown, function (self, level)
 		info.text, info.value = v, k
         info.func = function(self)
 						UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, self:GetID())
-						TempConfig.togglekey = self:GetID()
+						ptable.TempConfig.togglekey = self:GetID()
 					end
         UIDropDownMenu_AddButton(info, level)
     end
@@ -134,35 +132,34 @@ ToggleKeyLabel:SetPoint("BOTTOMLEFT", ToggleKeyDropDown, "TOPLEFT", 18, 0)
 ToggleKeyDropDown:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", -15, -30)
 
 OptionsPanel.refresh = function()
-	TempConfig = CopyTable(AutoTurnInCharacterDB)
+	ptable.TempConfig = CopyTable(AutoTurnInCharacterDB)
 
-	Enable:SetChecked(TempConfig.enabled)
+	Enable:SetChecked(ptable.TempConfig.enabled)
 
-	UIDropDownMenu_SetSelectedID(QuestDropDown, TempConfig.all and 1 or 2)
-	UIDropDownMenu_SetText(QuestDropDown, TempConfig.all and L["questTypeAll"] or L["questTypeList"]  )
+	UIDropDownMenu_SetSelectedID(QuestDropDown, ptable.TempConfig.all and 1 or 2)
+	UIDropDownMenu_SetText(QuestDropDown, ptable.TempConfig.all and L["questTypeAll"] or L["questTypeList"]  )
 
-	UIDropDownMenu_SetSelectedID(LootDropDown, TempConfig.dontloot and 1 or 2)
-	UIDropDownMenu_SetText(LootDropDown, TempConfig.dontloot and L["lootTypeFalse"] or L["lootTypeTrue"])
+	UIDropDownMenu_SetSelectedID(LootDropDown, ptable.TempConfig.dontloot)
+	UIDropDownMenu_SetText(LootDropDown, LootConst[ptable.TempConfig.dontloot])
 	
-	UIDropDownMenu_SetSelectedID(TournamentDropDown, TempConfig.tournament)
-	UIDropDownMenu_SetText(TournamentDropDown,TournamentConst[TempConfig.tournament])
-	if (TempConfig.dontloot) then 
+	UIDropDownMenu_SetSelectedID(TournamentDropDown, ptable.TempConfig.tournament)
+	UIDropDownMenu_SetText(TournamentDropDown,TournamentConst[ptable.TempConfig.tournament])
+	if (ptable.TempConfig.dontloot == 1) then 
 		UIDropDownMenu_DisableDropDown(TournamentDropDown)
 	end
-	DarkMoonCannon:SetChecked(TempConfig.darkmoonteleport)
-	ShowRewardText:SetChecked(TempConfig.showrewardtext)
+	DarkMoonCannon:SetChecked(ptable.TempConfig.darkmoonteleport)
+	ShowRewardText:SetChecked(ptable.TempConfig.showrewardtext)
 
-	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, TempConfig.togglekey)
-	UIDropDownMenu_SetText(ToggleKeyDropDown,  ToggleKeyConst[TempConfig.togglekey])
-
+	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)
+	UIDropDownMenu_SetText(ToggleKeyDropDown,  ToggleKeyConst[ptable.TempConfig.togglekey])
 end
 
 OptionsPanel.default = function() 
-	TempConfig = CopyTable(AutoTurnIn.defaults)
+	ptable.TempConfig = CopyTable(AutoTurnIn.defaults)
 end
 
 OptionsPanel.okay = function()
-	AutoTurnInCharacterDB = CopyTable(TempConfig)
+	AutoTurnInCharacterDB = CopyTable(ptable.TempConfig)
 	AutoTurnIn:SetEnabled(AutoTurnInCharacterDB.enabled)
 end
 
