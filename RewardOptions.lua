@@ -7,7 +7,7 @@ RewardPanel.name= QUEST_REWARDS
 local function CreateCheckbox(name, parent, marginx, marginy, text)
 	local cb = CreateFrame("CheckButton", "$parent"..name,  parent, "OptionsCheckButtonTemplate")
 	cb:SetPoint("TOPLEFT", parent, marginx, marginy)
-	_G[cb:GetName().."Text"]:SetText(text)
+	_G[cb:GetName().."Text"]:SetText(text and text or name)
 	cb:SetScript("OnClick", function(self)
 		ptable.TempConfig.items[name] = self:GetChecked() == 1
 	end)
@@ -34,34 +34,37 @@ local description = RewardPanel:CreateFontString(nil, "ARTWORK", "GameFontHighli
 description:SetText("Reward loot options")
 RewardPanel.parent = _G["AutoTurnInOptionsPanel"]
 
+local weapon = {GetAuctionItemSubClasses(1)}
+local armor = {GetAuctionItemSubClasses(2)}
+
 -- WEAPON
 local WeaponPanel = CreatePanel("WeaponPanel", C.WEAPONLABEL, 590, 170)
-CreateCheckbox("One-Handed Axes", WeaponPanel, 10, -8, C.ITEMS['One-Handed Axes'])
-CreateCheckbox("Two-Handed Axes", WeaponPanel, 206, -8, C.ITEMS['Two-Handed Axes'] )
-CreateCheckbox("One-Handed Maces", WeaponPanel, 402, -8, C.ITEMS['One-Handed Maces'])
+CreateCheckbox(weapon[1], WeaponPanel, 10, -8)
+CreateCheckbox(weapon[2], WeaponPanel, 206, -8)
+CreateCheckbox(weapon[5], WeaponPanel, 402, -8)
 	-- 2nd line 
-CreateCheckbox("Two-Handed Maces", WeaponPanel, 10, -40, C.ITEMS['Two-Handed Maces'])
-CreateCheckbox("Polearms", WeaponPanel, 206, -40, C.ITEMS['Polearms'])
-CreateCheckbox("One-Handed Swords", WeaponPanel, 402, -40, C.ITEMS['One-Handed Swords'] )
+CreateCheckbox(weapon[6], WeaponPanel, 10, -40)
+CreateCheckbox(weapon[7], WeaponPanel, 206, -40)
+CreateCheckbox(weapon[8], WeaponPanel, 402, -40)
     -- 3rd line
-CreateCheckbox("Two-Handed Swords", WeaponPanel, 10, -72, C.ITEMS['Two-Handed Swords'])
-CreateCheckbox("Staves", WeaponPanel, 206, -72, C.ITEMS['Staves'])
-CreateCheckbox("Fist Weapons", WeaponPanel, 402, -72, C.ITEMS['Fist Weapons'])
+CreateCheckbox(weapon[9], WeaponPanel, 10, -72)
+CreateCheckbox(weapon[10], WeaponPanel, 206, -72)
+CreateCheckbox(weapon[11], WeaponPanel, 402, -72)
 	-- 4rd line
-CreateCheckbox("Daggers", WeaponPanel, 10, -104, C.ITEMS['Daggers'] )
-CreateCheckbox("Thrown", WeaponPanel, 206, -104, C.ITEMS['Thrown'])
-CreateCheckbox("Wands", WeaponPanel, 402, -104, C.ITEMS['Wands'])
+CreateCheckbox(weapon[13], WeaponPanel, 10, -104)
+CreateCheckbox(weapon[14], WeaponPanel, 206, -104)
+CreateCheckbox(weapon[16], WeaponPanel, 402, -104)
 	-- 5th line
-CreateCheckbox("Ranged", WeaponPanel, 10, -136, string.format("%s, %s, %s", C.ITEMS['Crossbows'], C.ITEMS['Bows'], C.ITEMS['Guns']) )
+CreateCheckbox("Ranged", WeaponPanel, 10, -136, string.format("%s, %s, %s", weapon[3], weapon[4], weapon[15]) )
 
 -- ARMOR 
 local ArmorPanel = CreatePanel("ArmorPanel", C.ARMORLABEL, 590, 70)
-CreateCheckbox("Cloth", ArmorPanel, 10, -8, C.ITEMS['Cloth'])
-CreateCheckbox("Leather", ArmorPanel, 152, -8, C.ITEMS['Leather'] )
-CreateCheckbox("Mail", ArmorPanel, 292, -8, C.ITEMS['Mail'])
-CreateCheckbox("Plate", ArmorPanel, 436, -8, C.ITEMS['Plate'])
+CreateCheckbox(armor[2], ArmorPanel, 10, -8)
+CreateCheckbox(armor[3], ArmorPanel, 152, -8)
+CreateCheckbox(armor[4], ArmorPanel, 292, -8)
+CreateCheckbox(armor[5], ArmorPanel, 436, -8)
 	-- 2nd line 
-CreateCheckbox("Shields", ArmorPanel, 10, -40, C.ITEMS['Shields'])
+CreateCheckbox(armor[6], ArmorPanel, 10, -40)
 CreateCheckbox("Jewelry", ArmorPanel, 292, -40, ptable.L['Jewelry'] )
 	
 -- ATTRIBUTES
