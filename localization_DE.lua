@@ -490,7 +490,7 @@ privateTable.L.quests = {
 ['Schleim-Time']="",
 ['Tümpelschrecken']="",
 --Darkmoon Faire
-['Auch Abfall kann nützlich sein']="",
+["Spaß für die Kleinen"] = {item=393, amount=15, currency=true},
 ['Die menschliche Kanonenkugel']="",
 ['Er schießt, er trifft!']="",
 ['Hau-den-Gnoll']="",

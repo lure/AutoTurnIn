@@ -477,6 +477,7 @@ privateTable.L.quests = {
 ["The Ring's the Thing"]="",
 ["Time for Slime"]="",
 --Darkmoon Faire
+["Fun for the Little Ones"] = {item=393, amount=15, currency=true},
 ["He Shoots, He Scores!"]="",
 ["It's Hammer Time"]="",
 ["Target: Turtle"]="",
