@@ -51,8 +51,8 @@ CreateCheckbox("Fist Weapons", WeaponPanel, 402, -72, C.ITEMS['Fist Weapons'])
 CreateCheckbox("Daggers", WeaponPanel, 10, -104, C.ITEMS['Daggers'] )
 CreateCheckbox("Thrown", WeaponPanel, 206, -104, C.ITEMS['Thrown'])
 CreateCheckbox("Wands", WeaponPanel, 402, -104, C.ITEMS['Wands'])
+	-- 5th line
 CreateCheckbox("Ranged", WeaponPanel, 10, -136, string.format("%s, %s, %s", C.ITEMS['Crossbows'], C.ITEMS['Bows'], C.ITEMS['Guns']) )
-
 
 -- ARMOR 
 local ArmorPanel = CreatePanel("ArmorPanel", C.ARMORLABEL, 590, 70)
@@ -60,7 +60,9 @@ CreateCheckbox("Cloth", ArmorPanel, 10, -8, C.ITEMS['Cloth'])
 CreateCheckbox("Leather", ArmorPanel, 152, -8, C.ITEMS['Leather'] )
 CreateCheckbox("Mail", ArmorPanel, 292, -8, C.ITEMS['Mail'])
 CreateCheckbox("Plate", ArmorPanel, 436, -8, C.ITEMS['Plate'])
+	-- 2nd line 
 CreateCheckbox("Shields", ArmorPanel, 10, -40, C.ITEMS['Shields'])
+CreateCheckbox("Jewelry", ArmorPanel, 292, -40, ptable.L['Jewelry'] )
 	
 -- ATTRIBUTES
 local StatPanel = CreatePanel("StatPanel", STAT_CATEGORY_ATTRIBUTES, 590, 40) 

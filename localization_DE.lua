@@ -28,7 +28,9 @@ privateTable.L = setmetatable({
 	["DarkmoonTeleLabel"]="Dunkelmond-Jahrmarkt: Zurück zur Kanone!",	 
 	["Teleportologe Fosselbab"]="Teleportologist Fozlebub",
 	["rewardtext"]="Show quest reward text",
-	["togglekey"]="aktivieren/deaktivieren Taste"},
+	["togglekey"]="aktivieren/deaktivieren Taste",
+	
+	['Jewelry']="Juwelier"},
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {

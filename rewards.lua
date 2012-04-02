@@ -8,7 +8,10 @@ local armor = {GetAuctionItemSubClasses(2)}
 -- INVTYPE_RELIC INVTYPE_TRINKET - остановить лут вообще. 
 C.WEAPONLABEL, C.ARMORLABEL = GetAuctionItemClasses()
 C.STOPTOKENS = {['INVTYPE_RELIC']='', ['INVTYPE_TRINKET']=''}
+C.JEWELRY = {['INVTYPE_FINGER']='', ['INVTYPE_NECK']=''}
 --[[
+
+
 SPELL_STAT1_NAME = "Strength";
 SPELL_STAT2_NAME = "Agility";
 SPELL_STAT3_NAME = "Stamina";
@@ -78,7 +81,7 @@ end
 /run for k,v in pairs(OPEN_FILTER_LIST) do for n,m in pairs(v) do print(n,m) end end
 
 /run print(_G[INVTYPE_CLOAK])
-/run print(select(5, GetItemInfo("Гримуар отвратительных ритуалов")))
+/run print(select(6, GetItemInfo("Набедренники Прилива")))
 
 /run function a(...) for i=1, select("#", ...), 2 do invType = _G[select(i, ...)] print(invType, select(i, ...)) end end a(GetAuctionInvTypes(2,2))
 00:08:47 Спина INVTYPE_CLOAK 1 INVTYPE_HOLDABLE nil

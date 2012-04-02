@@ -9,24 +9,26 @@ privateTable.L = setmetatable({
 	["dontlootfalse"]="loot most expensive reward",
 	["dontloottrue"]="do not complete quests with rewards",
 	
-	["questTypeLabel"] = "quests", 
+	["questTypeLabel"] = "Quests to handle", 
 	["questTypeAll"] = "all", 
 	["questTypeList"] = "daily", 
 
-	["lootTypeLabel"]="quests with rewards",
+	["lootTypeLabel"]="Quests with rewards",
 	["lootTypeFalse"]="don't turn in",
 	["lootTypeGreed"]="loot most expensive reward",
 	["lootTypeNeed"]="loot by parameters",
 	
-	["tournamentLabel"]="tournament", 
+	["tournamentLabel"]="Tournament", 
 	["tournamentWrit"]="Champion's Writ", -- 46114
 	["tournamentPurse"]="Champion's Purse",  -- 45724
 	
 	["DarkmoonTeleLabel"]="Darkmoon: teleport to the cannon",
 	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub",
 	
-	["rewardtext"]="print quest reward text",
-	["togglekey"]="Enable/disable key"},
+	["rewardtext"]="Print quest reward text",
+	["togglekey"]="Enable/disable key",
+	
+	['Jewelry']="Jewelry"},
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {

@@ -29,7 +29,10 @@ privateTable.L = setmetatable({
 	["DarkmoonFaireTeleport"]="Телепортолог Фоцлебульб",
 	
 	["rewardtext"]="Показывать финальный текст задания",
-	["togglekey"]="Клавиша разового включения/отключения"},
+	["togglekey"]="Клавиша разового включения/отключения",
+	
+	['Jewelry']="Ювелирные украшения"},
+	
 	{__index = function(table, index) return index end})
 
 privateTable.L.quests = {

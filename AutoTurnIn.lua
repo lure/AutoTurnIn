@@ -209,6 +209,16 @@ function AutoTurnIn:QUEST_PROGRESS()
     end
 end
 
+local function IsRangedWeapon(subclass)
+	return (AutoTurnInCharacterDB.items['Ranged'] and (C.ITEMS['Crossbows'] == subclass or 
+														C.ITEMS['Guns'] == subclass or 
+														C.ITEMS['Bows'] == subclass))
+end
+
+local function IsJewelry(equipSlot)
+	return AutoTurnInCharacterDB.items['Jewelry'] and (C.JEWELRY[equipSlot])
+end
+
 function AutoTurnIn:QUEST_COMPLETE()
 	-- blasted Lands citadel wonderful NPC. They do not trigger any events except quest_complete. 
 	if not AllowedToHandle() then 
@@ -256,18 +266,15 @@ function AutoTurnIn:QUEST_COMPLETE()
 					local found = {}
 					
 					for i=1, GetNumQuestChoices() do
-						local class, subclass, _, equipSlot = select(6, GetItemInfo(GetQuestItemLink("choice", i)))
-						-- relics and trinkets are out of autoloot
+						local link = GetQuestItemLink("choice", i)
+						local class, subclass, _, equipSlot = select(6, GetItemInfo(link))
+						--[[relics and trinkets are out of autoloot
 						if C.STOPTOKENS[equipSlot] then
-							self:Print(INVTYPE_RELIC..' or ' .. INVTYPE_TRINKET .. 'found. Choose reward manually pls.')
+							self:Print(INVTYPE_RELIC..' or ' .. INVTYPE_TRINKET .. ' found. Choose reward manually pls.')
 							return
-						end
-						
-						if  AutoTurnInCharacterDB.items[subclass] or (AutoTurnInCharacterDB.items['Ranged'] and 
-																	 (C.ITEMS['Crossbows'] == subclass or 
-																	  C.ITEMS['Guns'] == subclass or 
-																	  C.ITEMS['Bows'] == subclass)) then 
-							local stattable = GetItemStats(swordLink)
+						end]]--
+						if  AutoTurnInCharacterDB.items[subclass] or IsRangedWeapon(subclass) or IsJewelry(equipSlot) then 
+							local stattable = GetItemStats(link)
 							for stat, value in pairs(stattable) do
 								if ( C.STATS[stat] ) then
 									tinsert(found, i)
@@ -276,13 +283,16 @@ function AutoTurnIn:QUEST_COMPLETE()
 						end
 					end
 					
+					print("Handle "..#found )
 					-- HANDLE RESULT 
 					if #found > 1 then
-						for _, reward in pairs(found) do 
+						for _, reward in pairs(found) do
+							print("found: " .. GetQuestItemLink("choice", found[reward]))
 						--_G["QuestInfoItem" .. index]
 						end
 					elseif(#found == 1) then
-						GetQuestReward(found[1])
+						print("found: " .. GetQuestItemLink("choice", found[1]))
+						--GetQuestReward(found[1])
 					end
 				end
 				-- #N E E D 
@@ -290,7 +300,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 				
 			end
 		else
-			GetQuestReward(index)
+			--GetQuestReward(index)
 		end
     end
 end
