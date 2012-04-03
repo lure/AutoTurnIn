@@ -28,7 +28,13 @@ local function CreatePanel(name, text, w, h)
 		end
 	end
 	function panel:GetConfig()
-		return name == "StatPanel" and ptable.TempConfig.stats  or ptable.TempConfig.items 
+		if name == "StatPanel" then 
+			return ptable.TempConfig.stat
+		elseif name == "ArmorPanel" then
+			return ptable.TempConfig.armor
+		else 
+			return ptable.TempConfig.weapon
+		end
 	end
 	_G[panel:GetName().."Title"]:SetText(text)
 	return panel
@@ -100,14 +106,14 @@ RewardPanel.refresh = function()
 	ArmorPanel:ClearCheckBoxes()
 	StatPanel:ClearCheckBoxes()
 
-	for k,v in pairs(ptable.TempConfig.items) do 
-		local w = _G[WeaponPanel:GetName()..k]
-		w = w and w or _G[ArmorPanel:GetName()..k]
-		w:SetChecked(v) 
+	for k,v in pairs(ptable.TempConfig.armor) do
+		_G[ArmorPanel:GetName()..k]:SetChecked(v)
+	end	
+	for k,v in pairs(ptable.TempConfig.weapon) do
+		_G[WeaponPanel:GetName()..k]:SetChecked(v)
 	end
-
-	for k,v in pairs(ptable.TempConfig.stats) do
-		_G[StatPanel:GetName()..k]:SetChecked(v) 
+	for k,v in pairs(ptable.TempConfig.stat) do
+		_G[StatPanel:GetName()..k]:SetChecked(v)
 	end
 	
 	GreedAfterNeed:SetChecked(ptable.TempConfig.greedifnothingfound )

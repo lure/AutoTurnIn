@@ -51,9 +51,9 @@ function AutoTurnIn:OnEnable()
 		AutoTurnInCharacterDB.togglekey = 1
 	end
 	
-	AutoTurnInCharacterDB.items = AutoTurnInCharacterDB.items and AutoTurnInCharacterDB.items or {}
-	AutoTurnInCharacterDB.stats = AutoTurnInCharacterDB.stats and AutoTurnInCharacterDB.stats or {}
-
+	AutoTurnInCharacterDB.armor = AutoTurnInCharacterDB.armor and AutoTurnInCharacterDB.armor or {}
+	AutoTurnInCharacterDB.weapon = AutoTurnInCharacterDB.weapon and AutoTurnInCharacterDB.weapon or {}
+	AutoTurnInCharacterDB.stat = AutoTurnInCharacterDB.stat and AutoTurnInCharacterDB.stat or {}
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 	if LDB then
@@ -281,18 +281,29 @@ function AutoTurnIn:Need()
 			self:Print(INVTYPE_RELIC .. ' or ' .. INVTYPE_TRINKET.. ' found. Choose reward manually pls.')
 			return true
 		end
-		if  AutoTurnInCharacterDB.items[subclass] or IsRangedAndRequired(subclass) or IsJewelryAndRequired(equipSlot) then
-			if next(AutoTurnInCharacterDB.stats) then 
-				wipe(stattable)
-				GetItemStats(link, stattable)
-				for stat, value in pairs(stattable) do
-					if ( AutoTurnInCharacterDB.stats[C.STATS[stat]] ) then
-						tinsert(found, i)
-					end
+			
+		-- item is suitable is there are no type cpecified at all or item type is required
+		local OkByType = false
+		if class == C.WEAPONLABEL then
+			OkByType = (not next(AutoTurnInCharacterDB.weapon)) or (AutoTurnInCharacterDB.weapon[subclass] or IsRangedAndRequired(subclass))
+		else
+			OkByType = (not next(AutoTurnInCharacterDB.armor)) or (AutoTurnInCharacterDB.armor[subclass] or IsJewelryAndRequired(equipSlot))
+		end
+		
+		--Same here: if no stat specified or item stat is chosen then item is wanted
+		local OkByStat = not not next(AutoTurnInCharacterDB.stat) -- true if table is not empty
+		if OkByStat then
+			wipe(stattable)
+			GetItemStats(link, stattable)
+			for stat, value in pairs(stattable) do
+				if ( AutoTurnInCharacterDB.stat[C.STATS[stat]] ) then
+					OkByStat = true
 				end
-			else
-				tinsert(found, i)
 			end
+		end
+
+		if (OkByType and OkByStat) then
+			tinsert(found, i)
 		end
 	end
 
@@ -307,11 +318,7 @@ function AutoTurnIn:Need()
 		GetQuestReward(found[1])
 	end
 
-	if (#found == 0)  then 
-		return false 
-	else 
-		return true
-	end
+	return ( #found ~= 0 )
 end
 
 function AutoTurnIn:QUEST_COMPLETE()
