@@ -50,9 +50,10 @@ function AutoTurnIn:OnEnable()
 	if (tonumber(AutoTurnInCharacterDB.togglekey) == nil) then
 		AutoTurnInCharacterDB.togglekey = 1
 	end
-	if ( AutoTurnInCharacterDB.items == nil ) then
-		AutoTurnInCharacterDB.items = {}
-	end
+	
+	AutoTurnInCharacterDB.items = AutoTurnInCharacterDB.items and AutoTurnInCharacterDB.items or {}
+	AutoTurnInCharacterDB.stats = AutoTurnInCharacterDB.stats and AutoTurnInCharacterDB.stats or {}
+
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 	if LDB then
@@ -215,17 +216,16 @@ function AutoTurnIn:QUEST_PROGRESS()
     end
 end
 
-local function IsRangedWeapon(subclass)
-	return (AutoTurnInCharacterDB.items['Ranged'] and (C.ITEMS['Crossbows'] == subclass or
-														C.ITEMS['Guns'] == subclass or
-														C.ITEMS['Bows'] == subclass))
+local function IsRangedAndRequired(subclass)
+	return (AutoTurnInCharacterDB.items['Ranged'] and 
+		(C.ITEMS['Crossbows'] == subclass or C.ITEMS['Guns'] == subclass or C.ITEMS['Bows'] == subclass))
 end
 
-local function IsJewelry(equipSlot)
+local function IsJewelryAndRequired(equipSlot)
 	return AutoTurnInCharacterDB.items['Jewelry'] and (C.JEWELRY[equipSlot])
 end
 
---doesn't work. Frame appear faster than items loaded. Need rework. It is called nowhere right now
+--[[ doesn't work. Frame appear faster than items loaded. Need rework. It is called nowhere right now
 local function TryToLoadRewards()
 	local title = GetTitleText()
 	numEntries = GetNumQuestLogEntries()
@@ -241,19 +241,17 @@ local function TryToLoadRewards()
 			end
 		end
 	end
-end
+end]]--
 
 function AutoTurnIn:Greed()
 	local index, money = 0, 0;
 
 	if (AutoTurnInCharacterDB.dontloot == 2) then
 		for i=1, GetNumQuestChoices() do
-
 			local link = GetQuestItemLink("choice", i)
 			if ( link == nil ) then
 				return
 			end
-
 			local m = select(11, GetItemInfo(link))
 			if m > money then
 				money = m
@@ -266,7 +264,7 @@ function AutoTurnIn:Greed()
 	end
 end
 
-local found = {}
+local found, stattable = {}, {}
 function AutoTurnIn:Need()
 	wipe(found)
 
@@ -274,21 +272,26 @@ function AutoTurnIn:Need()
 		local link = GetQuestItemLink("choice", i)
 
 		if ( link == nil ) then
-			return
+			return true
 		end
 
 		local class, subclass, _, equipSlot = select(6, GetItemInfo(link))
-		--[[relics and trinkets are out of autoloot
-		if C.STOPTOKENS[equipSlot] then
-			self:Print(INVTYPE_RELIC..' or ' .. INVTYPE_TRINKET .. ' found. Choose reward manually pls.')
-			return
-		end]]--
-		if  AutoTurnInCharacterDB.items[subclass] or IsRangedWeapon(subclass) or IsJewelry(equipSlot) then
-			local stattable = GetItemStats(link)
-			for stat, value in pairs(stattable) do
-				if ( AutoTurnInCharacterDB.items[C.STATS[stat]] ) then
-					tinsert(found, i)
+		--[[relics and trinkets are out of autoloot]]--
+		if  (UnitHasRelicSlot("player") and 'INVTYPE_RELIC' == equipSlot) or 'INVTYPE_TRINKET' == equipSlot then
+			self:Print(INVTYPE_RELIC .. ' or ' .. INVTYPE_TRINKET.. ' found. Choose reward manually pls.')
+			return true
+		end
+		if  AutoTurnInCharacterDB.items[subclass] or IsRangedAndRequired(subclass) or IsJewelryAndRequired(equipSlot) then
+			if next(AutoTurnInCharacterDB.stats) then 
+				wipe(stattable)
+				GetItemStats(link, stattable)
+				for stat, value in pairs(stattable) do
+					if ( AutoTurnInCharacterDB.stats[C.STATS[stat]] ) then
+						tinsert(found, i)
+					end
 				end
+			else
+				tinsert(found, i)
 			end
 		end
 	end
@@ -300,8 +303,14 @@ function AutoTurnIn:Need()
 			vars = vars..' '..GetQuestItemLink("choice", reward) 			
 		end
 		self:Print("Found few items. Choose manually pls" ..vars)	
-	elseif(#found == 1) then
+	elseif(#found == 1) then		
 		GetQuestReward(found[1])
+	end
+
+	if (#found == 0)  then 
+		return false 
+	else 
+		return true
 	end
 end
 
@@ -312,7 +321,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 	end
 
 	if (AutoTurnInCharacterDB.showrewardtext) then
-		self:Print( UnitName("target") and  UnitName("target") or '' .. GetRewardText())
+		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
 	end
 
 	local quest = L.quests[GetTitleText()]
@@ -324,9 +333,11 @@ function AutoTurnIn:QUEST_COMPLETE()
 					GetQuestReward(AutoTurnInCharacterDB.tournament)
 					return
 				end
+				local forceGreed = false 
 				if (AutoTurnInCharacterDB.dontloot == 3) then
-					self:Need()
-				elseif (AutoTurnInCharacterDB.dontloot == 2) then
+					forceGreed = (not self:Need() ) and AutoTurnInCharacterDB.greedifnothingfound
+				end
+				if (AutoTurnInCharacterDB.dontloot == 2 or forceGreed) then
 					self:Greed()
 				end
 			end

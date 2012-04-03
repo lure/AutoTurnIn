@@ -30,7 +30,10 @@ privateTable.L = setmetatable({
 	["rewardtext"]="Show quest reward text",
 	["togglekey"]="aktivieren/deaktivieren Taste",
 	
-	['Jewelry']="Juwelier"},
+	['Jewelry']="Juwelier",
+	["rewardlootoptions"]="Reward loot rules",
+	['greedifnothing']='Greed if nothing found'},
+	
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {

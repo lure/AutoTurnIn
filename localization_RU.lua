@@ -31,7 +31,9 @@ privateTable.L = setmetatable({
 	["rewardtext"]="Показывать финальный текст задания",
 	["togglekey"]="Клавиша разового включения/отключения",
 	
-	['Jewelry']="Ювелирные украшения"},
+	['Jewelry']="Ювелирные украшения",
+	["rewardlootoptions"]="Правила выбора награды",
+	["greedifnothing"]="Взять самую дорогую, если ничего не нашлось"},
 	
 	{__index = function(table, index) return index end})
 

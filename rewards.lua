@@ -5,8 +5,8 @@ local C = ptable.CONST
 local weapon = {GetAuctionItemSubClasses(1)}
 local armor = {GetAuctionItemSubClasses(2)}
 
+-- C.STOPTOKENS = {['INVTYPE_RELIC']='', ['INVTYPE_TRINKET']=''}
 C.WEAPONLABEL, C.ARMORLABEL = GetAuctionItemClasses()
-C.STOPTOKENS = {['INVTYPE_RELIC']='', ['INVTYPE_TRINKET']=''}
 C.JEWELRY = {['INVTYPE_FINGER']='', ['INVTYPE_NECK']=''}
 C.STATS = {
 	['ITEM_MOD_STRENGTH_SHORT'] = "Strength",
@@ -15,6 +15,7 @@ C.STATS = {
 	['ITEM_MOD_SPIRIT_SHORT'] = "Spirit"
 }
 
+-- Most of the constants are never used but it's convinient to have them here as a reminder and shortcut
 C.ITEMS = {
 	['One-Handed Axes'] = weapon[1],
 	['Two-Handed Axes'] = weapon[2],
