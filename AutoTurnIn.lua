@@ -203,6 +203,15 @@ function AutoTurnIn:GOSSIP_SHOW()
 
 	self:VarArgForActiveQuests(GetGossipActiveQuests())
 	self:VarArgForAvailableQuests(GetGossipAvailableQuests())
+	
+	if (AutoTurnInCharacterDB.darkmoonautostart and (GetZoneText() == L["Darkmoon Island"]) and GetNumGossipActiveQuests() > 0) then  
+		local options = {GetGossipOptions()}
+		for k, v in pairs(options) do
+			if ((v ~= "gossip") and strfind(v, "|cFF0008E8%(")) then
+				SelectGossipOption(math.floor(k / GetNumGossipOptions()) +1)
+			end 
+		end
+	end
 end
 
 function AutoTurnIn:QUEST_DETAIL()

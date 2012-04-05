@@ -27,6 +27,9 @@ privateTable.L = setmetatable({
 	
 	["DarkmoonTeleLabel"]="Dunkelmond-Jahrmarkt: Zurück zur Kanone!",	 
 	["Teleportologe Fosselbab"]="Teleportologist Fozlebub",
+	["DarkmoonAutoLabel"]="Dunkelmond-Jahrmarkt: Spiel starten!",
+	["Darkmoon Island"]="Dunkelmondinsel",	
+	
 	["rewardtext"]="Show quest reward text",
 	["togglekey"]="aktivieren/deaktivieren Taste",
 	

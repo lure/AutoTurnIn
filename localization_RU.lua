@@ -27,6 +27,8 @@ privateTable.L = setmetatable({
 	
 	["DarkmoonTeleLabel"]="Ярмарка Новолуния: телепортация к пушке", -- darkmoon
 	["DarkmoonFaireTeleport"]="Телепортолог Фоцлебульб",
+	["DarkmoonAutoLabel"]="Ярмарка Новолуния: начинать игру",	
+	["Darkmoon Island"]="Остров Новолуния",
 	
 	["rewardtext"]="Показывать финальный текст задания",
 	["togglekey"]="Клавиша разового включения/отключения",

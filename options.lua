@@ -88,6 +88,13 @@ DarkMoonCannon:SetScript("OnClick", function(self)
 	ptable.TempConfig.darkmoonteleport = self:GetChecked() == 1 
 end)
 
+-- DarkmoonTeleport
+local DarkMoonAutoStart = CreateFrame("CheckButton", O.."DarkMoonAutoStart", OptionsPanel, "OptionsCheckButtonTemplate")
+_G[DarkMoonAutoStart:GetName().."Text"]:SetText(L["DarkmoonAutoLabel"])
+DarkMoonAutoStart:SetScript("OnClick", function(self) 
+	ptable.TempConfig.darkmoonautostart = self:GetChecked() == 1 
+end)
+
 -- 'Show Reward Text' CheckBox
 local ShowRewardText = CreateFrame("CheckButton", O.."Reward", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[ShowRewardText:GetName().."Text"]:SetText(L["rewardtext"])
@@ -126,7 +133,8 @@ LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -30)
 TournamentDropDownLabel:SetPoint("BOTTOMLEFT", TournamentDropDown, "TOPLEFT", 18, 0)
 TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
 DarkMoonCannon:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -16)
-ShowRewardText:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -16)
+DarkMoonAutoStart:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -16)
+ShowRewardText:SetPoint("TOPLEFT", DarkMoonAutoStart, "BOTTOMLEFT", 0, -16)
 
 ToggleKeyLabel:SetPoint("BOTTOMLEFT", ToggleKeyDropDown, "TOPLEFT", 18, 0)
 ToggleKeyDropDown:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", -15, -30)
