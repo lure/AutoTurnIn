@@ -76,7 +76,8 @@ CreateCheckbox(armor[4], ArmorPanel, 292, -8)
 CreateCheckbox(armor[5], ArmorPanel, 436, -8)
 	-- 2nd line 
 CreateCheckbox(armor[6], ArmorPanel, 10, -40)
-CreateCheckbox("Jewelry", ArmorPanel, 292, -40, L['Jewelry'] )
+CreateCheckbox("Jewelry", ArmorPanel, 190, -40, L['Jewelry'] )
+CreateCheckbox(INVTYPE_HOLDABLE, ArmorPanel, 380, -40)
 	
 -- ATTRIBUTES
 local StatPanel = CreatePanel("StatPanel", STAT_CATEGORY_ATTRIBUTES, 590, 40) 

@@ -7,7 +7,6 @@ May turn in quests with rewards and choose most expensive one for future selling
 /au 		- for GUI
 /au all 	- any quest would by accepted and turned in
 /au list 	- only specified quest
-/au loot 	- toggles quest completition: do not complete quests with a list of rewards at all or choose most expensive one of rewards
 /au off 	- turns addon off
 /au on 		- turns addon on
 /au help 	- brief help and active settings

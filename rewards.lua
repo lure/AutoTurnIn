@@ -5,7 +5,7 @@ local C = ptable.CONST
 local weapon = {GetAuctionItemSubClasses(1)}
 local armor = {GetAuctionItemSubClasses(2)}
 
--- C.STOPTOKENS = {['INVTYPE_RELIC']='', ['INVTYPE_TRINKET']=''}
+-- C.STOPTOKENS = {['INVTYPE_RELIC']='', ['INVTYPE_TRINKET']='', ['INVTYPE_HOLDABL']=''}
 C.WEAPONLABEL, C.ARMORLABEL = GetAuctionItemClasses()
 C.JEWELRY = {['INVTYPE_FINGER']='', ['INVTYPE_NECK']=''}
 C.STATS = {
@@ -47,42 +47,3 @@ C.ITEMS = {
 	['Totems'] = armor[9],
 	]]--
 }
-
-
-
---[[ 
-(\[('.+')\]\s+=\s+((weapon|armor)\[\d+\]),)
-
-Статы: показываем актуальные для класса. Например, шаман - интеллект и ловкость. Воин - сила. 
-Либрамы и триньки: останавливаем аддон и просим пользователя выбрать
-
-if not _G.AutoTurnInCharacterDB.items then 
-	AutoTurnInCharacterDB.items = {}
-	for k, v in pairs(ptable.C.ITEMS) do 
-		AutoTurnInCharacterDB.items[k]=0
-	end 
-end 
-/run table.foreach(OPEN_FILTER_LIST, function(value) for v,k in pairs(value) do print(v,k) end)
-
-/run for k,v in pairs(OPEN_FILTER_LIST) do for n,m in pairs(v) do print(n,m) end end
-/run for k,v in pairs(InterfaceOptionsFrameAddOnsButton2.element) do print(k,v) end 
-
-/run print(_G[INVTYPE_CLOAK])
-/run print(select(6, GetItemInfo("Набедренники Прилива")))
-
-/run function a(...) for i=1, select("#", ...), 2 do invType = _G[select(i, ...)] print(invType, select(i, ...)) end end a(GetAuctionInvTypes(2,2))
-00:08:47 Спина INVTYPE_CLOAK 1 INVTYPE_HOLDABLE nil
-
-SPELL_STAT1_NAME = "Strength";
-SPELL_STAT2_NAME = "Agility";
-SPELL_STAT3_NAME = "Stamina";
-SPELL_STAT4_NAME = "Intellect";
-SPELL_STAT5_NAME = "Spirit";
-
-STAT_CATEGORY_ATTRIBUTES = "Attributes";
-STAT_CATEGORY_DEFENSE = "Defense";
-STAT_CATEGORY_GENERAL = "General";
-STAT_CATEGORY_MELEE = "Melee";
-STAT_CATEGORY_RANGED = "Ranged";
-
-]]--
