@@ -75,7 +75,6 @@ privateTable.L.quests = {
 -- Thorium Brotherhood 
 ["Завоевать еще большую благосклонность"]={item="Окалина черного железа", amount=100, currency=false},
 ["Завоевать благосклонность"]={item="Окалина черного железа", amount=4, currency=false},
-["Сумеречные ожерелья"]={item="Сумеречное ожерелье", amount=20, currency=false},
 ["Покровительство братства, кожа Недр"]={item="Кожа Недр", amount=2, currency=false},
 ["Покровительство братства, кровь горы"]={item="Кровь Горы", amount=1, currency=false},
 ["Покровительство братства, огненное ядро"]={item="Огненное ядро", amount=1, currency=false},

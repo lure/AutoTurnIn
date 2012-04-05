@@ -75,7 +75,6 @@ privateTable.L.quests = {
 ['Favor Amongst the Brotherhood, Lava Core']={item="Lava Core", amount=1, currency=false},
 ['Gaining Acceptance']={item="Dark Iron Residue", amount=4, currency=false},
 ['Gaining Even More Acceptance']={item="Dark Iron Residue", amount=100, currency=false},
-['Twilight Collars']={item="Twilight Collar", amount=20, currency=false},
 
 
 --[[Burning Crusade]]--

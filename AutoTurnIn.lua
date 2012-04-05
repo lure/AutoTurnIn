@@ -234,7 +234,7 @@ function AutoTurnIn:IsRangedAndRequired(subclass)
 end
 
 function AutoTurnIn:IsOffhandAndRequired(equipSlot)
-	return (AutoTurnInCharacterDB.armor[INVTYPE_HOLDABLE] and INVTYPE_HOLDABLE == equipSlot)
+	return (AutoTurnInCharacterDB.armor[INVTYPE_HOLDABLE] and 'INVTYPE_HOLDABLE' == equipSlot)
 end
 
 function AutoTurnIn:IsJewelryAndRequired(equipSlot)
@@ -295,14 +295,14 @@ function AutoTurnIn:Need()
 		local link = GetQuestItemLink("choice", i)
 
 		if ( link == nil ) then
-			self:Print(MSG_ITEMLINKISNULL)		
+			self:Print(self.MSG_ITEMLINKISNULL)		
 			return true
 		end
 
 		local class, subclass, _, equipSlot = select(6, GetItemInfo(link))
 		--[[relics and trinkets are out of autoloot]]--
 		if  (UnitHasRelicSlot("player") and 'INVTYPE_RELIC' == equipSlot) or 'INVTYPE_TRINKET' == equipSlot then
-			self:Print(MSG_STOPITEM)
+			self:Print(self.MSG_STOPITEM)
 			return true
 		end
 
@@ -318,7 +318,7 @@ function AutoTurnIn:Need()
 
 		--Same here: if no stat specified or item stat is chosen then item is wanted
 		local OkByStat = (not next(AutoTurnInCharacterDB.stat)) -- true if table is empty
-		if not OkByStat then
+		if (not OkByStat) and ('INVTYPE_RELIC' ~= equipSlot) then
 			wipe(self.stattable)
 			GetItemStats(link, self.stattable)
 			for stat, value in pairs(self.stattable) do

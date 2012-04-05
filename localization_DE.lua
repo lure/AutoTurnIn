@@ -80,7 +80,6 @@ privateTable.L.quests = {
 ['Gunst der Bruderschaft, Lavakern']={item="Lavakern", amount=1, currency=false},
 ['Anerkennung erlangen']={item="Dunkeleisenrückstände", amount=4, currency=false},
 ['Noch mehr Anerkennung erlangen']={item="Dunkeleisenrückstände", amount=100, currency=false},
-['Zwielichthalsbänder']={item="Zwielichthalsband", amount=20, currency=false},
 
 --[[Burning Crusade]]--
 --Lower City
