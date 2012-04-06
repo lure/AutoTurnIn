@@ -70,34 +70,30 @@ CreateCheckbox("Ranged", WeaponPanel, 10, -136, string.format("%s, %s, %s", weap
 
 -- ARMOR 
 local ArmorPanel = CreatePanel("ArmorPanel", C.ARMORLABEL, 590, 70)
-CreateCheckbox(armor[2], ArmorPanel, 10, -8)
-CreateCheckbox(armor[3], ArmorPanel, 152, -8)
-CreateCheckbox(armor[4], ArmorPanel, 292, -8)
-CreateCheckbox(armor[5], ArmorPanel, 436, -8)
-
-local ArmorDropLabel = RewardPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-ArmorDropLabel:SetText("Armor type")
-local ArmorConst = {'---', armor[2], armor[3], armor[4],armor[5]}
-local ArmorDropDown = CreateFrame("Frame", O.."ToggleKeyDropDown", RewardPanel, "UIDropDownMenuTemplate")
+local ArmorDropDown = CreateFrame("Frame", O.."ToggleKeyDropDown", ArmorPanel, "UIDropDownMenuTemplate")
 UIDropDownMenu_Initialize(ArmorDropDown, function (self, level)   
+local ArmorConst = {NONE_KEY, armor[2], armor[3], armor[4],armor[5]}
     for k, v in ipairs(ArmorConst) do
         local info = UIDropDownMenu_CreateInfo()
 		info.text, info.value = v, k
         info.func = function(self)
 						UIDropDownMenu_SetSelectedID(ArmorDropDown, self:GetID())
 						wipe(ptable.TempConfig.armor)
-						ptable.TempConfig.armor[self:GetText()] = true
+						if self:GetID() > 1 then 
+							ptable.TempConfig.armor[self:GetText()] = true
+						end
 					end
         UIDropDownMenu_AddButton(info, level)
     end
 end)
 UIDropDownMenu_SetWidth(ArmorDropDown, 200);
 UIDropDownMenu_JustifyText(ArmorDropDown, "LEFT")
-
+ArmorDropDown:SetPoint("TOPLEFT", ArmorPanel, 0, -8)
+CreateCheckbox(armor[6], ArmorPanel, 292, -8)
 	-- 2nd line 
-CreateCheckbox(armor[6], ArmorPanel, 10, -40)
-CreateCheckbox("Jewelry", ArmorPanel, 190, -40, L['Jewelry'] )
-CreateCheckbox(INVTYPE_HOLDABLE, ArmorPanel, 380, -40)
+CreateCheckbox("Jewelry", ArmorPanel, 10, -40, L['Jewelry'] )
+CreateCheckbox(INVTYPE_HOLDABLE, ArmorPanel, 206, -40)
+CreateCheckbox(INVTYPE_CLOAK, ArmorPanel, 206, -40)
 	
 -- ATTRIBUTES
 local StatPanel = CreatePanel("StatPanel", STAT_CATEGORY_ATTRIBUTES, 590, 40) 
@@ -120,18 +116,13 @@ ArmorPanel:SetPoint("TOPLEFT", WeaponPanel, "BOTTOMLEFT", 0, -20)
 StatPanel:SetPoint("TOPLEFT", ArmorPanel, "BOTTOMLEFT", 0, -20)
 GreedAfterNeed:SetPoint("TOPLEFT", StatPanel, "BOTTOMLEFT", 8, -16)
 
-
-ArmorDropDown:SetPoint("TOPLEFT", GreedAfterNeed, "BOTTOMLEFT", 8, -16)
 --[[ PANEL FINCTIONS ]]--
+local AC = {[NONE_KEY]=1, [armor[2]]=2, [armor[3]]=3, [armor[4]]=4,[armor[5]]=5}
 RewardPanel.refresh = function()
-
 	WeaponPanel:ClearCheckBoxes()
 	ArmorPanel:ClearCheckBoxes()
 	StatPanel:ClearCheckBoxes()
 
-	for k,v in pairs(ptable.TempConfig.armor) do
-		_G[ArmorPanel:GetName()..k]:SetChecked(v)
-	end	
 	for k,v in pairs(ptable.TempConfig.weapon) do
 		_G[WeaponPanel:GetName()..k]:SetChecked(v)
 	end
@@ -140,6 +131,11 @@ RewardPanel.refresh = function()
 	end
 	
 	GreedAfterNeed:SetChecked(ptable.TempConfig.greedifnothingfound )
+	
+	local armor = next(ptable.TempConfig.armor) 
+	local index = armor and AC[armor] or 1
+	UIDropDownMenu_SetSelectedID(ArmorDropDown, index)
+	UIDropDownMenu_SetText(ArmorDropDown,  armor and armor or NONE_KEY)
 end
 --RewardPanel.default = function() end
 --RewardPanel.okay = function()end
