@@ -52,7 +52,6 @@ function AutoTurnIn:OnEnable()
 	if (tonumber(AutoTurnInCharacterDB.togglekey) == nil) then
 		AutoTurnInCharacterDB.togglekey = 1
 	end
-	
 	AutoTurnInCharacterDB.armor = AutoTurnInCharacterDB.armor and AutoTurnInCharacterDB.armor or {}
 	AutoTurnInCharacterDB.weapon = AutoTurnInCharacterDB.weapon and AutoTurnInCharacterDB.weapon or {}
 	AutoTurnInCharacterDB.stat = AutoTurnInCharacterDB.stat and AutoTurnInCharacterDB.stat or {}
@@ -110,8 +109,6 @@ function AutoTurnIn:GetItemAmount(isCurrency, item)
 	local amount = isCurrency and select(2, GetCurrencyInfo(item)) or GetItemCount(item, nil, true)
 	return amount and amount or 0
 end
-
-
 function AutoTurnIn:AllowedToHandle(forcecheck)
 	if ( self.allowed == nil or forcecheck ) then
 		-- Double 'not' converts possible 'nil' to boolean representation
@@ -127,7 +124,6 @@ function AutoTurnIn:QUEST_GREETING()
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
-	
 	for index=1, GetNumActiveQuests() do
 		local quest, completed = GetActiveTitle(index)
 		if (AutoTurnInCharacterDB.all or L.quests[quest]) and (completed) then
@@ -162,10 +158,12 @@ function AutoTurnIn:VarArgForActiveQuests(...)
 				if quest and quest.amount then
 					if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 						SelectGossipActiveQuest(math.floor(i/4)+1)
+						self.DarkmoonAllowToProceed = false
 						return
 					end
 				else
 					SelectGossipActiveQuest(math.floor(i/4)+1)
+					self.DarkmoonAllowToProceed = false
 					return
 				end
 			end
@@ -200,16 +198,18 @@ function AutoTurnIn:GOSSIP_SHOW()
 		SelectGossipOption(1)
 		StaticPopup1Button1:Click()
 	end
-
+	-- darkmoon fairy gossip sometime turns in quest too fast so I can't relay only on quest number count. It often lie.
+	self.DarkmoonAllowToProceed = true
+	local questCount = GetNumGossipActiveQuests() > 0
 	self:VarArgForActiveQuests(GetGossipActiveQuests())
 	self:VarArgForAvailableQuests(GetGossipAvailableQuests())
-	
-	if (AutoTurnInCharacterDB.darkmoonautostart and (GetZoneText() == L["Darkmoon Island"]) and GetNumGossipActiveQuests() > 0) then  
+
+	if (self.DarkmoonAllowToProceed and questCount) and AutoTurnInCharacterDB.darkmoonautostart and (GetZoneText() == L["Darkmoon Island"]) then
 		local options = {GetGossipOptions()}
 		for k, v in pairs(options) do
 			if ((v ~= "gossip") and strfind(v, "|cFF0008E8%(")) then
-				SelectGossipOption(math.floor(k / GetNumGossipOptions()) +1)
-			end 
+				SelectGossipOption(math.floor(k / GetNumGossipOptions())+1)
+			end
 		end
 	end
 end
@@ -229,18 +229,13 @@ function AutoTurnIn:QUEST_PROGRESS()
 end
 
 function AutoTurnIn:IsRangedAndRequired(subclass)
-	return (AutoTurnInCharacterDB.weapon['Ranged'] and 
+	return (AutoTurnInCharacterDB.weapon['Ranged'] and
 		(C.ITEMS['Crossbows'] == subclass or C.ITEMS['Guns'] == subclass or C.ITEMS['Bows'] == subclass))
-end
-
-function AutoTurnIn:IsOffhandAndRequired(equipSlot)
-	return (AutoTurnInCharacterDB.armor[INVTYPE_HOLDABLE] and 'INVTYPE_HOLDABLE' == equipSlot)
 end
 
 function AutoTurnIn:IsJewelryAndRequired(equipSlot)
 	return AutoTurnInCharacterDB.armor['Jewelry'] and (C.JEWELRY[equipSlot])
 end
-
 
 --[[ doesn't work. Frame appear faster than items loaded. Need rework. It is called nowhere right now
 local function TryToLoadRewards()
@@ -295,7 +290,7 @@ function AutoTurnIn:Need()
 		local link = GetQuestItemLink("choice", i)
 
 		if ( link == nil ) then
-			self:Print(self.MSG_ITEMLINKISNULL)		
+			self:Print(self.MSG_ITEMLINKISNULL)
 			return true
 		end
 
@@ -312,8 +307,8 @@ function AutoTurnIn:Need()
 			OkByType = (not next(AutoTurnInCharacterDB.weapon)) or (AutoTurnInCharacterDB.weapon[subclass] or 
 						self:IsRangedAndRequired(subclass))
 		else
-			OkByType = (not next(AutoTurnInCharacterDB.armor)) or (AutoTurnInCharacterDB.armor[subclass] or 
-						self:IsJewelryAndRequired(equipSlot) or self:IsOffhandAndRequired(equipSlot))
+			OkByType = ( not next(AutoTurnInCharacterDB.armor) ) or ( AutoTurnInCharacterDB.armor[subclass] or 
+						AutoTurnInCharacterDB.armor[equipSlot] or self:IsJewelryAndRequired(equipSlot) )
 		end
 
 		--Same here: if no stat specified or item stat is chosen then item is wanted
@@ -337,9 +332,9 @@ function AutoTurnIn:Need()
 	if #self.found > 1 then
 		local vars = ""
 		for _, reward in pairs(self.found) do
-			vars = vars..' '..GetQuestItemLink("choice", reward) 			
+			vars = vars..' '..GetQuestItemLink("choice", reward)
 		end
-		self:Print('Found more thatn one candidate. '..ERR_QUEST_MUST_CHOOSE..' '..TRACKER_SORT_MANUAL)	
+		self:Print(L["multiplefound"]..ERR_QUEST_MUST_CHOOSE..' '..TRACKER_SORT_MANUAL)	
 	elseif(#self.found == 1) then
 		self:TurnInQuest(self.found[1])
 	end
@@ -347,6 +342,7 @@ function AutoTurnIn:Need()
 	return ( #self.found ~= 0 )
 end
 
+-- Надо вынести  щиты, оффхенды, плащи в другой набор, отдельно от брони. Но не могу вспомнить, почему
 function AutoTurnIn:QUEST_COMPLETE()
 	-- blasted Lands citadel wonderful NPC. They do not trigger any events except quest_complete.
 	if not self:AllowedToHandle() then
@@ -362,11 +358,11 @@ function AutoTurnIn:QUEST_COMPLETE()
 					self:TurnInQuest(AutoTurnInCharacterDB.tournament)
 					return
 				end
-				
+
 				local forceGreed = false 
 				if (AutoTurnInCharacterDB.dontloot == 3) then
 					forceGreed = (not self:Need() ) and AutoTurnInCharacterDB.greedifnothingfound
-				end				
+				end
 				if (AutoTurnInCharacterDB.dontloot == 2 or forceGreed) then
 					self:Greed()
 				end

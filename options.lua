@@ -88,7 +88,7 @@ DarkMoonCannon:SetScript("OnClick", function(self)
 	ptable.TempConfig.darkmoonteleport = self:GetChecked() == 1 
 end)
 
--- DarkmoonTeleport
+-- Darkmoon games
 local DarkMoonAutoStart = CreateFrame("CheckButton", O.."DarkMoonAutoStart", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[DarkMoonAutoStart:GetName().."Text"]:SetText(L["DarkmoonAutoLabel"])
 DarkMoonAutoStart:SetScript("OnClick", function(self) 
@@ -152,10 +152,11 @@ OptionsPanel.refresh = function()
 	
 	UIDropDownMenu_SetSelectedID(TournamentDropDown, ptable.TempConfig.tournament)
 	UIDropDownMenu_SetText(TournamentDropDown,TournamentConst[ptable.TempConfig.tournament])
-	if (ptable.TempConfig.dontloot == 1) then 
+	if (ptable.TempConfig.dontloot == 1) then
 		UIDropDownMenu_DisableDropDown(TournamentDropDown)
 	end
 	DarkMoonCannon:SetChecked(ptable.TempConfig.darkmoonteleport)
+	DarkMoonAutoStart:SetChecked(ptable.TempConfig.darkmoonautostart)
 	ShowRewardText:SetChecked(ptable.TempConfig.showrewardtext)
 
 	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)

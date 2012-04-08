@@ -35,7 +35,8 @@ privateTable.L = setmetatable({
 	
 	['Jewelry']="Ювелирные украшения",
 	["rewardlootoptions"]="Правила выбора награды",
-	["greedifnothing"]="Взять самую дорогую, если ничего не нашлось"},
+	["greedifnothing"]="Взять самую дорогую, если ничего не нашлось",
+	["multiplefound"]="Найдено несколько подходящих наград. "..ERR_QUEST_MUST_CHOOSE..' '..TRACKER_SORT_MANUAL},
 	
 	{__index = function(table, index) return index end})
 
@@ -79,7 +80,7 @@ privateTable.L.quests = {
 ["Покровительство братства, кровь горы"]={item="Кровь Горы", amount=1, currency=false},
 ["Покровительство братства, огненное ядро"]={item="Огненное ядро", amount=1, currency=false},
 ["Покровительство братства, черное железо"]={item="Руда черного железа", amount=10, currency=false},
-["Покровительство братства, ядро лавы"]={item="	Ядро лавы", amount=1, currency=false},
+["Покровительство братства, ядро лавы"]={item="Ядро лавы", amount=1, currency=false},
 
 
 --[[Burning Crusade]]--

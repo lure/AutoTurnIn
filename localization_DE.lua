@@ -35,7 +35,8 @@ privateTable.L = setmetatable({
 	
 	['Jewelry']="Juwelier",
 	["rewardlootoptions"]="Reward loot rules",
-	['greedifnothing']='Greed if nothing found'},
+	['greedifnothing']='Greed if nothing found',
+	["multiplefound"]="Найдено несколько подходящих наград. "..ERR_QUEST_MUST_CHOOSE..' '..TRACKER_SORT_MANUAL},
 	
 	{__index = function(table, index) return index end})
 	
