@@ -36,7 +36,7 @@ privateTable.L = setmetatable({
 	['Jewelry']="Ювелирные украшения",
 	["rewardlootoptions"]="Правила выбора награды",
 	["greedifnothing"]="Взять самую дорогую, если ничего не нашлось",
-	["multiplefound"]="Найдено несколько подходящих наград. "..ERR_QUEST_MUST_CHOOSE..' '..TRACKER_SORT_MANUAL},
+	["multiplefound"]="Найдено несколько подходящих наград. "..ERR_QUEST_MUST_CHOOSE},
 	
 	{__index = function(table, index) return index end})
 
