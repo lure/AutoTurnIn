@@ -334,7 +334,7 @@ function AutoTurnIn:Need()
 		for _, reward in pairs(self.found) do
 			vars = vars..' '..GetQuestItemLink("choice", reward)
 		end
-		self:Print(L["multiplefound"]..ERR_QUEST_MUST_CHOOSE..' '..TRACKER_SORT_MANUAL)	
+		self:Print(L["multiplefound"])	
 	elseif(#self.found == 1) then
 		self:TurnInQuest(self.found[1])
 	end
