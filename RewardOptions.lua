@@ -100,10 +100,10 @@ CreateCheckbox('INVTYPE_CLOAK', ArmorPanel, 402, -40, INVTYPE_CLOAK)
 	
 -- ATTRIBUTES
 local StatPanel = CreatePanel("StatPanel", STAT_CATEGORY_ATTRIBUTES, 590, 40) 
-CreateCheckbox("Strength", StatPanel, 10, -8, SPELL_STAT1_NAME)
-CreateCheckbox("Agility", StatPanel, 152, -8, SPELL_STAT2_NAME)
-CreateCheckbox("Intellect", StatPanel, 292, -8, SPELL_STAT4_NAME)
-CreateCheckbox("Spirit", StatPanel, 436, -8, SPELL_STAT5_NAME)
+CreateCheckbox('ITEM_MOD_STRENGTH_SHORT', StatPanel, 10, -8, SPELL_STAT1_NAME)
+CreateCheckbox('ITEM_MOD_AGILITY_SHORT', StatPanel, 152, -8, SPELL_STAT2_NAME)
+CreateCheckbox('ITEM_MOD_INTELLECT_SHORT', StatPanel, 292, -8, SPELL_STAT4_NAME)
+CreateCheckbox('ITEM_MOD_SPIRIT_SHORT', StatPanel, 436, -8, SPELL_STAT5_NAME)
 
 -- 'Enable' CheckBox
 local GreedAfterNeed = CreateFrame("CheckButton", O.."Enable", RewardPanel, "OptionsCheckButtonTemplate")
