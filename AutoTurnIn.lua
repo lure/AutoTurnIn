@@ -40,7 +40,7 @@ function AutoTurnIn:OnEnable()
 	if (not AutoTurnInDB) or (not AutoTurnInDB.version or (AutoTurnInDB.version < vers)) then
 		AutoTurnInCharacterDB = nil
 		_G.AutoTurnInDB = {version = vers}
-		self:Print(L["reset"])
+		self:Print(INSTANCE_RESET_SUCCESS:format(GAMEOPTIONS_MENU))
 	end
 
 	if not AutoTurnInCharacterDB then
@@ -259,7 +259,8 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 	if (AutoTurnInCharacterDB.showrewardtext) then
 		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
 	end
-	GetQuestReward(rewardIndex)
+	print(rewardIndex)
+	--GetQuestReward(rewardIndex)
 end
 
 function AutoTurnIn:Greed()
@@ -317,7 +318,8 @@ function AutoTurnIn:Need()
 			wipe(self.stattable)
 			GetItemStats(link, self.stattable)
 			for stat, value in pairs(self.stattable) do
-				if ( AutoTurnInCharacterDB.stat[C.STATS[stat]] ) then
+				print(stat, AutoTurnInCharacterDB.stat[stat]) 
+				if ( AutoTurnInCharacterDB.stat[stat] ) then
 					OkByStat = true
 				end
 			end

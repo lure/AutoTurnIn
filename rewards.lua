@@ -8,12 +8,6 @@ local armor = {GetAuctionItemSubClasses(2)}
 -- C.STOPTOKENS = {['INVTYPE_RELIC']='', ['INVTYPE_TRINKET']='', ['INVTYPE_HOLDABL']=''}
 C.WEAPONLABEL, C.ARMORLABEL = GetAuctionItemClasses()
 C.JEWELRY = {['INVTYPE_FINGER']='', ['INVTYPE_NECK']=''}
-C.STATS = {
-	['ITEM_MOD_STRENGTH_SHORT'] = "Strength",
-	['ITEM_MOD_AGILITY_SHORT'] = "Agility",
-	['ITEM_MOD_INTELLECT_SHORT'] = "Intellect",
-	['ITEM_MOD_SPIRIT_SHORT'] = "Spirit"
-}
 
 -- Most of the constants are never used but it's convinient to have them here as a reminder and shortcut
 C.ITEMS = {
