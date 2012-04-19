@@ -38,12 +38,7 @@ end
 function AutoTurnIn:OnEnable()
 	if (not AutoTurnInCharacterDB) or (not AutoTurnInCharacterDB.version or (AutoTurnInCharacterDB.version < TOCVersion)) then
 		AutoTurnInCharacterDB = nil
-<<<<<<< HEAD
 		self:Print(L["reset"])
-=======
-		_G.AutoTurnInDB = {version = vers}
-		self:Print(INSTANCE_RESET_SUCCESS:format(GAMEOPTIONS_MENU))
->>>>>>> 7126ee301cc5a09eff9a8b8d804db1220eaf89cd
 	end
 
 	if not AutoTurnInCharacterDB then
