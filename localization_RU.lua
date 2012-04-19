@@ -36,7 +36,12 @@ privateTable.L = setmetatable({
 	['Jewelry']="Ювелирные украшения",
 	["rewardlootoptions"]="Правила выбора награды",
 	["greedifnothing"]="Взять самую дорогую, если ничего не нашлось",
-	["multiplefound"]="Найдено несколько подходящих наград. "..ERR_QUEST_MUST_CHOOSE},
+	["multiplefound"]="Найдено несколько подходящих наград. "..ERR_QUEST_MUST_CHOOSE,
+	["nosuitablefound"]="Подходящих предметов не найдено. "..ERR_QUEST_MUST_CHOOSE,
+	["gogreedy"]="Подходящих предметов не найдено. Берем самую дорогую.",
+	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
+	["stopitemfound"]="Найдено " .. INVTYPE_RELIC .. ' или ' .. INVTYPE_TRINKET.. ': '.. ERR_QUEST_MUST_CHOOSE,
+	},
 	
 	{__index = function(table, index) return index end})
 

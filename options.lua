@@ -68,8 +68,8 @@ UIDropDownMenu_Initialize(LootDropDown, function (self, level)
 		info.text, info.value = v, k
         info.func = function(self)
 						UIDropDownMenu_SetSelectedID(LootDropDown, self:GetID())
-						ptable.TempConfig.dontloot = self:GetID()
-						if ptable.TempConfig.dontloot == 1 then 
+						ptable.TempConfig.lootreward = self:GetID()
+						if ptable.TempConfig.lootreward == 1 then 
 							UIDropDownMenu_DisableDropDown(TournamentDropDown)
 						else 
 							UIDropDownMenu_EnableDropDown(TournamentDropDown)
@@ -147,12 +147,12 @@ OptionsPanel.refresh = function()
 	UIDropDownMenu_SetSelectedID(QuestDropDown, ptable.TempConfig.all and 1 or 2)
 	UIDropDownMenu_SetText(QuestDropDown, ptable.TempConfig.all and L["questTypeAll"] or L["questTypeList"]  )
 
-	UIDropDownMenu_SetSelectedID(LootDropDown, ptable.TempConfig.dontloot)
-	UIDropDownMenu_SetText(LootDropDown, LootConst[ptable.TempConfig.dontloot])
+	UIDropDownMenu_SetSelectedID(LootDropDown, ptable.TempConfig.lootreward)
+	UIDropDownMenu_SetText(LootDropDown, LootConst[ptable.TempConfig.lootreward])
 	
 	UIDropDownMenu_SetSelectedID(TournamentDropDown, ptable.TempConfig.tournament)
 	UIDropDownMenu_SetText(TournamentDropDown,TournamentConst[ptable.TempConfig.tournament])
-	if (ptable.TempConfig.dontloot == 1) then
+	if (ptable.TempConfig.lootreward == 1) then
 		UIDropDownMenu_DisableDropDown(TournamentDropDown)
 	end
 	DarkMoonCannon:SetChecked(ptable.TempConfig.darkmoonteleport)

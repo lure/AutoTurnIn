@@ -32,7 +32,12 @@ privateTable.L = setmetatable({
 	['Jewelry']="Jewelry",
 	["rewardlootoptions"]="Reward loot rules",
 	['greedifnothing']='Greed if nothing found',
-	["multiplefound"]="Multiple reward candidates found. "..ERR_QUEST_MUST_CHOOSE},
+	["multiplefound"]="Multiple reward candidates found. "..ERR_QUEST_MUST_CHOOSE,
+	["nosuitablefound"]="No suitable reward found. "..ERR_QUEST_MUST_CHOOSE,
+	["gogreedy"]="No suitable reward found, choosing highest value one.",
+	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
+	["stopitemfound"]="Found " .. INVTYPE_RELIC .. ' or ' .. INVTYPE_TRINKET.. ': '.. ERR_QUEST_MUST_CHOOSE,
+	},
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {

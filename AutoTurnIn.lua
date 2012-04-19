@@ -3,7 +3,8 @@ local L = ptable.L
 local C = ptable.CONST
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
-AutoTurnIn.defaults = {enabled = true, all = false, dontloot = 1, tournament = 2, darkmoonteleport=true, togglekey=1}
+AutoTurnIn.defaults = {enabled = true, all = false, lootreward = 1, tournament = 2, 
+					   darkmoonteleport=true, togglekey=2, darkmoonautostart=true, showrewardtext=true}
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
@@ -40,14 +41,14 @@ function AutoTurnIn:OnEnable()
 	if (not AutoTurnInDB) or (not AutoTurnInDB.version or (AutoTurnInDB.version < vers)) then
 		AutoTurnInCharacterDB = nil
 		_G.AutoTurnInDB = {version = vers}
-		self:Print(INSTANCE_RESET_SUCCESS:format(GAMEOPTIONS_MENU))
+		self:Print(L["reset"])
 	end
 
 	if not AutoTurnInCharacterDB then
 		_G.AutoTurnInCharacterDB = CopyTable(self.defaults)
 	end
-	if (tonumber(AutoTurnInCharacterDB.dontloot) == nil) then
-		AutoTurnInCharacterDB.dontloot = 1
+	if (tonumber(AutoTurnInCharacterDB.lootreward) == nil) then
+		AutoTurnInCharacterDB.lootreward = 1
 	end
 	if (tonumber(AutoTurnInCharacterDB.togglekey) == nil) then
 		AutoTurnInCharacterDB.togglekey = 1
@@ -255,12 +256,14 @@ local function TryToLoadRewards()
 	end
 end]]--
 
-function AutoTurnIn:TurnInQuest(rewardIndex)
+function AutoTurnIn:TurnInQuest(rewardIndex)	
 	if (AutoTurnInCharacterDB.showrewardtext) then
 		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
 	end
-	print(rewardIndex)
-	--GetQuestReward(rewardIndex)
+	if  self.forceGreed then 
+		self:Print(L["gogreedy"])
+	end
+	GetQuestReward(rewardIndex)
 end
 
 function AutoTurnIn:Greed()
@@ -283,22 +286,20 @@ function AutoTurnIn:Greed()
 end
 
 AutoTurnIn.found, AutoTurnIn.stattable = {}, {}
-AutoTurnIn.MSG_STOPITEM = INVTYPE_RELIC .. ' | ' .. INVTYPE_TRINKET.. ': '.. ERR_QUEST_MUST_CHOOSE..' '..TRACKER_SORT_MANUAL
-AutoTurnIn.MSG_ITEMLINKISNULL= BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE
 function AutoTurnIn:Need()
 	wipe(self.found)
 	for i=1, GetNumQuestChoices() do
 		local link = GetQuestItemLink("choice", i)
 
 		if ( link == nil ) then
-			self:Print(self.MSG_ITEMLINKISNULL)
+			self:Print(L["rewardlag"])
 			return true
 		end
 
 		local class, subclass, _, equipSlot = select(6, GetItemInfo(link))
 		--[[relics and trinkets are out of autoloot]]--
 		if  (UnitHasRelicSlot("player") and 'INVTYPE_RELIC' == equipSlot) or 'INVTYPE_TRINKET' == equipSlot then
-			self:Print(self.MSG_STOPITEM)
+			self:Print(L["stopitemfound"])
 			return true
 		end
 
@@ -318,14 +319,17 @@ function AutoTurnIn:Need()
 			wipe(self.stattable)
 			GetItemStats(link, self.stattable)
 			for stat, value in pairs(self.stattable) do
-				print(stat, AutoTurnInCharacterDB.stat[stat]) 
 				if ( AutoTurnInCharacterDB.stat[stat] ) then
 					OkByStat = true
 				end
 			end
 		end
 
-		if (OkByType and OkByStat) then
+		-- User may not choose any options hence any item became 'ok'. That situation is undoubtly incorrect.
+		local EmptySettings = (class == C.WEAPONLABEL and (not next(AutoTurnInCharacterDB.weapon)) or (not next(AutoTurnInCharacterDB.armor))) and 
+							  (not next(AutoTurnInCharacterDB.stat))
+		
+		if (OkByType and OkByStat and (not EmptySettings)) then
 			tinsert(self.found, i)
 		end
 	end
@@ -341,6 +345,9 @@ function AutoTurnIn:Need()
 		self:TurnInQuest(self.found[1])
 	end
 
+	if  ( #self.found == 0 ) and (not AutoTurnInCharacterDB.greedifnothingfound) then 
+		self:Print(L["nosuitablefound"])
+	end	
 	return ( #self.found ~= 0 )
 end
 
@@ -354,18 +361,19 @@ function AutoTurnIn:QUEST_COMPLETE()
 	local quest = L.quests[GetTitleText()]
     if AutoTurnInCharacterDB.all or quest then
 		if GetNumQuestChoices() > 0 then
-			if AutoTurnInCharacterDB.dontloot > 1 then -- Auto Loot enabled!
+			if AutoTurnInCharacterDB.lootreward > 1 then -- Auto Loot enabled!
+				self.forceGreed = false 
+				
 				-- Tournament quest found
 				if (quest == "tournament") then
 					self:TurnInQuest(AutoTurnInCharacterDB.tournament)
 					return
 				end
-
-				local forceGreed = false 
-				if (AutoTurnInCharacterDB.dontloot == 3) then
-					forceGreed = (not self:Need() ) and AutoTurnInCharacterDB.greedifnothingfound
+			
+				if (AutoTurnInCharacterDB.lootreward == 3) then
+					self.forceGreed = (not self:Need() ) and AutoTurnInCharacterDB.greedifnothingfound
 				end
-				if (AutoTurnInCharacterDB.dontloot == 2 or forceGreed) then
+				if (AutoTurnInCharacterDB.lootreward == 2 or self.forceGreed) then
 					self:Greed()
 				end
 			end

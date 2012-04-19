@@ -140,7 +140,6 @@ RewardPanel.refresh = function()
 	end	
 	
 	GreedAfterNeed:SetChecked(ptable.TempConfig.greedifnothingfound )
-
 	-- Armor types dropdown
 	ArmorDropDown.value = nil
 	for index, armorName in ipairs(ARMORCONST) do
@@ -148,6 +147,7 @@ RewardPanel.refresh = function()
 			ArmorDropDown.value=index			
 		end
 	end
+	
 	ArmorDropDown.value = ArmorDropDown.value and ArmorDropDown.value or 1
 	UIDropDownMenu_SetSelectedID(ArmorDropDown, ArmorDropDown.value)
 	UIDropDownMenu_SetText(ArmorDropDown, ARMORCONST[ArmorDropDown.value])
