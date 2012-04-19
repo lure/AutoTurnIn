@@ -1,9 +1,10 @@
 local addonName, ptable = ...
 local L = ptable.L
 local C = ptable.CONST
+local TOCVersion = GetAddOnMetadata(addonName, "Version")
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
-AutoTurnIn.defaults = {enabled = true, all = false, dontloot = 1, tournament = 2, darkmoonteleport=true, togglekey=1}
+AutoTurnIn.defaults = {enabled = true, all = false, dontloot = 1, tournament = 2, darkmoonteleport=true, togglekey=1, version=TOCVersion}
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
@@ -35,11 +36,8 @@ function AutoTurnIn:SetEnabled(enabled)
 end
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
-	local vers = GetAddOnMetadata(addonName, "Version")
-
-	if (not AutoTurnInDB) or (not AutoTurnInDB.version or (AutoTurnInDB.version < vers)) then
+	if (not AutoTurnInCharacterDB) or (not AutoTurnInCharacterDB.version or (AutoTurnInCharacterDB.version < TOCVersion)) then
 		AutoTurnInCharacterDB = nil
-		_G.AutoTurnInDB = {version = vers}
 		self:Print(L["reset"])
 	end
 
