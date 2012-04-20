@@ -36,7 +36,7 @@ privateTable.L = setmetatable({
 	["nosuitablefound"]="No suitable reward found. "..ERR_QUEST_MUST_CHOOSE,
 	["gogreedy"]="No suitable reward found, choosing highest value one.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
-	["stopitemfound"]="Found " .. INVTYPE_RELIC .. ' or ' .. INVTYPE_TRINKET.. ': '.. ERR_QUEST_MUST_CHOOSE,
+	["stopitemfound"]="There are %s in rewards. Choose an item by yourself.",
 	},
 	{__index = function(table, index) return index end})
 	

@@ -40,7 +40,7 @@ privateTable.L = setmetatable({
 	["nosuitablefound"]="Подходящих предметов не найдено. "..ERR_QUEST_MUST_CHOOSE,
 	["gogreedy"]="Подходящих предметов не найдено. Берем самую дорогую.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
-	["stopitemfound"]="Найдено " .. INVTYPE_RELIC .. ' или ' .. INVTYPE_TRINKET.. ': '.. ERR_QUEST_MUST_CHOOSE,
+	["stopitemfound"]="Среди наград есть %s. Выберите предмет самостоятельно.",
 	},
 	
 	{__index = function(table, index) return index end})
