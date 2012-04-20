@@ -5,7 +5,7 @@ local TOCVersion = GetAddOnMetadata(addonName, "Version")
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 AutoTurnIn.defaults = {enabled = true, all = false, lootreward = 1, tournament = 2, 
-					   darkmoonteleport=true, togglekey=2, darkmoonautostart=true, showrewardtext=true, version=TOCVersion}}
+					   darkmoonteleport=true, togglekey=2, darkmoonautostart=true, showrewardtext=true, version=TOCVersion}
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
