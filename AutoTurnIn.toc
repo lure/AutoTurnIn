@@ -7,7 +7,6 @@
 ## Notes-enUS: Auto accept and complete daily or any quests 
 ## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests (send your translation to luraddon@gmail.com pls)
 ## OptionalDeps: Ace3
-## SavedVariables: AutoTurnInDB
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
 ## X-Date: 2012-01-16
 ## X-Category: Quest
