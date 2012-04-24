@@ -297,7 +297,7 @@ function AutoTurnIn:Need()
 		local class, subclass, _, equipSlot = select(6, GetItemInfo(link))
 		--[[relics and trinkets are out of autoloot]]--
 		if  (UnitHasRelicSlot("player") and 'INVTYPE_RELIC' == equipSlot) or 'INVTYPE_TRINKET' == equipSlot then
-			self:Print(L["stopitemfound"]:format(equipSlot))
+			self:Print(L["stopitemfound"]:format(_G['equipSlot']))
 			return true
 		end
 
