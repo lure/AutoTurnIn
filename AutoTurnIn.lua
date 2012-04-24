@@ -343,7 +343,7 @@ function AutoTurnIn:Need()
 		self:TurnInQuest(self.found[1])
 	end
 
-	if  ( #self.found == 0 ) and (not AutoTurnInCharacterDB.greedifnothingfound) then 
+	if  ( #self.found == 0 and GetNumQuestChoices() > 0 ) and ( not AutoTurnInCharacterDB.greedifnothingfound ) then 
 		self:Print(L["nosuitablefound"])
 	end	
 	return ( #self.found ~= 0 )
