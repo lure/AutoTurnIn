@@ -1,8 +1,10 @@
 local addonName, ptable = ...
 local L = ptable.L
 local O = addonName .. "OptionsPanel"
-local OptionsPanel = CreateFrame("Frame", O)
-OptionsPanel.name=addonName
+AutoTurnIn.OptionsPanel = CreateFrame("Frame", O)
+AutoTurnIn.OptionsPanel.name=addonName
+local OptionsPanel = AutoTurnIn.OptionsPanel
+
 -- Title
 local title = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetText(addonName)

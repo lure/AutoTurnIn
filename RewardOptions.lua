@@ -1,9 +1,10 @@
 local addonName, ptable = ...
-local C = ptable.CONST
-local L = ptable.L
+local L, C = ptable.L, ptable.CONST
 local O = addonName .. "RewardPanel"
-local RewardPanel = CreateFrame("Frame", O)
-RewardPanel.name = QUEST_REWARDS
+AutoTurnIn.RewardPanel = CreateFrame("Frame", O)
+AutoTurnIn.RewardPanel.name = QUEST_REWARDS
+AutoTurnIn.RewardPanel.parent = addonName
+local RewardPanel = AutoTurnIn.RewardPanel
 
 local function CreateCheckbox(name, parent, marginx, marginy, text)
 	local cb = CreateFrame("CheckButton", "$parent"..name,  parent, "OptionsCheckButtonTemplate")
@@ -43,7 +44,7 @@ end
 -- Description
 local description = RewardPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 description:SetText(L["rewardlootoptions"])
-RewardPanel.parent = _G["AutoTurnInOptionsPanel"]
+
 
 local weapon = {GetAuctionItemSubClasses(1)}
 local armor = {GetAuctionItemSubClasses(2)}

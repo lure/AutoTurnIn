@@ -9,6 +9,7 @@ AutoTurnIn.defaults = {enabled = true, all = false, lootreward = 1, tournament =
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
+AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 
 AutoTurnIn.ldbstruct = {
 		type = "data source",
@@ -17,13 +18,13 @@ AutoTurnIn.ldbstruct = {
 		text = addonName,
 		OnClick = function(clickedframe, button)
 			if InterfaceOptionsFrame:IsVisible() then
-				if (InterfaceOptionsFrameAddOns.selection:GetName() == "AutoTurnInOptionsPanel") then 
-					InterfaceOptionsFrame_OpenToCategory(_G["AutoTurnInRewardPanel"])
-				elseif (InterfaceOptionsFrameAddOns.selection:GetName() == "AutoTurnInRewardPanel") then 
+				if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"
+					InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.RewardPanel)
+				elseif (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.RewardPanel:GetName() ) then --"AutoTurnInRewardPanel"
 					InterfaceOptionsFrameCancel:Click()
 				end
 			else
-				InterfaceOptionsFrame_OpenToCategory(_G["AutoTurnInOptionsPanel"])
+				InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
 			end
 		end,
 	}
@@ -85,7 +86,7 @@ local p2 = {[true]=L["all"], [false]=L["list"]}
 function AutoTurnIn:ConsoleComand(arg)
 	arg = strlower(arg)
 	if (#arg == 0) then
-		InterfaceOptionsFrame_OpenToCategory(_G["AutoTurnInOptionsPanel"])
+		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
 	elseif arg == "on" then
 		self:SetEnabled(true)
 		self:Print(L["enabled"])
