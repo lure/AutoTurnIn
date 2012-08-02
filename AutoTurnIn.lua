@@ -216,7 +216,7 @@ end
 
 function AutoTurnIn:QUEST_DETAIL()
 	if self:AllowedToHandle() and (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) then
-		QuestInfoDescriptionText:SetAlphaGradient(0, math.huge)
+		QuestInfoDescriptionText:SetAlphaGradient(0, -1)
 		QuestInfoDescriptionText:SetAlpha(1)
 		AcceptQuest()
 	end
