@@ -284,9 +284,22 @@ function AutoTurnIn:Greed()
 	end
 end
 
+--[[ 
+iterates all rewards and compares with chosen stats and types. If only one appropriate item found then it accepted and quest is turned in. 
+if more than one suitable item found then item list is shown in a chat window and addons return control to player. 
+
+@returns 'true' if one or more suitable reward is found, 'false' otherwise
+]]--
 AutoTurnIn.found, AutoTurnIn.stattable = {}, {}
 function AutoTurnIn:Need()
 	wipe(self.found)
+	local rewardsCount = GetNumQuestChoices()
+	
+	if ( rewardsCount < 2 ) then 
+		self:TurnInQuest(1)
+		return true
+	end
+	
 	for i=1, GetNumQuestChoices() do
 		local link = GetQuestItemLink("choice", i)
 
@@ -350,7 +363,7 @@ function AutoTurnIn:Need()
 	return ( #self.found ~= 0 )
 end
 
--- Надо вынести  щиты, оффхенды, плащи в другой набор, отдельно от брони. Но не могу вспомнить, почему
+-- I was forced to make decision on offhands, cloack and shileds separate from armor but I can't pick up my mind about the reason...
 function AutoTurnIn:QUEST_COMPLETE()
 	-- blasted Lands citadel wonderful NPC. They do not trigger any events except quest_complete.
 	if not self:AllowedToHandle() then
