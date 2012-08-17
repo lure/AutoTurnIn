@@ -13,22 +13,5 @@ May turn in quests with rewards and choose most expensive one for future selling
 
 that's all for now. 
 If you feel yourself in a mood to make localization to another language, let me know through 
-curseforge site. 
-
-
-Short script to extract quests name from wowhead.com. Just open the list with the quest and run it through Firefox web development console.
-============================
-var quests={}, _result="", x;
-var area = $("div.comment-edit-body textarea");
-$("table.listview-mode-default tr").find("td:first div a").each(function (){
-    if ($(this).text() != "") quests[$(this).text()]= "";
-});
-for(x in quests) {
-  _result += "['"+x+"']=\"\",\n"  
-}
-if (area.length) {
-    area.removeAttr("disabled").val(_result);
-} else  {
-    $("body").append('<textarea class="comment-editbox" name="commentbody" cols="40" rows="10">'+_result+'</textarea>');
-}
-==============================
+curseforge site. If in need to populate configs with some particular quests take a look at wowhead.js. 
+This script used in Firefox allow to grab quests from search form. 
