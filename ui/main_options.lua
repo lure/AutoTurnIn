@@ -5,6 +5,8 @@ AutoTurnIn.OptionsPanel = CreateFrame("Frame", O)
 AutoTurnIn.OptionsPanel.name=addonName
 local OptionsPanel = AutoTurnIn.OptionsPanel
 
+local MakeACopy=true
+
 -- Title
 local title = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetText(addonName)
@@ -13,6 +15,20 @@ local notes = GetAddOnMetadata(addonName, "Notes-" .. GetLocale())
 notes = notes or GetAddOnMetadata(addonName, "Notes")
 local subText = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 subText:SetText(notes)
+-- Reset button
+local ResetButton = CreateFrame("Button", nil, OptionsPanel, "OptionsButtonTemplate")
+ResetButton:SetText(L["resetbutton"])
+ResetButton:SetScript("OnClick", function()
+	ptable.TempConfig = CopyTable(AutoTurnIn.defaults)
+	ptable.TempConfig.armor = {}
+	ptable.TempConfig.weapon = {}
+	ptable.TempConfig.stat = {}
+	
+	MakeACopy=false;
+	AutoTurnIn.RewardPanel.refresh();
+	AutoTurnIn.OptionsPanel.refresh();
+end)
+
 
 -- 'Enable' CheckBox
 local Enable = CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsCheckButtonTemplate")
@@ -104,6 +120,13 @@ ShowRewardText:SetScript("OnClick", function(self)
 	ptable.TempConfig.showrewardtext = self:GetChecked() == 1 
 end)
 
+-- 'Equip Reward Text' CheckBox
+local EquipReward = CreateFrame("CheckButton", O.."Equip", OptionsPanel, "OptionsCheckButtonTemplate")
+_G[EquipReward:GetName().."Text"]:SetText(L["autoequip"])
+EquipReward:SetScript("OnClick", function(self) 
+	ptable.TempConfig.autoequip = self:GetChecked() == 1 
+end)
+
 -- Auto toggle key
 local ToggleKeyLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 ToggleKeyLabel:SetText(L["togglekey"])
@@ -127,6 +150,7 @@ UIDropDownMenu_JustifyText(ToggleKeyDropDown, "LEFT")
 -- Control placement
 title:SetPoint("TOPLEFT", 16, -16)
 subText:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
+ResetButton:SetPoint("TOPRIGHT", OptionsPanel, "TOPRIGHT", -10, -10)
 Enable:SetPoint("TOPLEFT", subText, "BOTTOMLEFT", 0, -16)
 QuestLabel:SetPoint("BOTTOMLEFT", QuestDropDown, "TOPLEFT", 18, 0)
 QuestDropDown:SetPoint("TOPLEFT", Enable, "BOTTOMLEFT", -15, -35)
@@ -137,12 +161,15 @@ TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
 DarkMoonCannon:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -16)
 DarkMoonAutoStart:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -16)
 ShowRewardText:SetPoint("TOPLEFT", DarkMoonAutoStart, "BOTTOMLEFT", 0, -16)
+EquipReward:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", 0, -16)
 
 ToggleKeyLabel:SetPoint("BOTTOMLEFT", ToggleKeyDropDown, "TOPLEFT", 18, 0)
-ToggleKeyDropDown:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", -15, -30)
+ToggleKeyDropDown:SetPoint("TOPLEFT", EquipReward, "BOTTOMLEFT", -15, -30)
 
 OptionsPanel.refresh = function()
-	ptable.TempConfig = CopyTable(AutoTurnInCharacterDB)
+	if ( MakeACopy ) then 
+		ptable.TempConfig = CopyTable(AutoTurnInCharacterDB)
+	end
 
 	Enable:SetChecked(ptable.TempConfig.enabled)
 
@@ -160,9 +187,11 @@ OptionsPanel.refresh = function()
 	DarkMoonCannon:SetChecked(ptable.TempConfig.darkmoonteleport)
 	DarkMoonAutoStart:SetChecked(ptable.TempConfig.darkmoonautostart)
 	ShowRewardText:SetChecked(ptable.TempConfig.showrewardtext)
-
+	EquipReward:SetChecked(ptable.TempConfig.autoequip)
+	
 	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)
 	UIDropDownMenu_SetText(ToggleKeyDropDown,  ToggleKeyConst[ptable.TempConfig.togglekey])
+	MakeACopy = true
 end
 
 OptionsPanel.default = function() 

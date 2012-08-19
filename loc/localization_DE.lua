@@ -11,6 +11,7 @@ privateTable.L = setmetatable({
 	["list"]="diente nur die ausgewählten Quests",
 	["dontlootfalse"]="Addon übergibt den Job, und wählen Sie die teuerste Belohnung",
 	["dontloottrue"]="Quests mit Belohnungen werden nicht von Addon fertig sein",
+	["resetbutton"]="reset",
 		
 	["questTypeLabel"] = "quests", 
 	["questTypeAll"] = "alle", 
@@ -31,6 +32,7 @@ privateTable.L = setmetatable({
 	["Darkmoon Island"]="Dunkelmondinsel",	
 	
 	["rewardtext"]="Show quest reward text",
+	["autoequip"]="tragen Belohnung",
 	["togglekey"]="aktivieren/deaktivieren Taste",
 	
 	['Jewelry']="Juwelier",

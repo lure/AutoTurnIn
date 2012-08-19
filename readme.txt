@@ -14,4 +14,4 @@ May turn in quests with rewards and choose most expensive one for future selling
 that's all for now. 
 If you feel yourself in a mood to make localization to another language, let me know through 
 curseforge site. If in need to populate configs with some particular quests take a look at wowhead.js. 
-This script used in Firefox allow to grab quests from search form. 
+This script used in Firefox allows to grab quests from search form. 

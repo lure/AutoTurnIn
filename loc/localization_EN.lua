@@ -8,6 +8,7 @@ privateTable.L = setmetatable({
 	["list"]="only daily quests will be handled",
 	["dontlootfalse"]="loot most expensive reward",
 	["dontloottrue"]="do not complete quests with rewards",
+	["resetbutton"]="reset",
 	
 	["questTypeLabel"] = "Quests to handle", 
 	["questTypeAll"] = "all", 
@@ -27,6 +28,7 @@ privateTable.L = setmetatable({
 	["DarkmoonAutoLabel"]="Darkmoon: start the game!",	
 	
 	["rewardtext"]="Print quest reward text",
+	["autoequip"]="Equip received reward",
 	["togglekey"]="Enable/disable key",
 	
 	['Jewelry']="Jewelry",

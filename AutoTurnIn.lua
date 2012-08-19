@@ -5,7 +5,7 @@ local TOCVersion = GetAddOnMetadata(addonName, "Version")
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 AutoTurnIn.defaults = {enabled = true, all = false, lootreward = 1, tournament = 2, 
-					   darkmoonteleport=true, togglekey=2, darkmoonautostart=true, showrewardtext=true, version=TOCVersion}
+					   darkmoonteleport=true, togglekey=2, darkmoonautostart=true, showrewardtext=true, version=TOCVersion, autoequip = false}
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
@@ -105,10 +105,16 @@ function AutoTurnIn:ConsoleComand(arg)
 	end
 end
 
+
+-- returns specified item count on player character. It may be some sort of currency or present in inventory as real items.
 function AutoTurnIn:GetItemAmount(isCurrency, item)
 	local amount = isCurrency and select(2, GetCurrencyInfo(item)) or GetItemCount(item, nil, true)
 	return amount and amount or 0
 end
+
+-- returns set 'self.allowed' to true if addon is allowed to handle current gossip conversation 
+-- Cases when it may not : (addon is enabled and toggle key was pressed) or (addon is disabled and toggle key is not presse)
+-- 'forcecheck' does what it name says: forces check 
 function AutoTurnIn:AllowedToHandle(forcecheck)
 	if ( self.allowed == nil or forcecheck ) then
 		-- Double 'not' converts possible 'nil' to boolean representation
@@ -119,7 +125,7 @@ function AutoTurnIn:AllowedToHandle(forcecheck)
 	return self.allowed
 end
 
--- OldGossip interaction system. Burn in hell See http://wowprogramming.com/docs/events/QUEST_GREETING
+-- OldGossip interaction system. Burn in hell. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
 	if (not self:AllowedToHandle(true)) then
 		return
@@ -171,6 +177,7 @@ function AutoTurnIn:VarArgForActiveQuests(...)
 	end
 end
 
+-- like previous function this one works around `nil` values in a list.
 function AutoTurnIn:VarArgForAvailableQuests(...)
 	for i=1, select("#", ...), 5 do
 		local questname = select(i, ...)
@@ -228,11 +235,13 @@ function AutoTurnIn:QUEST_PROGRESS()
     end
 end
 
+-- return true if an item is of `ranged` type and is suitable with current options
 function AutoTurnIn:IsRangedAndRequired(subclass)
 	return (AutoTurnInCharacterDB.weapon['Ranged'] and
 		(C.ITEMS['Crossbows'] == subclass or C.ITEMS['Guns'] == subclass or C.ITEMS['Bows'] == subclass))
 end
 
+-- return true if an item is of `Jewelry` type and is suitable with current options
 function AutoTurnIn:IsJewelryAndRequired(equipSlot)
 	return AutoTurnInCharacterDB.armor['Jewelry'] and (C.JEWELRY[equipSlot])
 end
@@ -255,6 +264,14 @@ local function TryToLoadRewards()
 	end
 end]]--
 
+function AutoTurnIn:AutoEquip(rewardIndex)
+	if (AutoTurnInCharacterDB.autoequip and rewardIndex) then 
+		EquipItemByName(GetQuestItemLink("choice", rewardIndex))
+	end
+end
+
+-- turns quest in printing reward text if `showrewardtext` option is set. 
+-- prints appropriate message if item is taken by greed 
 function AutoTurnIn:TurnInQuest(rewardIndex)	
 	if (AutoTurnInCharacterDB.showrewardtext) then
 		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
@@ -262,7 +279,13 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 	if  self.forceGreed then 
 		self:Print(L["gogreedy"])
 	end
+
+	if (rewardIndex) then 
+		self:Print("debug " .. rewardIndex)
+		self:Print("debug " .. GetQuestItemLink("choice", rewardIndex))
+	end
 	GetQuestReward(rewardIndex)
+	AutoEquip(rewardIndex)	
 end
 
 function AutoTurnIn:Greed()
@@ -288,9 +311,9 @@ end
 iterates all rewards and compares with chosen stats and types. If only one appropriate item found then it accepted and quest is turned in. 
 if more than one suitable item found then item list is shown in a chat window and addons return control to player. 
 
-@returns 'true' if one or more suitable reward is found, 'false' otherwise
-]]--
-AutoTurnIn.found, AutoTurnIn.stattable = {}, {}
+@returns 'true' if one or more suitable reward is found, 'false' otherwise ]]--
+-- tables are declared here to optimize memory model. Said that in current implementation it's cheaper to wipe than to create.
+AutoTurnIn.found, AutoTurnIn.stattable = {}, {} 
 function AutoTurnIn:Need()
 	wipe(self.found)
 	local rewardsCount = GetNumQuestChoices()
@@ -390,7 +413,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 				end
 			end
 		else
-			self:TurnInQuest(index)
+			self:TurnInQuest(nil)
 		end
     end
 end

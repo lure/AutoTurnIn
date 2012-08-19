@@ -13,10 +13,10 @@
 ## X-Embeds: Ace3
 
 embeds.xml
-localization_RU.lua
-localization_EN.lua
-localization_DE.lua
-rewards.lua
+loc\localization_RU.lua
+loc\localization_EN.lua
+loc\localization_DE.lua
+rewards_const.lua
 AutoTurnIn.lua
-options.lua
-RewardOptions.lua
+ui\main_options.lua
+ui\reward_options.lua
