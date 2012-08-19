@@ -1,4 +1,4 @@
-﻿## Interface: 40300
+﻿## Interface: 50001
 ## Title: AutoTurnIn
 ## Version: 3.0
 ## Author: Lur
