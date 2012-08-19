@@ -10,6 +10,7 @@ AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
 AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
+AutoTurnIn.autoEquipList={}
 
 AutoTurnIn.ldbstruct = {
 		type = "data source",
@@ -127,9 +128,11 @@ end
 
 -- OldGossip interaction system. Burn in hell. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
+	self:Print("debug: old gossip system")
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
+	
 	for index=1, GetNumActiveQuests() do
 		local quest, completed = GetActiveTitle(index)
 		if (AutoTurnInCharacterDB.all or L.quests[quest]) and (completed) then
@@ -155,20 +158,22 @@ end
 -- (gaq[i+3]) equals "1" if quest is complete, "nil" otherwise
 -- why not 	gaq={GetGossipAvailableQuests()}? Well, tables in lua are truncated for values with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
 function AutoTurnIn:VarArgForActiveQuests(...)
-	for i=1, select("#", ...), 4 do
-		local completeStatus = select(i+3, ...)
+    local MOP_INDEX_CONST = 5 -- was '4' in Cataclysm
+
+	for i=1, select("#", ...), MOP_INDEX_CONST do
+		local completeStatus = select(i+3, ...)		
 		if (completeStatus) then  -- complete status
 			local questname = select(i, ...)
 			local quest = L.quests[questname]
 			if AutoTurnInCharacterDB.all or quest  then
 				if quest and quest.amount then
 					if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
-						SelectGossipActiveQuest(math.floor(i/4)+1)
+						SelectGossipActiveQuest(math.floor(i/MOP_INDEX_CONST)+1)
 						self.DarkmoonAllowToProceed = false
 						return
 					end
 				else
-					SelectGossipActiveQuest(math.floor(i/4)+1)
+					SelectGossipActiveQuest(math.floor(i/MOP_INDEX_CONST)+1)
 					self.DarkmoonAllowToProceed = false
 					return
 				end
@@ -179,17 +184,18 @@ end
 
 -- like previous function this one works around `nil` values in a list.
 function AutoTurnIn:VarArgForAvailableQuests(...)
-	for i=1, select("#", ...), 5 do
+	local MOP_INDEX_CONST = 6 -- was '5' in Cataclysm
+	for i=1, select("#", ...), MOP_INDEX_CONST do
 		local questname = select(i, ...)
 		local quest = L.quests[questname]
 		if AutoTurnInCharacterDB.all or (quest and (not quest.donotaccept)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
-					SelectGossipAvailableQuest(math.floor(i/5)+1)
+					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
 					return
 				end
 			else
-				SelectGossipAvailableQuest(math.floor(i/5)+1)
+				SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
 				return
 			end
 		end
@@ -246,46 +252,49 @@ function AutoTurnIn:IsJewelryAndRequired(equipSlot)
 	return AutoTurnInCharacterDB.armor['Jewelry'] and (C.JEWELRY[equipSlot])
 end
 
---[[ doesn't work. Frame appear faster than items loaded. Need rework. It is called nowhere right now
-local function TryToLoadRewards()
-	local title = GetTitleText()
-	numEntries = GetNumQuestLogEntries()
-	for questIndex=1, numEntries do
-		questLogTitleText, _, _, _, isHeader = GetQuestLogTitle(questIndex)
-		if (not isHeader) then
-			if title == questLogTitleText then
-				SelectQuestLogEntry(questIndex)
-				if not QuestLogFrame:IsVisible() then
-					QuestLogFrame:Show()
-					QuestLogFrame:Hide()
-				end
-			end
-		end
-	end
-end]]--
+-- CHAT MESSAGE CHANNEL FILTER. Used to intercept item received event and equip reward
+function AutoTurnIn:CHAT_MSG_LOOT_Filter(self, event, msg, author, ...)
+	print("DEBUG: in CHAT_MSG_LOOT_Filter")
 
-function AutoTurnIn:AutoEquip(rewardIndex)
-	if (AutoTurnInCharacterDB.autoequip and rewardIndex) then 
-		EquipItemByName(GetQuestItemLink("choice", rewardIndex))
+	for link in pairs(AutoTurnIn.autoEquipList) do
+	
+		print("debug [", msg, "]", format(ERR_QUEST_REWARD_ITEM_S, link), (msg == format(ERR_QUEST_REWARD_ITEM_S, link)))
+		
+		if (msg == format(ERR_QUEST_REWARD_ITEM_S, link)) then
+			print("debug: equiping", link)
+			EquipItemByName(link)
+			AutoTurnIn.autoEquipList[link]=nil
+		end
+
 	end
-end
+	
+--	if (not next(AutoTurnIn.autoEquipList)) then 
+		--print("debug: removing filter")
+		--ChatFrame_RemoveMessageEventFilter("CHAT_MSG_LOOT", self.CHAT_MSG_LOOT_Filter);
+--	end	
+	return false, msg, author, ...
+end 
+
 
 -- turns quest in printing reward text if `showrewardtext` option is set. 
 -- prints appropriate message if item is taken by greed 
+-- equips received reward if such option selected
+ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", AutoTurnIn.CHAT_MSG_LOOT_Filter)
 function AutoTurnIn:TurnInQuest(rewardIndex)	
 	if (AutoTurnInCharacterDB.showrewardtext) then
 		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
 	end
+	
 	if  self.forceGreed then 
 		self:Print(L["gogreedy"])
+	end	
+	
+	local link = GetQuestItemLink("choice", rewardIndex)
+	if (AutoTurnInCharacterDB.autoequip and link) then
+		self.autoEquipList[link] = true
 	end
-
-	if (rewardIndex) then 
-		self:Print("debug " .. rewardIndex)
-		self:Print("debug " .. GetQuestItemLink("choice", rewardIndex))
-	end
+	
 	GetQuestReward(rewardIndex)
-	AutoEquip(rewardIndex)	
 end
 
 function AutoTurnIn:Greed()
@@ -316,13 +325,7 @@ if more than one suitable item found then item list is shown in a chat window an
 AutoTurnIn.found, AutoTurnIn.stattable = {}, {} 
 function AutoTurnIn:Need()
 	wipe(self.found)
-	local rewardsCount = GetNumQuestChoices()
-	
-	if ( rewardsCount < 2 ) then 
-		self:TurnInQuest(1)
-		return true
-	end
-	
+
 	for i=1, GetNumQuestChoices() do
 		local link = GetQuestItemLink("choice", i)
 
@@ -395,7 +398,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 
 	local quest = L.quests[GetTitleText()]
     if AutoTurnInCharacterDB.all or quest then
-		if GetNumQuestChoices() > 0 then
+		if GetNumQuestChoices() > 1 then
 			if AutoTurnInCharacterDB.lootreward > 1 then -- Auto Loot enabled!
 				self.forceGreed = false 
 				
@@ -413,7 +416,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 				end
 			end
 		else
-			self:TurnInQuest(nil)
+			self:TurnInQuest(1)
 		end
     end
 end
