@@ -37,6 +37,7 @@ function AutoTurnIn:SetEnabled(enabled)
 		self.ldb.label = self.ldb.text
 	end
 end
+
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
 	if (not AutoTurnInCharacterDB) or (not AutoTurnInCharacterDB.version or (AutoTurnInCharacterDB.version < TOCVersion)) then
@@ -64,6 +65,7 @@ function AutoTurnIn:OnEnable()
 
 	self:SetEnabled(AutoTurnInCharacterDB.enabled)
 	self:RegisterGossipEvents()
+	self:RegisterEvent("BAG_UPDATE")
 end
 
 function AutoTurnIn:RegisterGossipEvents()
@@ -252,46 +254,41 @@ function AutoTurnIn:IsJewelryAndRequired(equipSlot)
 	return AutoTurnInCharacterDB.armor['Jewelry'] and (C.JEWELRY[equipSlot])
 end
 
--- CHAT MESSAGE CHANNEL FILTER. Used to intercept item received event and equip reward
-function AutoTurnIn:CHAT_MSG_LOOT_Filter(self, event, msg, author, ...)
-	print("DEBUG: in CHAT_MSG_LOOT_Filter")
 
-	for link in pairs(AutoTurnIn.autoEquipList) do
-	
-		print("debug [", msg, "]", format(ERR_QUEST_REWARD_ITEM_S, link), (msg == format(ERR_QUEST_REWARD_ITEM_S, link)))
-		
-		if (msg == format(ERR_QUEST_REWARD_ITEM_S, link)) then
-			print("debug: equiping", link)
-			EquipItemByName(link)
-			AutoTurnIn.autoEquipList[link]=nil
-		end
-
+function AutoTurnIn:BAG_UPDATE(event, bagID)
+	local listIsEmpty = not next(self.autoEquipList)
+	if ( bagID < 0 or bagID > NUM_BAG_SLOTS or listIsEmpty ) then 
+		return 
 	end
 	
---	if (not next(AutoTurnIn.autoEquipList)) then 
-		--print("debug: removing filter")
-		--ChatFrame_RemoveMessageEventFilter("CHAT_MSG_LOOT", self.CHAT_MSG_LOOT_Filter);
---	end	
-	return false, msg, author, ...
-end 
-
+	for slot=1, GetContainerNumSlots(bagID), 1 do 
+		local link = GetContainerItemLink (bagID, slot)
+		if ( link ) then 
+			local name = GetItemInfo(link)
+			if ( name and self.autoEquipList[name] ) then
+				self:Print(L["equipping reward"], link)
+				EquipItemByName(name)
+				self.autoEquipList[name]=nil		
+			end
+		end
+	end
+end
 
 -- turns quest in printing reward text if `showrewardtext` option is set. 
 -- prints appropriate message if item is taken by greed 
 -- equips received reward if such option selected
-ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", AutoTurnIn.CHAT_MSG_LOOT_Filter)
 function AutoTurnIn:TurnInQuest(rewardIndex)	
 	if (AutoTurnInCharacterDB.showrewardtext) then
 		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
 	end
 	
-	if  self.forceGreed then 
+	if self.forceGreed then 
 		self:Print(L["gogreedy"])
 	end	
 	
-	local link = GetQuestItemLink("choice", rewardIndex)
-	if (AutoTurnInCharacterDB.autoequip and link) then
-		self.autoEquipList[link] = true
+	local name = GetQuestItemInfo("choice", rewardIndex)
+	if (AutoTurnInCharacterDB.autoequip and name) then
+		self.autoEquipList[name] = true
 	end
 	
 	GetQuestReward(rewardIndex)
