@@ -41,3 +41,19 @@ C.ITEMS = {
 	['Totems'] = armor[9],
 	]]--
 }
+
+--[[ 
+from GlobalStrings.lua
+ITEM_MOD_CRIT_RATING_SHORT = "Critical Strike";
+ITEM_MOD_DODGE_RATING_SHORT = "Dodge";
+ITEM_MOD_PARRY_RATING_SHORT = "Parry";
+
+ITEM_MOD_EXPERTISE_RATING_SHORT = "Expertise";
+ITEM_MOD_HASTE_RATING_SHORT = "Haste";
+ITEM_MOD_HIT_RATING_SHORT = "Hit";
+
+ITEM_MOD_MASTERY_RATING_SHORT = "Mastery";
+ITEM_MOD_SPELL_PENETRATION_SHORT = "Spell Penetration";
+ITEM_MOD_SPELL_POWER_SHORT = "Spell Power";
+
+]]--

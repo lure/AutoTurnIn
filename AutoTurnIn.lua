@@ -57,6 +57,7 @@ function AutoTurnIn:OnEnable()
 	AutoTurnInCharacterDB.armor = AutoTurnInCharacterDB.armor and AutoTurnInCharacterDB.armor or {}
 	AutoTurnInCharacterDB.weapon = AutoTurnInCharacterDB.weapon and AutoTurnInCharacterDB.weapon or {}
 	AutoTurnInCharacterDB.stat = AutoTurnInCharacterDB.stat and AutoTurnInCharacterDB.stat or {}
+	AutoTurnInCharacterDB.secondary = AutoTurnInCharacterDB.secondary and AutoTurnInCharacterDB.secondary or {}
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 	if LDB then
@@ -148,7 +149,6 @@ function AutoTurnIn:QUEST_GREETING()
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectAvailableQuest(index)
-					return
 				end
 			else
 				SelectAvailableQuest(index)
@@ -172,12 +172,10 @@ function AutoTurnIn:VarArgForActiveQuests(...)
 					if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 						SelectGossipActiveQuest(math.floor(i/MOP_INDEX_CONST)+1)
 						self.DarkmoonAllowToProceed = false
-						return
 					end
 				else
 					SelectGossipActiveQuest(math.floor(i/MOP_INDEX_CONST)+1)
 					self.DarkmoonAllowToProceed = false
-					return
 				end
 			end
 		end
@@ -193,12 +191,10 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 		if AutoTurnInCharacterDB.all or (quest and (not quest.donotaccept)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
-					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
-					return
+					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)					
 				end
 			else
-				SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
-				return
+				SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)				
 			end
 		end
 	end
@@ -267,8 +263,8 @@ function AutoTurnIn:BAG_UPDATE(event, bagID)
 			local name = GetItemInfo(link)
 			if ( name and self.autoEquipList[name] ) then
 				self:Print(L["equipping reward"], link)
-				EquipItemByName(name)
 				self.autoEquipList[name]=nil		
+				EquipItemByName(name)
 			end
 		end
 	end
@@ -322,7 +318,7 @@ if more than one suitable item found then item list is shown in a chat window an
 AutoTurnIn.found, AutoTurnIn.stattable = {}, {} 
 function AutoTurnIn:Need()
 	wipe(self.found)
-
+	
 	for i=1, GetNumQuestChoices() do
 		local link = GetQuestItemLink("choice", i)
 
@@ -349,22 +345,26 @@ function AutoTurnIn:Need()
 		end
 
 		--Same here: if no stat specified or item stat is chosen then item is wanted
-		local OkByStat = (not next(AutoTurnInCharacterDB.stat)) -- true if table is empty
-		if (not OkByStat) and ('INVTYPE_RELIC' ~= equipSlot) then
+		local OkByStat = not next(AutoTurnInCharacterDB.stat) 					-- true if table is empty
+		local OkBySecondary = not next(AutoTurnInCharacterDB.secondary) -- true if table is empty
+		if (not (OkByStat and OkBySecondaryStat)) and ('INVTYPE_RELIC' ~= equipSlot) then
 			wipe(self.stattable)
 			GetItemStats(link, self.stattable)
 			for stat, value in pairs(self.stattable) do
 				if ( AutoTurnInCharacterDB.stat[stat] ) then
 					OkByStat = true
 				end
+				if ( AutoTurnInCharacterDB.secondary[stat] ) then
+					OkBySecondary = true
+				end
 			end
 		end
-
-		-- User may not choose any options hence any item became 'ok'. That situation is undoubtly incorrect.
-		local EmptySettings = (class == C.WEAPONLABEL and (not next(AutoTurnInCharacterDB.weapon)) or (not next(AutoTurnInCharacterDB.armor))) and 
-							  (not next(AutoTurnInCharacterDB.stat))
 		
-		if (OkByType and OkByStat and (not EmptySettings)) then
+		-- User may not choose any options hence any item became 'ok'. That situation is undoubtly incorrect.
+		local SettingsExists = (class == C.WEAPONLABEL and next(AutoTurnInCharacterDB.weapon) or next(AutoTurnInCharacterDB.armor)) 
+								or next(AutoTurnInCharacterDB.stat)
+ 					  
+		if (OkByType and OkByStat and OkBySecondary and SettingsExists) then
 			tinsert(self.found, i)
 		end
 	end

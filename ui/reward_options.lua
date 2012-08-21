@@ -33,8 +33,10 @@ local function CreatePanel(name, text, w, h)
 			return ptable.TempConfig.stat
 		elseif name == "ArmorPanel" then
 			return ptable.TempConfig.armor
-		else 
+		elseif name == "WeaponPanel" then 
 			return ptable.TempConfig.weapon
+		elseif name == "SecStatPanel" then
+			return ptable.TempConfig.secondary		
 		end
 	end
 	_G[panel:GetName().."Title"]:SetText(text)
@@ -106,7 +108,21 @@ CreateCheckbox('ITEM_MOD_AGILITY_SHORT', StatPanel, 152, -8, SPELL_STAT2_NAME)
 CreateCheckbox('ITEM_MOD_INTELLECT_SHORT', StatPanel, 292, -8, SPELL_STAT4_NAME)
 CreateCheckbox('ITEM_MOD_SPIRIT_SHORT', StatPanel, 436, -8, SPELL_STAT5_NAME)
 
--- 'Enable' CheckBox
+local SecStatPanel = CreatePanel("SecStatPanel", STAT_CATEGORY_ATTRIBUTES .. "-2", 590, 102) 
+CreateCheckbox('ITEM_MOD_CRIT_RATING_SHORT', SecStatPanel, 10, -8, ITEM_MOD_CRIT_RATING_SHORT)
+CreateCheckbox('ITEM_MOD_DODGE_RATING_SHORT', SecStatPanel, 206, -8, ITEM_MOD_DODGE_RATING_SHORT)
+CreateCheckbox('ITEM_MOD_PARRY_RATING_SHORT', SecStatPanel, 402, -8, ITEM_MOD_PARRY_RATING_SHORT)
+	-- 2nd line 
+CreateCheckbox('ITEM_MOD_EXPERTISE_RATING_SHORT', SecStatPanel, 10, -40, ITEM_MOD_EXPERTISE_RATING_SHORT)
+CreateCheckbox('ITEM_MOD_HASTE_RATING_SHORT', SecStatPanel, 206, -40, ITEM_MOD_HASTE_RATING_SHORT)
+CreateCheckbox('ITEM_MOD_HIT_RATING_SHORT', SecStatPanel, 402, -40, ITEM_MOD_HIT_RATING_SHORT)
+    -- 3rd line
+CreateCheckbox('ITEM_MOD_MASTERY_RATING_SHORT', SecStatPanel, 10, -72, ITEM_MOD_MASTERY_RATING_SHORT)
+CreateCheckbox('ITEM_MOD_SPELL_PENETRATION_SHORT', SecStatPanel, 206, -72, ITEM_MOD_SPELL_PENETRATION_SHORT)
+CreateCheckbox('ITEM_MOD_SPELL_POWER_SHORT', SecStatPanel, 402, -72, ITEM_MOD_SPELL_POWER_SHORT)
+
+
+-- 'Greed' CheckBox
 local GreedAfterNeed = CreateFrame("CheckButton", O.."Enable", RewardPanel, "OptionsCheckButtonTemplate")
 _G[GreedAfterNeed:GetName().."Text"]:SetText(L["greedifnothing"])
 GreedAfterNeed:SetScript("OnClick", function(self) 
@@ -118,9 +134,10 @@ description:SetPoint("TOPLEFT", 16, -8)
 WeaponPanel:SetPoint("TOPLEFT", description, "BOTTOMLEFT", 0, -20)
 ArmorPanel:SetPoint("TOPLEFT", WeaponPanel, "BOTTOMLEFT", 0, -20)
 StatPanel:SetPoint("TOPLEFT", ArmorPanel, "BOTTOMLEFT", 0, -20)
-GreedAfterNeed:SetPoint("TOPLEFT", StatPanel, "BOTTOMLEFT", 8, -16)
+SecStatPanel:SetPoint("TOPLEFT", StatPanel, "BOTTOMLEFT", 0, -20)
+GreedAfterNeed:SetPoint("TOPLEFT", SecStatPanel, "BOTTOMLEFT", 8, -16)
 
---[[ PANEL FINCTIONS ]]--
+--[[ PANEL FUNCTIONS ]]--
 local AC = {[NONE_KEY]=1, [armor[2]]=2, [armor[3]]=3, [armor[4]]=4,[armor[5]]=5}
 RewardPanel.refresh = function()
 	WeaponPanel:ClearCheckBoxes()
@@ -133,11 +150,11 @@ RewardPanel.refresh = function()
 	for k,v in pairs(ptable.TempConfig.stat) do
 		_G[StatPanel:GetName()..k]:SetChecked(v)
 	end
+	for k,v in pairs(ptable.TempConfig.secondary) do
+		_G[SecStatPanel:GetName()..k]:SetChecked(v)
+	end	
 	for k,v in pairs(ptable.TempConfig.armor) do
-		local w = _G[ArmorPanel:GetName()..k]
-		if ( w ) then 
-			w:SetChecked(v)
-		end
+		_G[ArmorPanel:GetName()..k]:SetChecked(v)
 	end	
 	
 	GreedAfterNeed:SetChecked(ptable.TempConfig.greedifnothingfound )
