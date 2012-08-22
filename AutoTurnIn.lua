@@ -66,7 +66,6 @@ function AutoTurnIn:OnEnable()
 
 	self:SetEnabled(AutoTurnInCharacterDB.enabled)
 	self:RegisterGossipEvents()
-	self:RegisterEvent("BAG_UPDATE")
 end
 
 function AutoTurnIn:RegisterGossipEvents()
@@ -250,25 +249,33 @@ function AutoTurnIn:IsJewelryAndRequired(equipSlot)
 	return AutoTurnInCharacterDB.armor['Jewelry'] and (C.JEWELRY[equipSlot])
 end
 
-
-function AutoTurnIn:BAG_UPDATE(event, bagID)
-	local listIsEmpty = not next(self.autoEquipList)
-	if ( bagID < 0 or bagID > NUM_BAG_SLOTS or listIsEmpty ) then 
-		return 
+-- initiated in AutoTurnIn:TurnInQuest
+AutoTurnIn.delayFrame = CreateFrame('Frame')
+AutoTurnIn.delayFrame:Hide()
+AutoTurnIn.delayFrame:SetScript('OnUpdate', function()
+	if not next(AutoTurnIn.autoEquipList) then
+		AutoTurnIn.delayFrame:Hide()
+		return
 	end
-	
-	for slot=1, GetContainerNumSlots(bagID), 1 do 
-		local link = GetContainerItemLink (bagID, slot)
-		if ( link ) then 
-			local name = GetItemInfo(link)
-			if ( name and self.autoEquipList[name] ) then
-				self:Print(L["equipping reward"], link)
-				self.autoEquipList[name]=nil		
-				EquipItemByName(name)
+
+	if(time() < AutoTurnIn.delayFrame.delay) then
+		return
+	end
+
+	for bag=0, NUM_BAG_SLOTS do
+		for slot=1, GetContainerNumSlots(bag), 1 do
+			local link = GetContainerItemLink (bag, slot)
+			if ( link ) then
+				local name = GetItemInfo(link)
+				if ( name and AutoTurnIn.autoEquipList[name] ) then
+					AutoTurnIn:Print(L["equipping reward"], link)
+					AutoTurnIn.autoEquipList[name]=nil
+					EquipItemByName(name)
+				end
 			end
 		end
 	end
-end
+end)
 
 -- turns quest in printing reward text if `showrewardtext` option is set. 
 -- prints appropriate message if item is taken by greed 
@@ -285,6 +292,8 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 	local name = GetQuestItemInfo("choice", rewardIndex)
 	if (AutoTurnInCharacterDB.autoequip and name) then
 		self.autoEquipList[name] = true
+		self.delayFrame.delay = time() + 2
+		self.delayFrame:Show()
 	end
 	
 	GetQuestReward(rewardIndex)
@@ -328,8 +337,8 @@ function AutoTurnIn:Need()
 		end
 
 		local class, subclass, _, equipSlot = select(6, GetItemInfo(link))
-		--[[relics and trinkets are out of autoloot]]--
-		if  (UnitHasRelicSlot("player") and 'INVTYPE_RELIC' == equipSlot) or 'INVTYPE_TRINKET' == equipSlot then
+		--[[trinkets are out of autoloot]]--
+		if  ( 'INVTYPE_TRINKET' == equipSlot )then
 			self:Print(L["stopitemfound"]:format(_G[equipSlot]))
 			return true
 		end
@@ -347,7 +356,7 @@ function AutoTurnIn:Need()
 		--Same here: if no stat specified or item stat is chosen then item is wanted
 		local OkByStat = not next(AutoTurnInCharacterDB.stat) 					-- true if table is empty
 		local OkBySecondary = not next(AutoTurnInCharacterDB.secondary) -- true if table is empty
-		if (not (OkByStat and OkBySecondaryStat)) and ('INVTYPE_RELIC' ~= equipSlot) then
+		if (not (OkByStat and OkBySecondaryStat)) then
 			wipe(self.stattable)
 			GetItemStats(link, self.stattable)
 			for stat, value in pairs(self.stattable) do
