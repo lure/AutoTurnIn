@@ -20,9 +20,6 @@ local ResetButton = CreateFrame("Button", nil, OptionsPanel, "OptionsButtonTempl
 ResetButton:SetText(L["resetbutton"])
 ResetButton:SetScript("OnClick", function()
 	ptable.TempConfig = CopyTable(AutoTurnIn.defaults)
-	ptable.TempConfig.armor = {}
-	ptable.TempConfig.weapon = {}
-	ptable.TempConfig.stat = {}
 	
 	MakeACopy=false;
 	AutoTurnIn.RewardPanel.refresh();

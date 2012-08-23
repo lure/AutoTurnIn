@@ -5,7 +5,8 @@ local TOCVersion = GetAddOnMetadata(addonName, "Version")
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 AutoTurnIn.defaults = {enabled = true, all = false, lootreward = 1, tournament = 2, 
-					   darkmoonteleport=true, togglekey=2, darkmoonautostart=true, showrewardtext=true, version=TOCVersion, autoequip = false}
+					   darkmoonteleport=true, togglekey=2, darkmoonautostart=true, showrewardtext=true, version=TOCVersion, autoequip = false,
+					   armor = {}, weapon = {}, stat = {}, secondary = {}}
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
@@ -66,6 +67,7 @@ function AutoTurnIn:OnEnable()
 
 	self:SetEnabled(AutoTurnInCharacterDB.enabled)
 	self:RegisterGossipEvents()
+	self:Print("May I ask you to tell your friends about AutoTurnIn? Maybe via facebook or tweeter? plxplx! Also, any ideas and bug reports are welcome\.")
 end
 
 function AutoTurnIn:RegisterGossipEvents()

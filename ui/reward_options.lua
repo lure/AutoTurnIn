@@ -74,12 +74,15 @@ CreateCheckbox("Ranged", WeaponPanel, 10, -136, string.format("%s, %s, %s", weap
 -- ARMOR 
 local ArmorPanel = CreatePanel("ArmorPanel", C.ARMORLABEL, 590, 70)
 local ArmorDropDown = CreateFrame("Frame", O.."ToggleKeyDropDown", ArmorPanel, "UIDropDownMenuTemplate")
-local ARMORCONST = {NONE_KEY, armor[2], armor[3], armor[4],armor[5]}
+local ARMORCONST = {NONE_KEY, armor[2], armor[3], armor[4], armor[5]}
 UIDropDownMenu_Initialize(ArmorDropDown, function (self, level)   
     for k, v in ipairs(ARMORCONST) do
         local info = UIDropDownMenu_CreateInfo()
 		info.text, info.value = v, k
         info.func = function(self)
+						for k, v in pairs(ptable.TempConfig.armor) do
+							print(k, v)
+						end						
 						UIDropDownMenu_SetSelectedID(ArmorDropDown, self:GetID())
 						if ArmorDropDown.value > 1 then
 							ptable.TempConfig.armor[ARMORCONST[ArmorDropDown.value]] = nil
@@ -87,7 +90,10 @@ UIDropDownMenu_Initialize(ArmorDropDown, function (self, level)
 						if self:GetID() > 1 then
 							ArmorDropDown.value = self:GetID()
 							ptable.TempConfig.armor[self:GetText()] = true
-						end
+						end						
+						for k, v in pairs(ptable.TempConfig.armor) do
+							print(k, v)
+						end										
 					end
         UIDropDownMenu_AddButton(info, level)
     end
@@ -118,8 +124,7 @@ CreateCheckbox('ITEM_MOD_HASTE_RATING_SHORT', SecStatPanel, 206, -40, ITEM_MOD_H
 CreateCheckbox('ITEM_MOD_HIT_RATING_SHORT', SecStatPanel, 402, -40, ITEM_MOD_HIT_RATING_SHORT)
     -- 3rd line
 CreateCheckbox('ITEM_MOD_MASTERY_RATING_SHORT', SecStatPanel, 10, -72, ITEM_MOD_MASTERY_RATING_SHORT)
-CreateCheckbox('ITEM_MOD_SPELL_PENETRATION_SHORT', SecStatPanel, 206, -72, ITEM_MOD_SPELL_PENETRATION_SHORT)
-CreateCheckbox('ITEM_MOD_SPELL_POWER_SHORT', SecStatPanel, 402, -72, ITEM_MOD_SPELL_POWER_SHORT)
+CreateCheckbox('ITEM_MOD_SPELL_POWER_SHORT', SecStatPanel, 206, -72, ITEM_MOD_SPELL_POWER_SHORT)
 
 
 -- 'Greed' CheckBox
@@ -138,12 +143,11 @@ SecStatPanel:SetPoint("TOPLEFT", StatPanel, "BOTTOMLEFT", 0, -20)
 GreedAfterNeed:SetPoint("TOPLEFT", SecStatPanel, "BOTTOMLEFT", 8, -16)
 
 --[[ PANEL FUNCTIONS ]]--
-local AC = {[NONE_KEY]=1, [armor[2]]=2, [armor[3]]=3, [armor[4]]=4,[armor[5]]=5}
 RewardPanel.refresh = function()
 	WeaponPanel:ClearCheckBoxes()
 	ArmorPanel:ClearCheckBoxes()
 	StatPanel:ClearCheckBoxes()
-
+	SecStatPanel:ClearCheckBoxes()
 	for k,v in pairs(ptable.TempConfig.weapon) do
 		_G[WeaponPanel:GetName()..k]:SetChecked(v)
 	end
@@ -153,15 +157,22 @@ RewardPanel.refresh = function()
 	for k,v in pairs(ptable.TempConfig.secondary) do
 		_G[SecStatPanel:GetName()..k]:SetChecked(v)
 	end	
+
 	for k,v in pairs(ptable.TempConfig.armor) do
-		_G[ArmorPanel:GetName()..k]:SetChecked(v)
+		-- check is necessary: armor types and concrete subtypes held in one array. while subtypes have it's checkboxes, armor types rendered in a DropBox 
+		-- -> hence, no global control exists and _G[armorType] leads to silent exception
+		local checkbox = _G[ArmorPanel:GetName()..k];
+		if (checkbox) then 
+			_G[ArmorPanel:GetName()..k]:SetChecked(v)
+		end
 	end	
-	
+		
 	GreedAfterNeed:SetChecked(ptable.TempConfig.greedifnothingfound )
 	-- Armor types dropdown
 	ArmorDropDown.value = nil
+	
 	for index, armorName in ipairs(ARMORCONST) do
-		if ptable.TempConfig.armor[armorName] then 
+		if ptable.TempConfig.armor[armorName] then
 			ArmorDropDown.value=index			
 		end
 	end
