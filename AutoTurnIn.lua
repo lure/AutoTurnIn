@@ -1,10 +1,16 @@
+--[[
+Feel free to use this source code for any purpose ( except developing nuclear weapon! :)
+Please keep original author statement.
+@author Alex Shubert (alex.shubert@gmail.com)
+]]--
+
 local addonName, ptable = ...
 local L = ptable.L
 local C = ptable.CONST
 local TOCVersion = GetAddOnMetadata(addonName, "Version")
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
-AutoTurnIn.defaults = {enabled = true, all = false, lootreward = 1, tournament = 2, 
+AutoTurnIn.defaults = {enabled = true, all = false, lootreward = 1, tournament = 2,
 					   darkmoonteleport=true, togglekey=2, darkmoonautostart=true, showrewardtext=true, version=TOCVersion, autoequip = false,
 					   armor = {}, weapon = {}, stat = {}, secondary = {}}
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
@@ -67,7 +73,6 @@ function AutoTurnIn:OnEnable()
 
 	self:SetEnabled(AutoTurnInCharacterDB.enabled)
 	self:RegisterGossipEvents()
-	self:Print("May I ask you to tell your friends about AutoTurnIn? Maybe via facebook or tweeter? plxplx! Also, any ideas and bug reports are welcome\.")
 end
 
 function AutoTurnIn:RegisterGossipEvents()
@@ -117,9 +122,9 @@ function AutoTurnIn:GetItemAmount(isCurrency, item)
 	return amount and amount or 0
 end
 
--- returns set 'self.allowed' to true if addon is allowed to handle current gossip conversation 
+-- returns set 'self.allowed' to true if addon is allowed to handle current gossip conversation
 -- Cases when it may not : (addon is enabled and toggle key was pressed) or (addon is disabled and toggle key is not presse)
--- 'forcecheck' does what it name says: forces check 
+-- 'forcecheck' does what it name says: forces check
 function AutoTurnIn:AllowedToHandle(forcecheck)
 	if ( self.allowed == nil or forcecheck ) then
 		-- Double 'not' converts possible 'nil' to boolean representation
@@ -136,7 +141,7 @@ function AutoTurnIn:QUEST_GREETING()
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
-	
+
 	for index=1, GetNumActiveQuests() do
 		local quest, completed = GetActiveTitle(index)
 		if (AutoTurnInCharacterDB.all or L.quests[quest]) and (completed) then
@@ -159,12 +164,13 @@ function AutoTurnIn:QUEST_GREETING()
 end
 
 -- (gaq[i+3]) equals "1" if quest is complete, "nil" otherwise
--- why not 	gaq={GetGossipAvailableQuests()}? Well, tables in lua are truncated for values with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
+-- why not 	gaq={GetGossipAvailableQuests()}? Well, tables in lua are truncated for values
+-- with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
 function AutoTurnIn:VarArgForActiveQuests(...)
     local MOP_INDEX_CONST = 5 -- was '4' in Cataclysm
 
 	for i=1, select("#", ...), MOP_INDEX_CONST do
-		local completeStatus = select(i+3, ...)		
+		local completeStatus = select(i+3, ...)
 		if (completeStatus) then  -- complete status
 			local questname = select(i, ...)
 			local quest = L.quests[questname]
@@ -192,10 +198,10 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 		if AutoTurnInCharacterDB.all or (quest and (not quest.donotaccept)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
-					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)					
+					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
 				end
 			else
-				SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)				
+				SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
 			end
 		end
 	end
@@ -279,26 +285,26 @@ AutoTurnIn.delayFrame:SetScript('OnUpdate', function()
 	end
 end)
 
--- turns quest in printing reward text if `showrewardtext` option is set. 
--- prints appropriate message if item is taken by greed 
+-- turns quest in printing reward text if `showrewardtext` option is set.
+-- prints appropriate message if item is taken by greed
 -- equips received reward if such option selected
-function AutoTurnIn:TurnInQuest(rewardIndex)	
+function AutoTurnIn:TurnInQuest(rewardIndex)
 	if (AutoTurnInCharacterDB.showrewardtext) then
 		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
 	end
-	
-	if self.forceGreed then 
+
+	if self.forceGreed then
 		self:Print(L["gogreedy"])
-	end	
-	
+	end
+
 	local name = GetQuestItemInfo("choice", rewardIndex)
 	if (AutoTurnInCharacterDB.autoequip and name) then
 		self.autoEquipList[name] = true
 		self.delayFrame.delay = time() + 2
 		self.delayFrame:Show()
 	end
-	
-	GetQuestReward(rewardIndex)
+	self:Print(GetQuestItemLink("choice", rewardIndex))
+	--GetQuestReward(rewardIndex)
 end
 
 function AutoTurnIn:Greed()
@@ -320,16 +326,16 @@ function AutoTurnIn:Greed()
 	end
 end
 
---[[ 
-iterates all rewards and compares with chosen stats and types. If only one appropriate item found then it accepted and quest is turned in. 
-if more than one suitable item found then item list is shown in a chat window and addons return control to player. 
+--[[
+iterates all rewards and compares with chosen stats and types. If only one appropriate item found then it accepted and quest is turned in.
+if more than one suitable item found then item list is shown in a chat window and addons return control to player.
 
 @returns 'true' if one or more suitable reward is found, 'false' otherwise ]]--
 -- tables are declared here to optimize memory model. Said that in current implementation it's cheaper to wipe than to create.
-AutoTurnIn.found, AutoTurnIn.stattable = {}, {} 
+AutoTurnIn.found, AutoTurnIn.stattable = {}, {}
 function AutoTurnIn:Need()
 	wipe(self.found)
-	
+
 	for i=1, GetNumQuestChoices() do
 		local link = GetQuestItemLink("choice", i)
 
@@ -348,14 +354,15 @@ function AutoTurnIn:Need()
 		-- item is suitable is there are no type cpecified at all or item type is required
 		local OkByType = false
 		if class == C.WEAPONLABEL then
-			OkByType = (not next(AutoTurnInCharacterDB.weapon)) or (AutoTurnInCharacterDB.weapon[subclass] or 
+			OkByType = (not next(AutoTurnInCharacterDB.weapon)) or (AutoTurnInCharacterDB.weapon[subclass] or
 						self:IsRangedAndRequired(subclass))
 		else
-			OkByType = ( not next(AutoTurnInCharacterDB.armor) ) or ( AutoTurnInCharacterDB.armor[subclass] or 
+			OkByType = ( not next(AutoTurnInCharacterDB.armor) ) or ( AutoTurnInCharacterDB.armor[subclass] or
 						AutoTurnInCharacterDB.armor[equipSlot] or self:IsJewelryAndRequired(equipSlot) )
 		end
 
 		--Same here: if no stat specified or item stat is chosen then item is wanted
+		local itemCandidate = {index=i, hits=0}
 		local OkByStat = not next(AutoTurnInCharacterDB.stat) 					-- true if table is empty
 		local OkBySecondary = not next(AutoTurnInCharacterDB.secondary) -- true if table is empty
 		if (not (OkByStat and OkBySecondaryStat)) then
@@ -367,34 +374,40 @@ function AutoTurnIn:Need()
 				end
 				if ( AutoTurnInCharacterDB.secondary[stat] ) then
 					OkBySecondary = true
+					itemCandidate.hits =  itemCandidate.hits + 1
 				end
 			end
 		end
-		
+
 		-- User may not choose any options hence any item became 'ok'. That situation is undoubtly incorrect.
-		local SettingsExists = (class == C.WEAPONLABEL and next(AutoTurnInCharacterDB.weapon) or next(AutoTurnInCharacterDB.armor)) 
+		local SettingsExists = (class == C.WEAPONLABEL and next(AutoTurnInCharacterDB.weapon) or next(AutoTurnInCharacterDB.armor))
 								or next(AutoTurnInCharacterDB.stat)
- 					  
+ 		-- OK means that particular options section is empty or item meets requirements
 		if (OkByType and OkByStat and OkBySecondary and SettingsExists) then
-			tinsert(self.found, i)
+			tinsert(self.found, itemCandidate)
 		end
 	end
 
 	-- HANDLE RESULT
-	if #self.found > 1 then
-		local vars = ""
-		for _, reward in pairs(self.found) do
-			vars = vars..' '..GetQuestItemLink("choice", reward)
+	local foundCount = #self.found
+	if foundCount > 1 then
+		-- sorting found items by relevance (count of attributes that concidence)
+		table.sort(self.found, function(a,b) return a.hits > b.hits end)
+		if (self.found[1].hits == self.found[2].hits) then
+			self:Print(L["multiplefound"])
+			for _, reward in pairs(self.found) do
+				self:Print(GetQuestItemLink("choice", reward.index))
+			end
+		else
+			self:TurnInQuest(self.found[1].index)
 		end
-		self:Print(L["multiplefound"])	
-	elseif(#self.found == 1) then
-		self:TurnInQuest(self.found[1])
+	elseif(foundCount == 1) then
+		self:TurnInQuest(self.found[1].index)
+	elseif  ( foundCount == 0 and GetNumQuestChoices() > 0 ) and ( not AutoTurnInCharacterDB.greedifnothingfound ) then
+		self:Print(L["nosuitablefound"])
 	end
 
-	if  ( #self.found == 0 and GetNumQuestChoices() > 0 ) and ( not AutoTurnInCharacterDB.greedifnothingfound ) then 
-		self:Print(L["nosuitablefound"])
-	end	
-	return ( #self.found ~= 0 )
+	return ( foundCount ~= 0 )
 end
 
 -- I was forced to make decision on offhands, cloack and shileds separate from armor but I can't pick up my mind about the reason...
@@ -408,14 +421,14 @@ function AutoTurnIn:QUEST_COMPLETE()
     if AutoTurnInCharacterDB.all or quest then
 		if GetNumQuestChoices() > 1 then
 			if AutoTurnInCharacterDB.lootreward > 1 then -- Auto Loot enabled!
-				self.forceGreed = false 
-				
+				self.forceGreed = false
+
 				-- Tournament quest found
 				if (quest == "tournament") then
 					self:TurnInQuest(AutoTurnInCharacterDB.tournament)
 					return
 				end
-			
+
 				if (AutoTurnInCharacterDB.lootreward == 3) then
 					self.forceGreed = (not self:Need() ) and AutoTurnInCharacterDB.greedifnothingfound
 				end

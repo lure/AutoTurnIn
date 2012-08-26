@@ -55,19 +55,19 @@ local armor = {GetAuctionItemSubClasses(2)}
 local WeaponPanel = CreatePanel("WeaponPanel", C.WEAPONLABEL, 590, 170)
 CreateCheckbox(weapon[1], WeaponPanel, 10, -8)
 CreateCheckbox(weapon[2], WeaponPanel, 206, -8)
-CreateCheckbox(weapon[5], WeaponPanel, 402, -8)
+CreateCheckbox(weapon[10], WeaponPanel, 402, -8)
 	-- 2nd line 
-CreateCheckbox(weapon[6], WeaponPanel, 10, -40)
-CreateCheckbox(weapon[7], WeaponPanel, 206, -40)
-CreateCheckbox(weapon[8], WeaponPanel, 402, -40)
+CreateCheckbox(weapon[5], WeaponPanel, 10, -40)
+CreateCheckbox(weapon[6], WeaponPanel, 206, -40)
+CreateCheckbox(weapon[11], WeaponPanel, 402, -40)
     -- 3rd line
-CreateCheckbox(weapon[9], WeaponPanel, 10, -72)
-CreateCheckbox(weapon[10], WeaponPanel, 206, -72)
-CreateCheckbox(weapon[11], WeaponPanel, 402, -72)
+CreateCheckbox(weapon[8], WeaponPanel, 10, -72)
+CreateCheckbox(weapon[9], WeaponPanel, 206, -72)
+CreateCheckbox(weapon[16], WeaponPanel, 402, -72)
 	-- 4rd line
 CreateCheckbox(weapon[13], WeaponPanel, 10, -104)
-CreateCheckbox(weapon[14], WeaponPanel, 206, -104)
-CreateCheckbox(weapon[16], WeaponPanel, 402, -104)
+CreateCheckbox(weapon[7], WeaponPanel, 206, -104)
+CreateCheckbox(weapon[14], WeaponPanel, 402, -104)
 	-- 5th line
 CreateCheckbox("Ranged", WeaponPanel, 10, -136, string.format("%s, %s, %s", weapon[3], weapon[4], weapon[15]) )
 
@@ -79,10 +79,7 @@ UIDropDownMenu_Initialize(ArmorDropDown, function (self, level)
     for k, v in ipairs(ARMORCONST) do
         local info = UIDropDownMenu_CreateInfo()
 		info.text, info.value = v, k
-        info.func = function(self)
-						for k, v in pairs(ptable.TempConfig.armor) do
-							print(k, v)
-						end						
+        info.func = function(self)			
 						UIDropDownMenu_SetSelectedID(ArmorDropDown, self:GetID())
 						if ArmorDropDown.value > 1 then
 							ptable.TempConfig.armor[ARMORCONST[ArmorDropDown.value]] = nil
@@ -90,10 +87,7 @@ UIDropDownMenu_Initialize(ArmorDropDown, function (self, level)
 						if self:GetID() > 1 then
 							ArmorDropDown.value = self:GetID()
 							ptable.TempConfig.armor[self:GetText()] = true
-						end						
-						for k, v in pairs(ptable.TempConfig.armor) do
-							print(k, v)
-						end										
+						end															
 					end
         UIDropDownMenu_AddButton(info, level)
     end
