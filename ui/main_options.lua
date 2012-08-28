@@ -124,6 +124,13 @@ EquipReward:SetScript("OnClick", function(self)
 	ptable.TempConfig.autoequip = self:GetChecked() == 1 
 end)
 
+-- 'Equip Reward Text' CheckBox
+local Debug = CreateFrame("CheckButton", O.."Debug", OptionsPanel, "OptionsCheckButtonTemplate")
+_G[Debug:GetName().."Text"]:SetText(L["debug"])
+Debug:SetScript("OnClick", function(self) 
+	ptable.TempConfig.debug = self:GetChecked() == 1 
+end)
+
 -- Auto toggle key
 local ToggleKeyLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 ToggleKeyLabel:SetText(L["togglekey"])
@@ -159,6 +166,7 @@ DarkMoonCannon:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -16)
 DarkMoonAutoStart:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -16)
 ShowRewardText:SetPoint("TOPLEFT", DarkMoonAutoStart, "BOTTOMLEFT", 0, -16)
 EquipReward:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", 0, -16)
+Debug:SetPoint("TOPLEFT", ResetButton, "BOTTOMLEFT", 0, -16)
 
 ToggleKeyLabel:SetPoint("BOTTOMLEFT", ToggleKeyDropDown, "TOPLEFT", 18, 0)
 ToggleKeyDropDown:SetPoint("TOPLEFT", EquipReward, "BOTTOMLEFT", -15, -30)
@@ -185,6 +193,7 @@ OptionsPanel.refresh = function()
 	DarkMoonAutoStart:SetChecked(ptable.TempConfig.darkmoonautostart)
 	ShowRewardText:SetChecked(ptable.TempConfig.showrewardtext)
 	EquipReward:SetChecked(ptable.TempConfig.autoequip)
+	Debug:SetChecked(ptable.TempConfig.debug)
 	
 	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)
 	UIDropDownMenu_SetText(ToggleKeyDropDown,  ToggleKeyConst[ptable.TempConfig.togglekey])

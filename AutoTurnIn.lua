@@ -11,7 +11,7 @@ local TOCVersion = GetAddOnMetadata(addonName, "Version")
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 AutoTurnIn.defaults = {enabled = true, all = false, lootreward = 1, tournament = 2,
-					   darkmoonteleport=true, togglekey=2, darkmoonautostart=true, showrewardtext=true, version=TOCVersion, autoequip = false,
+					   darkmoonteleport=true, togglekey=4, darkmoonautostart=true, showrewardtext=true, version=TOCVersion, autoequip = false, debug=false,
 					   armor = {}, weapon = {}, stat = {}, secondary = {}}
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
@@ -303,8 +303,17 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		self.delayFrame.delay = time() + 2
 		self.delayFrame:Show()
 	end
-	self:Print(GetQuestItemLink("choice", rewardIndex))
-	--GetQuestReward(rewardIndex)
+	
+	if (AutoTurnInCharacterDB.debug) then
+		local link = GetQuestItemLink("choice", rewardIndex)
+		if (link) then 
+			self:Print("Debug: item to loot=", GetQuestItemLink("choice", rewardIndex))
+		elseif (GetNumQuestChoices() == 0) then
+			self:Print("Debug: turning quest in")
+		end
+	else
+		GetQuestReward(rewardIndex)
+	end
 end
 
 function AutoTurnIn:Greed()
@@ -338,7 +347,7 @@ function AutoTurnIn:Need()
 
 	for i=1, GetNumQuestChoices() do
 		local link = GetQuestItemLink("choice", i)
-
+	
 		if ( link == nil ) then
 			self:Print(L["rewardlag"])
 			return true
@@ -349,20 +358,21 @@ function AutoTurnIn:Need()
 		if  ( 'INVTYPE_TRINKET' == equipSlot )then
 			self:Print(L["stopitemfound"]:format(_G[equipSlot]))
 			return true
-		end
-
-		-- item is suitable is there are no type cpecified at all or item type is required
+		end		
+		local itemCandidate = {index=i, points=0, type="", stat="NOTCHOSEN", secondary={}}
+		
+		-- TYPE: item is suitable if there are no type specified at all or item type is chosen
 		local OkByType = false
 		if class == C.WEAPONLABEL then
 			OkByType = (not next(AutoTurnInCharacterDB.weapon)) or (AutoTurnInCharacterDB.weapon[subclass] or
-						self:IsRangedAndRequired(subclass))
+						self:IsRangedAndRequired(subclass))			
 		else
 			OkByType = ( not next(AutoTurnInCharacterDB.armor) ) or ( AutoTurnInCharacterDB.armor[subclass] or
 						AutoTurnInCharacterDB.armor[equipSlot] or self:IsJewelryAndRequired(equipSlot) )
 		end
-
-		--Same here: if no stat specified or item stat is chosen then item is wanted
-		local itemCandidate = {index=i, hits=0}
+		itemCandidate.type=subclass .. ((not not OkByType) and "=>OK" or "=>FAIL")
+		
+		--STAT+SECONDARY: Same here: if no stat specified or item stat is chosen then item is wanted		
 		local OkByStat = not next(AutoTurnInCharacterDB.stat) 					-- true if table is empty
 		local OkBySecondary = not next(AutoTurnInCharacterDB.secondary) -- true if table is empty
 		if (not (OkByStat and OkBySecondaryStat)) then
@@ -371,29 +381,41 @@ function AutoTurnIn:Need()
 			for stat, value in pairs(self.stattable) do
 				if ( AutoTurnInCharacterDB.stat[stat] ) then
 					OkByStat = true
+					itemCandidate.stat=_G[stat].."=>OK"
 				end
 				if ( AutoTurnInCharacterDB.secondary[stat] ) then
 					OkBySecondary = true
-					itemCandidate.hits =  itemCandidate.hits + 1
+					itemCandidate.points =  itemCandidate.points + 1
+					tinsert(itemCandidate.secondary, _G[stat])
 				end
 			end
 		end
 
 		-- User may not choose any options hence any item became 'ok'. That situation is undoubtly incorrect.
 		local SettingsExists = (class == C.WEAPONLABEL and next(AutoTurnInCharacterDB.weapon) or next(AutoTurnInCharacterDB.armor))
-								or next(AutoTurnInCharacterDB.stat)
+								or next(AutoTurnInCharacterDB.stat)	
  		-- OK means that particular options section is empty or item meets requirements
 		if (OkByType and OkByStat and OkBySecondary and SettingsExists) then
 			tinsert(self.found, itemCandidate)
 		end
+		
+		if (AutoTurnInCharacterDB.debug) then			
+			local secondaryDebug = ""
+			for _, sec in pairs(itemCandidate.secondary) do 
+				secondaryDebug = sec..","..secondaryDebug
+			end
+			self:Print("Debug:", GetQuestItemLink("choice", itemCandidate.index), " type:", itemCandidate.type, 
+						" stat:", itemCandidate.stat, " secondary:[", secondaryDebug, "]=>", itemCandidate.points)
+		end		
 	end
 
 	-- HANDLE RESULT
 	local foundCount = #self.found
 	if foundCount > 1 then
 		-- sorting found items by relevance (count of attributes that concidence)
-		table.sort(self.found, function(a,b) return a.hits > b.hits end)
-		if (self.found[1].hits == self.found[2].hits) then
+		table.sort(self.found, function(a,b) return a.points > b.points end)
+
+		if (self.found[1].points == self.found[2].points) then
 			self:Print(L["multiplefound"])
 			for _, reward in pairs(self.found) do
 				self:Print(GetQuestItemLink("choice", reward.index))
