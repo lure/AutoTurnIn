@@ -36,9 +36,9 @@ privateTable.L = setmetatable({
 	['greedifnothing']='Greed if nothing found',
 	["multiplefound"]="Multiple reward candidates found. "..ERR_QUEST_MUST_CHOOSE,
 	["nosuitablefound"]="No suitable reward found. "..ERR_QUEST_MUST_CHOOSE,
-	["gogreedy"]="No suitable reward found, choosing highest value one.",
+	["gogreedy"]="No suitable reward found, choosing the highest value one.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
-	["stopitemfound"]="There are %s in rewards. Choose an item by yourself.",
+	["stopitemfound"]="There is %s in rewards. Choose an item yourself.",
 	},
 	{__index = function(table, index) return index end})
 	

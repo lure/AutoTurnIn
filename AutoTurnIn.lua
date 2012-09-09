@@ -303,10 +303,10 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		self.delayFrame.delay = time() + 2
 		self.delayFrame:Show()
 	end
-	
+
 	if (AutoTurnInCharacterDB.debug) then
 		local link = GetQuestItemLink("choice", rewardIndex)
-		if (link) then 
+		if (link) then
 			self:Print("Debug: item to loot=", GetQuestItemLink("choice", rewardIndex))
 		elseif (GetNumQuestChoices() == 0) then
 			self:Print("Debug: turning quest in")
@@ -347,7 +347,7 @@ function AutoTurnIn:Need()
 
 	for i=1, GetNumQuestChoices() do
 		local link = GetQuestItemLink("choice", i)
-	
+
 		if ( link == nil ) then
 			self:Print(L["rewardlag"])
 			return true
@@ -358,21 +358,21 @@ function AutoTurnIn:Need()
 		if  ( 'INVTYPE_TRINKET' == equipSlot )then
 			self:Print(L["stopitemfound"]:format(_G[equipSlot]))
 			return true
-		end		
+		end
 		local itemCandidate = {index=i, points=0, type="", stat="NOTCHOSEN", secondary={}}
-		
+
 		-- TYPE: item is suitable if there are no type specified at all or item type is chosen
 		local OkByType = false
 		if class == C.WEAPONLABEL then
 			OkByType = (not next(AutoTurnInCharacterDB.weapon)) or (AutoTurnInCharacterDB.weapon[subclass] or
-						self:IsRangedAndRequired(subclass))			
+						self:IsRangedAndRequired(subclass))
 		else
 			OkByType = ( not next(AutoTurnInCharacterDB.armor) ) or ( AutoTurnInCharacterDB.armor[subclass] or
 						AutoTurnInCharacterDB.armor[equipSlot] or self:IsJewelryAndRequired(equipSlot) )
 		end
 		itemCandidate.type=subclass .. ((not not OkByType) and "=>OK" or "=>FAIL")
-		
-		--STAT+SECONDARY: Same here: if no stat specified or item stat is chosen then item is wanted		
+
+		--STAT+SECONDARY: Same here: if no stat specified or item stat is chosen then item is wanted
 		local OkByStat = not next(AutoTurnInCharacterDB.stat) 					-- true if table is empty
 		local OkBySecondary = not next(AutoTurnInCharacterDB.secondary) -- true if table is empty
 		if (not (OkByStat and OkBySecondaryStat)) then
@@ -393,20 +393,20 @@ function AutoTurnIn:Need()
 
 		-- User may not choose any options hence any item became 'ok'. That situation is undoubtly incorrect.
 		local SettingsExists = (class == C.WEAPONLABEL and next(AutoTurnInCharacterDB.weapon) or next(AutoTurnInCharacterDB.armor))
-								or next(AutoTurnInCharacterDB.stat)	
+								or next(AutoTurnInCharacterDB.stat)
  		-- OK means that particular options section is empty or item meets requirements
 		if (OkByType and OkByStat and OkBySecondary and SettingsExists) then
 			tinsert(self.found, itemCandidate)
 		end
-		
-		if (AutoTurnInCharacterDB.debug) then			
+
+		if (AutoTurnInCharacterDB.debug) then
 			local secondaryDebug = ""
-			for _, sec in pairs(itemCandidate.secondary) do 
+			for _, sec in pairs(itemCandidate.secondary) do
 				secondaryDebug = sec..","..secondaryDebug
 			end
-			self:Print("Debug:", GetQuestItemLink("choice", itemCandidate.index), " type:", itemCandidate.type, 
+			self:Print("Debug:", GetQuestItemLink("choice", itemCandidate.index), " type:", itemCandidate.type,
 						" stat:", itemCandidate.stat, " secondary:[", secondaryDebug, "]=>", itemCandidate.points)
-		end		
+		end
 	end
 
 	-- HANDLE RESULT
