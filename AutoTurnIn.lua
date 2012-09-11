@@ -277,8 +277,8 @@ AutoTurnIn.delayFrame:SetScript('OnUpdate', function()
 				local name = GetItemInfo(link)
 				if ( name and AutoTurnIn.autoEquipList[name] ) then
 					AutoTurnIn:Print(L["equipping reward"], link)
+					EquipItemByName(name, AutoTurnIn.autoEquipList[name])
 					AutoTurnIn.autoEquipList[name]=nil
-					EquipItemByName(name)
 				end
 			end
 		end
@@ -297,11 +297,31 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		self:Print(L["gogreedy"])
 	end
 
-	local name = GetQuestItemInfo("choice", rewardIndex)
-	if (AutoTurnInCharacterDB.autoequip and name) then
-		self.autoEquipList[name] = true
-		self.delayFrame.delay = time() + 2
-		self.delayFrame:Show()
+	if (not self.forceGreed) then
+		local name = GetQuestItemInfo("choice", rewardIndex)
+		if (AutoTurnInCharacterDB.autoequip and (strlen(name) > 0)) then
+			local lootLevel, _, _, _, _, equipSlot = select(4, GetItemInfo(GetQuestItemLink("choice", rewardIndex)))
+
+			-- Compares reward and already equiped item levels. If reward level is greater than equiped item, auto equip reward
+			local slots = C.SLOTS[equipSlot]
+			local slotNumber = GetInventorySlotInfo(slots[1])
+			local invLink = GetInventoryItemLink("player", slotNumber)
+			local eqLevel = select(4, GetItemInfo(invLink))
+			-- If reward is a ring  trinket or one-handed weapons all slots must be checked in order to swap one with a lesser item-level
+			if (#slots > 1) then
+				invLink = GetInventoryItemLink("player", GetInventorySlotInfo(slots[2]))
+				if (invLink) then 
+					local eq2Level = select(4, GetItemInfo(invLink))
+					eqLevel = (eqLevel > eq2Level) and eq2Level or eqLevel
+					slotNumber = (eqLevel > eq2Level) and GetInventorySlotInfo(slots[2]) or slotNumber
+				end
+			end
+			if(lootLevel > eqLevel) then
+				self.autoEquipList[name] = slotNumber
+				self.delayFrame.delay = time() + 2
+				self.delayFrame:Show()
+			end
+		end
 	end
 
 	if (AutoTurnInCharacterDB.debug) then
@@ -330,6 +350,7 @@ function AutoTurnIn:Greed()
 			index = i
 		end
 	end
+
 	if money > 0 then  -- some quests, like tournament ones, offer reputation rewards and they have no cost.
 		self:TurnInQuest(index)
 	end

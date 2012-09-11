@@ -5,7 +5,6 @@ local C = ptable.CONST
 local weapon = {GetAuctionItemSubClasses(1)}
 local armor = {GetAuctionItemSubClasses(2)}
 
--- C.STOPTOKENS = {['INVTYPE_RELIC']='', ['INVTYPE_TRINKET']='', ['INVTYPE_HOLDABL']=''}
 C.WEAPONLABEL, C.ARMORLABEL = GetAuctionItemClasses()
 C.JEWELRY = {['INVTYPE_FINGER']='', ['INVTYPE_NECK']=''}
 
@@ -42,6 +41,32 @@ C.ITEMS = {
 	]]--
 }
 
+C.SLOTS = {
+	["INVTYPE_AMMO"]={"AmmoSlot"},
+	["INVTYPE_HEAD"]={"HeadSlot"},
+	["INVTYPE_NECK"]={"NeckSlot"},
+	["INVTYPE_SHOULDER"]={"ShoulderSlot"},
+	["INVTYPE_CHEST"]={"ChestSlot"},
+	["INVTYPE_WAIST"]={"WaistSlot"},
+	["INVTYPE_LEGS"]={"LegsSlot"},
+	["INVTYPE_FEET"]={"FeetSlot"},
+	["INVTYPE_WRIST"]={"WristSlot"},
+	["INVTYPE_HAND"]={"HandsSlot"}, 
+	["INVTYPE_FINGER"]={"Finger0Slot", "Finger1Slot"}, 
+	["INVTYPE_TRINKET"]={"Trinket0Slot", "Trinket1Slot"},
+	["INVTYPE_CLOAK"]={"BackSlot"},
+
+	["INVTYPE_WEAPON"]={"MainHandSlot", "SecondaryHandSlot"},
+	["INVTYPE_2HWEAPON"]={"MainHandSlot"},
+	["INVTYPE_RANGED"]={"MainHandSlot"},
+	["INVTYPE_RANGEDRIGHT"]={"MainHandSlot"},
+	["INVTYPE_WEAPONMAINHAND"]={"MainHandSlot"}, 
+	["INVTYPE_SHIELD"]={"SecondaryHandSlot"},
+	["INVTYPE_WEAPONOFFHAND"]={"SecondaryHandSlot"},
+	["INVTYPE_HOLDABLE"]={"SecondaryHandSlot"}
+}
+
+
 --[[ 
 from GlobalStrings.lua
 ITEM_MOD_CRIT_RATING_SHORT = "Critical Strike";
@@ -55,5 +80,4 @@ ITEM_MOD_HIT_RATING_SHORT = "Hit";
 ITEM_MOD_MASTERY_RATING_SHORT = "Mastery";
 ITEM_MOD_SPELL_PENETRATION_SHORT = "Spell Penetration";
 ITEM_MOD_SPELL_POWER_SHORT = "Spell Power";
-
 ]]--
