@@ -14,7 +14,8 @@ privateTable.L = setmetatable({
 	["resetbutton"]="reset",
 		
 	["questTypeLabel"] = "quests", 
-	["questTypeAll"] = "alle", 
+	["questTypeAll"] = "alle",
+	["TrivialQuests"]="akzeptieren 'grauen' Quests", 	
 	["questTypeList"] = "Täglich", 
 
 	["lootTypeLabel"]="Jobs mit Auszeichnungen",

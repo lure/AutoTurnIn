@@ -14,7 +14,8 @@ privateTable.L = setmetatable({
 	["resetbutton"]="сброс",
 	
 	["questTypeLabel"] = "задания", 
-	["questTypeAll"] = "все", 
+	["questTypeAll"] = "все",
+	["TrivialQuests"]="брать 'серые' квесты",
 	["questTypeList"] = "ежедневные", 
 
 	["lootTypeLabel"]="задания с наградами",

@@ -53,6 +53,13 @@ end)
 UIDropDownMenu_SetWidth(QuestDropDown, 200);
 UIDropDownMenu_JustifyText(QuestDropDown, "LEFT")
 
+-- DarkmoonTeleport
+local TrivialQuests = CreateFrame("CheckButton", O.."TrivialQuests", OptionsPanel, "OptionsCheckButtonTemplate")
+_G[TrivialQuests:GetName().."Text"]:SetText(L["TrivialQuests"])
+TrivialQuests:SetScript("OnClick", function(self) 
+	ptable.TempConfig.trivial = self:GetChecked() == 1 
+end)
+
 -- Tournament loot type 
 local TournamentDropDownLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 TournamentDropDownLabel:SetText(L["tournamentLabel"])
@@ -158,6 +165,7 @@ ResetButton:SetPoint("TOPRIGHT", OptionsPanel, "TOPRIGHT", -10, -10)
 Enable:SetPoint("TOPLEFT", subText, "BOTTOMLEFT", 0, -16)
 QuestLabel:SetPoint("BOTTOMLEFT", QuestDropDown, "TOPLEFT", 18, 0)
 QuestDropDown:SetPoint("TOPLEFT", Enable, "BOTTOMLEFT", -15, -35)
+TrivialQuests:SetPoint("TOPLEFT", QuestDropDown, "TOPRIGHT", 30, 0)
 LootLabel:SetPoint("BOTTOMLEFT", LootDropDown, "TOPLEFT", 18, 0)
 LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -30)
 TournamentDropDownLabel:SetPoint("BOTTOMLEFT", TournamentDropDown, "TOPLEFT", 18, 0)
@@ -194,6 +202,7 @@ OptionsPanel.refresh = function()
 	ShowRewardText:SetChecked(ptable.TempConfig.showrewardtext)
 	EquipReward:SetChecked(ptable.TempConfig.autoequip)
 	Debug:SetChecked(ptable.TempConfig.debug)
+	TrivialQuests:SetChecked(ptable.TempConfig.trivial)
 	
 	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)
 	UIDropDownMenu_SetText(ToggleKeyDropDown,  ToggleKeyConst[ptable.TempConfig.togglekey])

@@ -10,8 +10,9 @@ local C = ptable.CONST
 local TOCVersion = GetAddOnMetadata(addonName, "Version")
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
-AutoTurnIn.defaults = {enabled = true, all = false, lootreward = 1, tournament = 2,
-					   darkmoonteleport=true, togglekey=4, darkmoonautostart=true, showrewardtext=true, version=TOCVersion, autoequip = false, debug=false,
+AutoTurnIn.defaults = {enabled = true, all = false, trivial = false, lootreward = 1, tournament = 2,
+					   darkmoonteleport=true, togglekey=4, darkmoonautostart=true, showrewardtext=true, 
+					   version=TOCVersion, autoequip = false, debug=false,
 					   armor = {}, weapon = {}, stat = {}, secondary = {}}
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
@@ -150,8 +151,9 @@ function AutoTurnIn:QUEST_GREETING()
 	end
 
 	for index=1, GetNumAvailableQuests() do
+		local isTrivialAndTrivialIsAllowed = AutoTurnInCharacterDB.trivial and IsActiveQuestTrivial(index)
 		local quest = L.quests[GetAvailableTitle(index)]
-		if (AutoTurnInCharacterDB.all or quest)then
+		if (isTrivialAndTrivialIsAllowed and (AutoTurnInCharacterDB.all or quest))then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectAvailableQuest(index)
@@ -192,10 +194,16 @@ end
 -- like previous function this one works around `nil` values in a list.
 function AutoTurnIn:VarArgForAvailableQuests(...)
 	local MOP_INDEX_CONST = 6 -- was '5' in Cataclysm
+
 	for i=1, select("#", ...), MOP_INDEX_CONST do
 		local questname = select(i, ...)
-		local quest = L.quests[questname]
-		if AutoTurnInCharacterDB.all or (quest and (not quest.donotaccept)) then
+		local isTrivial = select(i+2, ...)		
+		local quest = L.quests[questname] -- this quest exists in questlist, stored in addons localization files. There are mostly daily quests
+		
+		local isTrivialAndTrivialIsAllowed = AutoTurnInCharacterDB.trivial and isTrivial
+		local inListAndAllowed = quest and (not quest.donotaccept)		
+		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
+		if ( isTrivialAndTrivialIsAllowed and (AutoTurnInCharacterDB.all or inListAndAllowed) ) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
