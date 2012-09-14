@@ -151,9 +151,9 @@ function AutoTurnIn:QUEST_GREETING()
 	end
 
 	for index=1, GetNumAvailableQuests() do
-		local isTrivialAndTrivialIsAllowed = AutoTurnInCharacterDB.trivial and IsActiveQuestTrivial(index)
+		local triviaAndAllowedOrNotTrivia = IsActiveQuestTrivial(index) and AutoTurnInCharacterDB.trivial or true
 		local quest = L.quests[GetAvailableTitle(index)]
-		if (isTrivialAndTrivialIsAllowed and (AutoTurnInCharacterDB.all or quest))then
+		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or quest))then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectAvailableQuest(index)
@@ -199,11 +199,11 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 		local questname = select(i, ...)
 		local isTrivial = select(i+2, ...)		
 		local quest = L.quests[questname] -- this quest exists in questlist, stored in addons localization files. There are mostly daily quests
-		
-		local isTrivialAndTrivialIsAllowed = AutoTurnInCharacterDB.trivial and isTrivial
+		local triviaAndAllowedOrNotTrivia = isTrivial and AutoTurnInCharacterDB.trivial or true
 		local inListAndAllowed = quest and (not quest.donotaccept)		
+		
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
-		if ( isTrivialAndTrivialIsAllowed and (AutoTurnInCharacterDB.all or inListAndAllowed) ) then
+		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or inListAndAllowed)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
