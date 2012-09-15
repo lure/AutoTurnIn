@@ -66,6 +66,7 @@ function AutoTurnIn:OnEnable()
 	AutoTurnInCharacterDB.weapon = AutoTurnInCharacterDB.weapon and AutoTurnInCharacterDB.weapon or {}
 	AutoTurnInCharacterDB.stat = AutoTurnInCharacterDB.stat and AutoTurnInCharacterDB.stat or {}
 	AutoTurnInCharacterDB.secondary = AutoTurnInCharacterDB.secondary and AutoTurnInCharacterDB.secondary or {}
+	AutoTurnInCharacterDB.trivial = AutoTurnInCharacterDB.trivial ~= nil and AutoTurnInCharacterDB.trivial or false
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 	if LDB then
@@ -138,7 +139,6 @@ end
 
 -- OldGossip interaction system. Burn in hell. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
-	self:Print("debug: old gossip system")
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
@@ -151,7 +151,7 @@ function AutoTurnIn:QUEST_GREETING()
 	end
 
 	for index=1, GetNumAvailableQuests() do
-		local triviaAndAllowedOrNotTrivia = (not IsActiveQuestTrivial(index)) or AutoTurnInCharacterDB.trivial
+		local triviaAndAllowedOrNotTrivia = (not IsAvailableQuestTrivial(index)) or AutoTurnInCharacterDB.trivial
 		local quest = L.quests[GetAvailableTitle(index)]
 		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or quest))then
 			if quest and quest.amount then
@@ -299,11 +299,11 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
 	end
 
-	if (self.forceGreed) and (rewardIndex > 0) then
-		self:Print(L["gogreedy"])
-	end
-
-	if (not self.forceGreed) then
+	if self.forceGreed then
+		if GetNumQuestChoices() > 0 then 
+			self:Print(L["gogreedy"])
+		end
+	else
 		local name = GetQuestItemInfo("choice", rewardIndex)
 		if (AutoTurnInCharacterDB.autoequip and (strlen(name) > 0)) then
 			local lootLevel, _, _, _, _, equipSlot = select(4, GetItemInfo(GetQuestItemLink("choice", rewardIndex)))
