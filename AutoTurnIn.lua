@@ -151,7 +151,7 @@ function AutoTurnIn:QUEST_GREETING()
 	end
 
 	for index=1, GetNumAvailableQuests() do
-		local triviaAndAllowedOrNotTrivia = IsActiveQuestTrivial(index) and AutoTurnInCharacterDB.trivial or true
+		local triviaAndAllowedOrNotTrivia = (not IsActiveQuestTrivial(index)) or AutoTurnInCharacterDB.trivial
 		local quest = L.quests[GetAvailableTitle(index)]
 		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or quest))then
 			if quest and quest.amount then
@@ -170,7 +170,6 @@ end
 -- with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
 function AutoTurnIn:VarArgForActiveQuests(...)
     local MOP_INDEX_CONST = 5 -- was '4' in Cataclysm
-
 	for i=1, select("#", ...), MOP_INDEX_CONST do
 		local completeStatus = select(i+3, ...)
 		if (completeStatus) then  -- complete status
@@ -194,14 +193,13 @@ end
 -- like previous function this one works around `nil` values in a list.
 function AutoTurnIn:VarArgForAvailableQuests(...)
 	local MOP_INDEX_CONST = 6 -- was '5' in Cataclysm
-
 	for i=1, select("#", ...), MOP_INDEX_CONST do
 		local questname = select(i, ...)
 		local isTrivial = select(i+2, ...)		
 		local quest = L.quests[questname] -- this quest exists in questlist, stored in addons localization files. There are mostly daily quests
-		local triviaAndAllowedOrNotTrivia = isTrivial and AutoTurnInCharacterDB.trivial or true
+		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
 		local inListAndAllowed = quest and (not quest.donotaccept)		
-		
+
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
 		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or inListAndAllowed)) then
 			if quest and quest.amount then
@@ -301,7 +299,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
 	end
 
-	if self.forceGreed then
+	if (self.forceGreed) and (rewardIndex > 0) then
 		self:Print(L["gogreedy"])
 	end
 
