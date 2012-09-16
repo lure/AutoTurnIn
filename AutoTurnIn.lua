@@ -300,7 +300,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 	end
 
 	if self.forceGreed then
-		if GetNumQuestChoices() > 0 then 
+		if GetNumQuestChoices() > 0 then
 			self:Print(L["gogreedy"])
 		end
 	else
@@ -468,15 +468,15 @@ function AutoTurnIn:QUEST_COMPLETE()
 
 	local quest = L.quests[GetTitleText()]
     if AutoTurnInCharacterDB.all or quest then
+		-- Tournament quest found
+		if (quest == "tournament") then
+			self:TurnInQuest(AutoTurnInCharacterDB.tournament)
+			return
+		end
+		--It's not tournament, so decide about loot by general settings
 		if GetNumQuestChoices() > 1 then
 			if AutoTurnInCharacterDB.lootreward > 1 then -- Auto Loot enabled!
 				self.forceGreed = false
-
-				-- Tournament quest found
-				if (quest == "tournament") then
-					self:TurnInQuest(AutoTurnInCharacterDB.tournament)
-					return
-				end
 
 				if (AutoTurnInCharacterDB.lootreward == 3) then
 					self.forceGreed = (not self:Need() ) and AutoTurnInCharacterDB.greedifnothingfound

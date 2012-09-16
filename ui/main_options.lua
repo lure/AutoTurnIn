@@ -91,11 +91,6 @@ UIDropDownMenu_Initialize(LootDropDown, function (self, level)
         info.func = function(self)
 						UIDropDownMenu_SetSelectedID(LootDropDown, self:GetID())
 						ptable.TempConfig.lootreward = self:GetID()
-						if ptable.TempConfig.lootreward == 1 then 
-							UIDropDownMenu_DisableDropDown(TournamentDropDown)
-						else 
-							UIDropDownMenu_EnableDropDown(TournamentDropDown)
-						end
 					end
         UIDropDownMenu_AddButton(info, level)
     end
@@ -194,9 +189,6 @@ OptionsPanel.refresh = function()
 	
 	UIDropDownMenu_SetSelectedID(TournamentDropDown, ptable.TempConfig.tournament)
 	UIDropDownMenu_SetText(TournamentDropDown,TournamentConst[ptable.TempConfig.tournament])
-	if (ptable.TempConfig.lootreward == 1) then
-		UIDropDownMenu_DisableDropDown(TournamentDropDown)
-	end
 	DarkMoonCannon:SetChecked(ptable.TempConfig.darkmoonteleport)
 	DarkMoonAutoStart:SetChecked(ptable.TempConfig.darkmoonautostart)
 	ShowRewardText:SetChecked(ptable.TempConfig.showrewardtext)
