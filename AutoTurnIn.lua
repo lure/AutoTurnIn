@@ -140,7 +140,6 @@ end
 -- OldGossip interaction system. Burn in hell. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
 	self:Print("OLD GOSSIP")
-
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
@@ -157,9 +156,9 @@ function AutoTurnIn:QUEST_GREETING()
 		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
 		
 		local quest = L.quests[GetAvailableTitle(index)]
-		local dailyAndAllowed = (quest and (not quest.donotaccept)) or isDaily
+		local knownAllowedQuest = quest and (not quest.donotaccept)
 		
-		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or dailyAndAllowed))then
+		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or knownAllowedQuest or isDaily)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectAvailableQuest(index)
@@ -203,12 +202,13 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 		local questname = select(i, ...)
 		local isTrivial = select(i+2, ...)		
 		local isDaily  = select(i+3, ...)		
-		local quest = L.quests[questname] -- this quest exists in questlist, stored in addons localization files. There are mostly daily quests
 		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial	
-		local dailyAndAllowed = (quest and (not quest.donotaccept)) or isDaily
+		
+		local quest = L.quests[questname] -- this quest exists in addons quest DB. There are mostly daily quests
+		local knownAllowedQuest = quest and (not quest.donotaccept)		
 		
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
-		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or dailyAndAllowed)) then
+		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or knownAllowedQuest or isDaily )) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
