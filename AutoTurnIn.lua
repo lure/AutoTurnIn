@@ -139,6 +139,8 @@ end
 
 -- OldGossip interaction system. Burn in hell. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
+	self:Print("OLD GOSSIP")
+
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
@@ -150,10 +152,14 @@ function AutoTurnIn:QUEST_GREETING()
 		end
 	end
 
-	for index=1, GetNumAvailableQuests() do
-		local triviaAndAllowedOrNotTrivia = (not IsAvailableQuestTrivial(index)) or AutoTurnInCharacterDB.trivial
+	for index=1, GetNumAvailableQuests() do		
+		local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)
+		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
+		
 		local quest = L.quests[GetAvailableTitle(index)]
-		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or quest))then
+		local dailyAndAllowed = (quest and (not quest.donotaccept)) or isDaily
+		
+		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or dailyAndAllowed))then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectAvailableQuest(index)
@@ -196,12 +202,13 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 	for i=1, select("#", ...), MOP_INDEX_CONST do
 		local questname = select(i, ...)
 		local isTrivial = select(i+2, ...)		
+		local isDaily  = select(i+3, ...)		
 		local quest = L.quests[questname] -- this quest exists in questlist, stored in addons localization files. There are mostly daily quests
-		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
-		local inListAndAllowed = quest and (not quest.donotaccept)		
-
+		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial	
+		local dailyAndAllowed = (quest and (not quest.donotaccept)) or isDaily
+		
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
-		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or inListAndAllowed)) then
+		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or dailyAndAllowed)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
