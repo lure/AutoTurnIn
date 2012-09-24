@@ -16,7 +16,10 @@ embeds.xml
 loc\localization_RU.lua
 loc\localization_EN.lua
 loc\localization_DE.lua
+loc\localization_FR.lua
+
 rewards_const.lua
 AutoTurnIn.lua
+
 ui\main_options.lua
 ui\reward_options.lua

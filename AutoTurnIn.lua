@@ -3,7 +3,7 @@ Feel free to use this source code for any purpose ( except developing nuclear we
 Please keep original author statement.
 @author Alex Shubert (alex.shubert@gmail.com)
 ]]--
-
+local _G = _G --Rumors says that global _G is called by lookup in a super-global table. Have no idea whether it is true. 
 local addonName, ptable = ...
 local L = ptable.L
 local C = ptable.CONST

@@ -1,5 +1,14 @@
 local addonName, privateTable = ...
-if (GetLocale() == "enUS")  then
+-- lua throws except if no locale provided. 
+local replaceTable = {
+		["enUS"]=true,
+		["koKR"]=true, 
+		["esES"]=true, 
+		["esMX"]=true, 
+		["zhTW"]=true, 
+		["zhCN"]=true }
+		
+if (replaceTable[GetLocale()])  then
 privateTable.L = setmetatable({
 	["usage1"]="'on'/'off' to enable or disable addon",
 	["usage2"]="'all'/'list' to handle any quest or just specified in a list",
