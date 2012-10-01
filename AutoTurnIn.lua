@@ -3,7 +3,8 @@ Feel free to use this source code for any purpose ( except developing nuclear we
 Please keep original author statement.
 @author Alex Shubert (alex.shubert@gmail.com)
 ]]--
-local _G = _G --Rumors says that global _G is called by lookup in a super-global table. Have no idea whether it is true. 
+local _G = _G 	--Rumors say that global _G is called by lookup in a super-global table. Have no idea whether it is true. 
+local _ 		--Sometimes blizzard exposes "_" variable as a global. 
 local addonName, ptable = ...
 local L = ptable.L
 local C = ptable.CONST
@@ -19,6 +20,7 @@ AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
 AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 AutoTurnIn.autoEquipList={}
+AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log 
 
 AutoTurnIn.ldbstruct = {
 		type = "data source",
@@ -38,6 +40,10 @@ AutoTurnIn.ldbstruct = {
 		end,
 	}
 
+function AutoTurnIn:OnInitialize()
+	self:RegisterChatCommand("au", "ConsoleComand")
+end	
+	
 function AutoTurnIn:SetEnabled(enabled)
 	AutoTurnInCharacterDB.enabled = not not enabled
 	if self.ldb then
@@ -77,20 +83,43 @@ function AutoTurnIn:OnEnable()
 	self:RegisterGossipEvents()
 end
 
+function AutoTurnIn:OnDisable()
+  self:UnregisterAllEvents()
+end
+
 function AutoTurnIn:RegisterGossipEvents()
 	self:RegisterEvent("QUEST_GREETING")
 	self:RegisterEvent("GOSSIP_SHOW")
 	self:RegisterEvent("QUEST_DETAIL")
 	self:RegisterEvent("QUEST_PROGRESS")
 	self:RegisterEvent("QUEST_COMPLETE")
+	self:RegisterEvent("QUEST_LOG_UPDATE")
 end
 
-function AutoTurnIn:OnDisable()
-  self:UnregisterAllEvents()
+function AutoTurnIn:QUEST_LOG_UPDATE()
+	if ( GetNumQuestLogEntries() > 0 ) then
+		for index=1, GetNumQuestLogEntries() do
+			local title, _, _, _, isHeader , _, _, isDaily = GetQuestLogTitle(index)
+			if not isHeader and isDaily then
+				self.questCache[title] = true
+			end
+		end
+		self:UnregisterEvent("QUEST_LOG_UPDATE")
+	end
 end
 
-function AutoTurnIn:OnInitialize()
-	self:RegisterChatCommand("au", "ConsoleComand")
+-- returns true if quest offered by gossip is daily
+function AutoTurnIn:AllOrCachedDaily(questname)
+	return AutoTurnInCharacterDB.all or (not not self.questCache[questname])
+end
+
+function AutoTurnIn:AllOrDaily(questname)
+	return AutoTurnInCharacterDB.all or (QuestIsDaily() or QuestIsWeekly())
+end
+
+-- caches offered by gossip quest as daily
+function AutoTurnIn:CacheAsDaily(gossipQuest)
+	self.questCache[gossipQuest] = true
 end
 
 local p1 = {[true]=L["enabled"], [false]=L["disabled"]}
@@ -104,19 +133,9 @@ function AutoTurnIn:ConsoleComand(arg)
 		self:Print(L["enabled"])
 	elseif arg == "off"  then
 		self:SetEnabled(false)
-		self:Print(L["disabled"])
-	elseif arg == "all" then
-		AutoTurnInCharacterDB.all = true
-		self:Print(L["all"])
-	elseif arg == "list" then
-		AutoTurnInCharacterDB.all = false
-		self:Print(L["list"])
-	elseif arg == "help" then
-		self:Print(p1[AutoTurnInCharacterDB.enabled == true])
-		self:Print(p2[AutoTurnInCharacterDB.all])
+		self:Print(L["disabled"])	
 	end
 end
-
 
 -- returns specified item count on player character. It may be some sort of currency or present in inventory as real items.
 function AutoTurnIn:GetItemAmount(isCurrency, item)
@@ -139,26 +158,28 @@ end
 
 -- OldGossip interaction system. Burn in hell. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
-	self:Print("OLD GOSSIP")
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
 
 	for index=1, GetNumActiveQuests() do
-		local quest, completed = GetActiveTitle(index)
-		if (AutoTurnInCharacterDB.all or L.quests[quest]) and (completed) then
+		local quest, isComplete = GetActiveTitle(index)
+		if isComplete and (self:AllOrCachedDaily(quest)) then
 			SelectActiveQuest(index)
 		end
 	end
 
-	for index=1, GetNumAvailableQuests() do		
-		local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)
+	for index=1, GetNumAvailableQuests() do
+		local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)		
 		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
-		
 		local quest = L.quests[GetAvailableTitle(index)]
-		local knownAllowedQuest = quest and (not quest.donotaccept)
+		local notBlackListed = not (quest and quest.donotaccept)
 		
-		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or knownAllowedQuest or isDaily)) then
+		if isDaily then 
+			self:CacheAsDaily(GetAvailableTitle(index))
+		end
+
+		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all or isDaily)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectAvailableQuest(index)
@@ -175,12 +196,13 @@ end
 -- with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
 function AutoTurnIn:VarArgForActiveQuests(...)
     local MOP_INDEX_CONST = 5 -- was '4' in Cataclysm
+	
 	for i=1, select("#", ...), MOP_INDEX_CONST do
-		local completeStatus = select(i+3, ...)
-		if (completeStatus) then  -- complete status
+		local isComplete = select(i+3, ...) -- complete status
+		if ( isComplete ) then  
 			local questname = select(i, ...)
-			local quest = L.quests[questname]
-			if AutoTurnInCharacterDB.all or quest  then
+			if self:AllOrCachedDaily(questname) then
+				local quest = L.quests[questname]
 				if quest and quest.amount then
 					if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 						SelectGossipActiveQuest(math.floor(i/MOP_INDEX_CONST)+1)
@@ -205,10 +227,10 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial	
 		
 		local quest = L.quests[questname] -- this quest exists in addons quest DB. There are mostly daily quests
-		local knownAllowedQuest = quest and (not quest.donotaccept)		
-		
+		local notBlackListed = not (quest and quest.donotaccept)		
+			
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
-		if (triviaAndAllowedOrNotTrivia and (AutoTurnInCharacterDB.all or knownAllowedQuest or isDaily )) then
+		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all or isDaily )) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
@@ -246,7 +268,11 @@ function AutoTurnIn:GOSSIP_SHOW()
 end
 
 function AutoTurnIn:QUEST_DETAIL()
-	if self:AllowedToHandle() and (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) then
+	if (QuestIsDaily() or QuestIsWeekly()) then 
+		self:CacheAsDaily(GetTitleText())
+	end
+	
+	if self:AllowedToHandle() and self:AllOrDaily() then
 		QuestInfoDescriptionText:SetAlphaGradient(0, -1)
 		QuestInfoDescriptionText:SetAlpha(1)
 		AcceptQuest()
@@ -254,7 +280,7 @@ function AutoTurnIn:QUEST_DETAIL()
 end
 
 function AutoTurnIn:QUEST_PROGRESS()
-    if  self:AllowedToHandle() and (AutoTurnInCharacterDB.all or L.quests[GetTitleText()]) and IsQuestCompletable() then
+    if  self:AllowedToHandle() and IsQuestCompletable() and self:AllOrDaily() then	
 		CompleteQuest()
     end
 end
@@ -316,24 +342,27 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 			local lootLevel, _, _, _, _, equipSlot = select(4, GetItemInfo(GetQuestItemLink("choice", rewardIndex)))
 
 			-- Compares reward and already equiped item levels. If reward level is greater than equiped item, auto equip reward
-			local slots = C.SLOTS[equipSlot]
-			local slotNumber = GetInventorySlotInfo(slots[1])
-			local invLink = GetInventoryItemLink("player", slotNumber)
-			local eqLevel = select(4, GetItemInfo(invLink))
-			-- If reward is a ring  trinket or one-handed weapons all slots must be checked in order to swap one with a lesser item-level
-			if (#slots > 1) then
-				invLink = GetInventoryItemLink("player", GetInventorySlotInfo(slots[2]))
-				if (invLink) then 
-					local eq2Level = select(4, GetItemInfo(invLink))
-					eqLevel = (eqLevel > eq2Level) and eq2Level or eqLevel
-					slotNumber = (eqLevel > eq2Level) and GetInventorySlotInfo(slots[2]) or slotNumber
+			local slot = C.SLOTS[equipSlot]
+			if (slot) then
+				local slotNumber = GetInventorySlotInfo(slot[1])
+				local invLink = GetInventoryItemLink("player", slotNumber)
+				local eqLevel = invLink and select(4, GetItemInfo(invLink)) or 0
+				-- If reward is a ring  trinket or one-handed weapons all slots must be checked in order to swap one with a lesser item-level
+				if (#slot > 1) then
+					invLink = GetInventoryItemLink("player", GetInventorySlotInfo(slot[2]))
+					if (invLink) then 
+						local eq2Level = select(4, GetItemInfo(invLink))
+						eqLevel = (eqLevel > eq2Level) and eq2Level or eqLevel
+						slotNumber = (eqLevel > eq2Level) and GetInventorySlotInfo(slot[2]) or slotNumber
+					end
+				end
+				if(lootLevel > eqLevel) then
+					self.autoEquipList[name] = slotNumber
+					self.delayFrame.delay = time() + 2
+					self.delayFrame:Show()
 				end
 			end
-			if(lootLevel > eqLevel) then
-				self.autoEquipList[name] = slotNumber
-				self.delayFrame.delay = time() + 2
-				self.delayFrame:Show()
-			end
+			
 		end
 	end
 
@@ -473,8 +502,9 @@ function AutoTurnIn:QUEST_COMPLETE()
 		return
 	end
 
-	local quest = L.quests[GetTitleText()]
-    if AutoTurnInCharacterDB.all or quest then
+    if self:AllOrDaily() then
+		local questname = GetTitleText()
+		local quest = L.quests[questname]
 		-- Tournament quest found
 		if (quest == "tournament") then
 			self:TurnInQuest(AutoTurnInCharacterDB.tournament)
@@ -498,6 +528,30 @@ function AutoTurnIn:QUEST_COMPLETE()
     end
 end
 
+local QuestLevelFormat = " [%d] %s"
+function AutoTurnIn:ShowQuestLevelInLog()
+	-- see function QuestLog_Update() in function QuestLogFrame.lua for details
+	local scrollOffset = HybridScrollFrame_GetOffset(QuestLogScrollFrame);
+	local numEntries, numQuests = GetNumQuestLogEntries();
+	
+	for i=1, #QuestLogScrollFrame.buttons do
+		local questIndex = i + scrollOffset;		
+		local button = QuestLogScrollFrame.buttons[i]
+		if ( questIndex <= numEntries ) then
+			local title, level, _, _, isHeader = GetQuestLogTitle(questIndex);
+			if (not isHeader and title) then 
+				button:SetText(QuestLevelFormat:format(level, title))
+				QuestLogTitleButton_Resize(button)
+			end
+		end
+	end
+end	
+	
 -- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
 -- sometimes some parts of this chain is skipped. For example, priest in Honor Hold show quest window directly. This is a trick to handle 'toggle key'
 hooksecurefunc(QuestFrame, "Hide", function() AutoTurnIn.allowed = nil end)
+
+-- Quest level in a log. 
+hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
+hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
+-- WatchFrameAutoQuestPopUp1

@@ -133,5 +133,7 @@ privateTable.L.quests = {
 ["Призыв Древних"]={item=416, amount=125, currency=true},
 ["Развлечения для самых маленьких"] = {item=393, amount=15, currency=true},
 
+--MoP
+["Семена Страха"]={item="Осколки жуткого янтаря", amount=20, currency=false},
 }
 end
