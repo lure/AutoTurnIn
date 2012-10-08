@@ -2,7 +2,7 @@
 -- translated by http://www.curse.com/users/whitelightelgringo
 if (GetLocale() == "frFR")  then
 privateTable.L = setmetatable({
-	["usage1"]="'on'/'off' pour activer/désactiver l'addon"
+	["usage1"]="'on'/'off' pour activer/désactiver l'addon",
 	["usage2"]="'all'/'list' pour prendre en compte toutes les quêtes ou juste une liste spécifique",
 	["usage3"]="'loot' Ne pas rendre les quêtes à objets de récompense ou rendre les quêtes en choisissant l'objet de récompense le plus cher",
 	["all"]="ready to handle every quest",
