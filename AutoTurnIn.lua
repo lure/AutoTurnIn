@@ -589,4 +589,4 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 		end
 	end
 end
-hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame);
+hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)

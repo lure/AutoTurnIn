@@ -1,45 +1,46 @@
 ﻿local addonName, privateTable = ...
+-- translated by http://www.curse.com/users/whitelightelgringo
 if (GetLocale() == "frFR")  then
 privateTable.L = setmetatable({
-	["usage1"]="'on'/'off' to enable or disable addon",
-	["usage2"]="'all'/'list' to handle any quest or just specified in a list",
-	["usage3"]="'loot' do not complete quests with a list of rewards or complete it and choose most expensive one of rewards",
+	["usage1"]="'on'/'off' pour activer/désactiver l'addon"
+	["usage2"]="'all'/'list' pour prendre en compte toutes les quêtes ou juste une liste spécifique",
+	["usage3"]="'loot' Ne pas rendre les quêtes à objets de récompense ou rendre les quêtes en choisissant l'objet de récompense le plus cher",
 	["all"]="ready to handle every quest",
 	["list"]="only daily quests will be handled",
-	["dontlootfalse"]="loot most expensive reward",
-	["dontloottrue"]="do not complete quests with rewards",
-	["resetbutton"]="reset",
+	["dontlootfalse"]="choisir la récompense la plus chère",
+	["dontloottrue"]="ne pas rendre les quêtes à objets de récompense",
+	["resetbutton"]="réinitialiser",
 	
-	["questTypeLabel"] = "Quests to handle", 
-	["questTypeAll"] = "all",
-	["TrivialQuests"]="Accept 'grey' quests", 
-	["questTypeList"] = "daily", 
+	["questTypeLabel"] = "quêtes à prendre en compte",
+	["questTypeAll"] =  "toutes",
+	["TrivialQuests"]= "accepter les quêtes 'grise'", 
+	["questTypeList"] = "quêtes journalières",
 
-	["lootTypeLabel"]="Quests with rewards",
-	["lootTypeFalse"]="don't turn in",
-	["lootTypeGreed"]="loot most expensive reward",
-	["lootTypeNeed"]="loot by parameters",
+	["lootTypeLabel"]="quêtes à récompense d'objet",
+	["lootTypeFalse"]="ne pas rendre",
+	["lootTypeGreed"]="choisir la récompense la plus chère",
+	["lootTypeNeed"]="choisir la récompense selon les paramètres",
 	
-	["tournamentLabel"]="Tournament", 
-	["tournamentWrit"]="Champion's Writ", -- 46114
-	["tournamentPurse"]="Champion's Purse",  -- 45724
+	["tournamentLabel"]="Tournoi d'argent",
+	["tournamentWrit"]="Commission de champion", -- 46114
+	["tournamentPurse"]="Bourse de champion",  -- 45724
 	
-	["DarkmoonTeleLabel"]="Darkmoon: teleport to the cannon",
-	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub",
-	["DarkmoonAutoLabel"]="Darkmoon: start the game!",	
-	
-	["rewardtext"]="Print quest reward text",
-	["autoequip"]="Equip received reward",
-	["togglekey"]="Enable/disable key",
-	
-	['Jewelry']="Jewelry",
-	["rewardlootoptions"]="Reward loot rules",
-	['greedifnothing']='Greed if nothing found',
-	["multiplefound"]="Multiple reward candidates found. "..ERR_QUEST_MUST_CHOOSE,
-	["nosuitablefound"]="No suitable reward found. "..ERR_QUEST_MUST_CHOOSE,
-	["gogreedy"]="No suitable reward found, choosing the highest value one.",
-	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
-	["stopitemfound"]="There is %s in rewards. Choose an item yourself.",
+	["DarkmoonTeleLabel"]="Sombrelune: téléporter au canon",
+    ["DarkmoonFaireTeleport"]="Téléportologue Mélébou",
+    ["DarkmoonAutoLabel"]="Sombrelune: Lancer le jeu!",    
+    
+    ["rewardtext"]="Écrire le texte de quête dans le chat",
+    ["autoequip"]="Équiper les objets de récompense",
+    ["togglekey"]="touche activer/désactiver",
+    
+	['Jewelry']="Joaillerie",
+    ["rewardlootoptions"]="Règles d'objets de récompense",
+    ['greedifnothing']="Cupidité si rien n'est trouvé",
+    ["multiplefound"]="Récompense multiple trouvée. "..ERR_QUEST_MUST_CHOOSE,
+    ["nosuitablefound"]="Aucunes récompenses appropriées trouvées. "..ERR_QUEST_MUST_CHOOSE,
+    ["gogreedy"]="Aucunes récompenses appropriées trouvées, objet le plus cher choisit.",
+    ["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
+    ["stopitemfound"]="Il y a %s en récompense. Choisissez un objet.",
 	},
 	{__index = function(table, index) return index end})
 	
@@ -132,5 +133,7 @@ privateTable.L.quests = {
 ["Les petits s'amusent aussi"] = {item=393, amount=15, currency=true},
 --MoP
 ["Les graines de la peur"]={item="Eclats d’ambre d’effroi", amount=20, currency=false},
+["Remplir le garde-manger"]={item="Panier de vivres", amount=1, currency=false},
+["Un plat pour Jogu"]={item="Carottes sautées", amount=5, currency=false},
 }
 end

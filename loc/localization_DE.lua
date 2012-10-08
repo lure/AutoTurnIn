@@ -139,5 +139,7 @@ privateTable.L.quests = {
 ["Spaß für die Kleinen"] = {item=393, amount=15, currency=true},
 --MoP
 ["Saat der Angst"]={item="Schreckensambersplitter", amount=20, currency=false},
+["Auffüllen der Speisekammer"]={item="Bündel mit Zutaten", amount=1, currency=false},
+["Ein Gericht für Jogu"]={item="Gebratene Karotten", amount=5, currency=false},
 }
 end
