@@ -347,13 +347,16 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 				local slotNumber = GetInventorySlotInfo(slot[1])
 				local invLink = GetInventoryItemLink("player", slotNumber)
 				local eqLevel = invLink and select(4, GetItemInfo(invLink)) or 0
+
 				-- If reward is a ring  trinket or one-handed weapons all slots must be checked in order to swap one with a lesser item-level
 				if (#slot > 1) then
-					invLink = GetInventoryItemLink("player", GetInventorySlotInfo(slot[2]))
+					local slot2Number = GetInventorySlotInfo(slot[2]) 
+					invLink = GetInventoryItemLink("player", slot2Number)
 					if (invLink) then 
-						local eq2Level = select(4, GetItemInfo(invLink))
+						local eq2Level = select(4, GetItemInfo(invLink)) or 0						
+						-- do not reorder number and level assignments.
+						slotNumber = (eqLevel > eq2Level) and slot2Number or slotNumber
 						eqLevel = (eqLevel > eq2Level) and eq2Level or eqLevel
-						slotNumber = (eqLevel > eq2Level) and GetInventorySlotInfo(slot[2]) or slotNumber
 					end
 				end
 				if(lootLevel > eqLevel) then
@@ -362,7 +365,6 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 					self.delayFrame:Show()
 				end
 			end
-			
 		end
 	end
 
@@ -373,7 +375,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		elseif (GetNumQuestChoices() == 0) then
 			self:Print("Debug: turning quest in")
 		end
-	else
+	else		
 		GetQuestReward(rewardIndex)
 	end
 end
@@ -523,7 +525,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 				end
 			end
 		else
-			self:TurnInQuest(1)
+			self:TurnInQuest(1) -- index greater than '0' enables autoequip check. 
 		end
     end
 end
