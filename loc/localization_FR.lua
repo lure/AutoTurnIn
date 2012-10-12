@@ -26,16 +26,16 @@ privateTable.L = setmetatable({
 	["tournamentPurse"]="Bourse de champion",  -- 45724
 	
 	["DarkmoonTeleLabel"]="Sombrelune: téléporter au canon",
-    ["DarkmoonFaireTeleport"]="Téléportologue Mélébou",
-    ["DarkmoonAutoLabel"]="Sombrelune: Lancer le jeu!",    
+	["DarkmoonFaireTeleport"]="Téléportologue Mélébou",
+	["DarkmoonAutoLabel"]="Sombrelune: Lancer le jeu!",    
 
 	["The Jade Forest"]="La forêt de Jade",
 	["Scared Pandaren Cub"]="Bébé pandaren apeuré",
 
-    ["rewardtext"]="Écrire le texte de quête dans le chat",
-    ["autoequip"]="Équiper les objets de récompense",
-    ["togglekey"]="touche activer/désactiver",
-    
+	["rewardtext"]="Écrire le texte de quête dans le chat",
+	["autoequip"]="Équiper les objets de récompense",
+	["togglekey"]="touche activer/désactiver",
+
 	['Jewelry']="Joaillerie",
     ["rewardlootoptions"]="Règles d'objets de récompense",
     ['greedifnothing']="Cupidité si rien n'est trouvé",

@@ -21,6 +21,7 @@ loc\localization_FR.lua
 
 rewards_const.lua
 AutoTurnIn.lua
+QuestLevel.lua
 
 ui\main_options.lua
 ui\reward_options.lua
