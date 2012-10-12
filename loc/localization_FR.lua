@@ -28,7 +28,10 @@ privateTable.L = setmetatable({
 	["DarkmoonTeleLabel"]="Sombrelune: téléporter au canon",
     ["DarkmoonFaireTeleport"]="Téléportologue Mélébou",
     ["DarkmoonAutoLabel"]="Sombrelune: Lancer le jeu!",    
-    
+
+	["The Jade Forest"]="La forêt de Jade",
+	["Scared Pandaren Cub"]="Bébé pandaren apeuré",
+
     ["rewardtext"]="Écrire le texte de quête dans le chat",
     ["autoequip"]="Équiper les objets de récompense",
     ["togglekey"]="touche activer/désactiver",

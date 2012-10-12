@@ -12,7 +12,7 @@ privateTable.L = setmetatable({
 	["dontlootfalse"]="Addon übergibt den Job, und wählen Sie die teuerste Belohnung",
 	["dontloottrue"]="Quests mit Belohnungen werden nicht von Addon fertig sein",
 	["resetbutton"]="reset",
-		
+
 	["questTypeLabel"] = "quests", 
 	["questTypeAll"] = "alle",
 	["TrivialQuests"]="akzeptieren 'grauen' Quests", 	
@@ -22,16 +22,19 @@ privateTable.L = setmetatable({
 	["lootTypeFalse"]="nicht abgeschlossen",
 	["lootTypeGreed"]="nehmen Sie die teuerste, was",
 	["lootTypeNeed"]="Wahl Sie nach Parametern",
-	
+
 	["tournamentLabel"]="Turnier", 
 	["tournamentWrit"]="Verfügung des Champions", -- 46114
 	["tournamentPurse"]="Geldbeutel des Champions",  -- 45724
-	
+
 	["DarkmoonTeleLabel"]="Dunkelmond-Jahrmarkt: Zurück zur Kanone!",	 
 	["Teleportologe Fosselbab"]="Teleportologist Fozlebub",
 	["DarkmoonAutoLabel"]="Dunkelmond-Jahrmarkt: Spiel starten!",
-	["Darkmoon Island"]="Dunkelmondinsel",	
-	
+	["Darkmoon Island"]="Dunkelmondinsel",
+
+	["The Jade Forest"]="Der Jadewald",
+	["Scared Pandaren Cub"]="verängstigte Pandarenkinder",
+
 	["rewardtext"]="Show quest reward text",
 	["autoequip"]="tragen Belohnung",
 	["togglekey"]="aktivieren/deaktivieren Taste",

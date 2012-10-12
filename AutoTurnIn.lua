@@ -242,6 +242,18 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 	end
 end
 
+function AutoTurnIn:isDarkmoonAndAllowed()
+	return (self.DarkmoonAllowToProceed and questCount) and 
+			AutoTurnInCharacterDB.darkmoonautostart and 
+			(GetZoneText() == L["Darkmoon Island"]) 
+end
+
+function AutoTurnIn:isYoungPandaren()
+	return (UnitName("npc")== L["Scared Pandaren Cub"]) and
+			(GetRealZoneText() == L["The Jade Forest"]) 
+end
+
+
 function AutoTurnIn:GOSSIP_SHOW()
 	if (not self:AllowedToHandle(true)) then
 		return
@@ -257,13 +269,17 @@ function AutoTurnIn:GOSSIP_SHOW()
 	self:VarArgForActiveQuests(GetGossipActiveQuests())
 	self:VarArgForAvailableQuests(GetGossipAvailableQuests())
 
-	if (self.DarkmoonAllowToProceed and questCount) and AutoTurnInCharacterDB.darkmoonautostart and (GetZoneText() == L["Darkmoon Island"]) then
+	if self:isDarkmoonAndAllowed() then
 		local options = {GetGossipOptions()}
 		for k, v in pairs(options) do
 			if ((v ~= "gossip") and strfind(v, "|cFF0008E8%(")) then
 				SelectGossipOption(math.floor(k / GetNumGossipOptions())+1)
 			end
 		end
+	end
+
+	if self:isYoungPandaren() then
+		SelectGossipOption(1)
 	end
 end
 

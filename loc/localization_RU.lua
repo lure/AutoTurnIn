@@ -32,6 +32,9 @@ privateTable.L = setmetatable({
 	["DarkmoonAutoLabel"]="Ярмарка Новолуния: начинать игру",	
 	["Darkmoon Island"]="Остров Новолуния",
 	
+	["The Jade Forest"]="Нефритовый лес",
+	["Scared Pandaren Cub"]="Испуганный юный пандарен",
+	
 	["rewardtext"]="Показывать финальный текст задания",
 	["autoequip"]="Надеть полученную награду",
 	["togglekey"]="Клавиша разового включения/отключения",
