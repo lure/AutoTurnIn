@@ -138,5 +138,15 @@ privateTable.L.quests = {
 ["Les graines de la peur"]={item="Eclats d’ambre d’effroi", amount=20, currency=false},
 ["Remplir le garde-manger"]={item="Panier de vivres", amount=1, currency=false},
 ["Un plat pour Jogu"]={item="Carottes sautées", amount=5, currency=false},
+
+["Un plat pour Ella"]={item="Raviolis aux crevettes", amount=5, currency=false},
+["Un plat pour Chii Chii"]={item="Sauté de la vallée", amount=5, currency=false},
+["Un plat pour le fermier Fung"]={item="Rôti de sauvagine", amount=5, currency=false},
+["Un plat pour Marée"]={item="Plat de poissons jumeaux", amount=5, currency=false},
+["Un plat pour Gina"]={item="Soupe de brumes tourbillonnantes", amount=5, currency=false},
+["Un plat pour Haohan"]={item="Steak de tigre grillé au feu de bois", amount=5, currency=false},
+["Un plat pour le Vieux Patte des Hauts"]={item="Tortue braisée", amount=5, currency=false},
+["Un plat pour Sho"]={item="Poisson de l’Éternel printemps", amount=5, currency=false},
+["Un plat pour Tina"]={item="Saumon de l’esprit du feu", amount=5, currency=false},
 }
 end

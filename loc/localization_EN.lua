@@ -135,5 +135,15 @@ privateTable.L.quests = {
 ["Seeds of Fear"]={item="Dread Amber Shards", amount=20, currency=false},
 ["Replenishing the Pantry"]={item="Bundle of Groceries", amount=1, currency=false},
 ["A Dish for Jogu"]={item="Sauteed Carrots", amount=5, currency=false},
+
+["A Dish for Ella"]={item="Shrimp Dumplings", amount=5, currency=false},
+["Valley Stir Fry"]={item="Valley Stir Fry", amount=5, currency=false},
+["A Dish for Farmer Fung"]={item="Wildfowl Roast", amount=5, currency=false},
+["A Dish for Fish"]={item="Twin Fish Platter", amount=5, currency=false},
+["Swirling Mist Soup"]={item="Swirling Mist Soup", amount=5, currency=false},
+["A Dish for Haohan"]={item="Charbroiled Tiger Steak", amount=5, currency=false},
+["A Dish for Old Hillpaw"]={item="Braised Turtle", amount=5, currency=false},
+["A Dish for Sho"]={item="Eternal Blossom Fish", amount=5, currency=false},
+["A Dish for Tina"]={item="Fire Spirit Salmon", amount=5, currency=false},
 }
 end

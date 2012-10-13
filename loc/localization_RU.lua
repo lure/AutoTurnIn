@@ -139,6 +139,18 @@ privateTable.L.quests = {
 --MoP
 ["Семена Страха"]={item="Осколки жуткого янтаря", amount=20, currency=false},
 ["Поход за продуктами"]={item="Пакет с продуктами", amount=1, currency=false},
+
 ["Угощение для Йогу"]={item="Пассерованная морковь", amount=5, currency=false},
+["Угощение для Эллы"]={item="Клецки с раками-богомолами", amount=5, currency=false},
+["Угощение для Чи-Чи"]={item="Cтир-фрай долины", amount=5, currency=false},
+["Угощение для фермера Фуна"]={item="Жареная дичь", amount=5, currency=false},
+["Угощение для Рыбы"]={item="Блюдо из двух рыб", amount=5, currency=false},
+["Угощение для Джины"]={item="Суп из клубящегося тумана", amount=5, currency=false},
+["Угощение для Хаоханя"]={item="Жареный на углях стейк из тигриного мяса", amount=5, currency=false},
+["Угощение для старика Горной Лапы"]={item="Тушеное черепашье мясо", amount=5, currency=false},
+["Угощение для Шо"]={item="Рыба по-дольски", amount=5, currency=false},
+["Угощение для Тины"]={item="Лосось духов огня", amount=5, currency=false},
+
+
 }
 end

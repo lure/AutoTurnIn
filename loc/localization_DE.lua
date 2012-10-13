@@ -144,5 +144,16 @@ privateTable.L.quests = {
 ["Saat der Angst"]={item="Schreckensambersplitter", amount=20, currency=false},
 ["Auffüllen der Speisekammer"]={item="Bündel mit Zutaten", amount=1, currency=false},
 ["Ein Gericht für Jogu"]={item="Gebratene Karotten", amount=5, currency=false},
+
+["Garnelenklößchen"]={item="Garnelenklößchen", amount=5, currency=false},
+["Ein Gericht für Chi-Chi"]={item="Pfannengericht nach Vier-Winde-Art", amount=5, currency=false},
+["Ein Gericht für Bauer Fung"]={item="Wildgeflügelbraten", amount=5, currency=false},
+["Ein Gericht für Fischi"]={item="Zwillingsfischplatte", amount=5, currency=false},
+["Ein Gericht für Gina"]={item="Verwirbelte Nebelsuppe", amount=5, currency=false},
+["Ein Gericht für Haohan"]={item="Gegrilltes Tigersteak", amount=5, currency=false},
+["Ein Gericht für den alten Hügelpranke"]={item="Geschmorte Schildkröte", amount=5, currency=false},
+["Ein Gericht für Sho"]={item="Blütenfischfilet", amount=5, currency=false},
+["Ein Gericht für Tina"]={item="Feuergeisterlachs", amount=5, currency=false},
+
 }
 end
