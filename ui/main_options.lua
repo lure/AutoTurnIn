@@ -152,6 +152,19 @@ end)
 UIDropDownMenu_SetWidth(ToggleKeyDropDown, 200);
 UIDropDownMenu_JustifyText(ToggleKeyDropDown, "LEFT")
 
+-- 'Show QuestLevel' CheckBox
+local ShowQuestLevel = CreateFrame("CheckButton", O.."QuestLevel", OptionsPanel, "OptionsCheckButtonTemplate")
+_G[ShowQuestLevel:GetName().."Text"]:SetText(L["questlevel"])
+ShowQuestLevel:SetScript("OnClick", function(self) 
+	ptable.TempConfig.questlevel = self:GetChecked() == 1 
+end)
+
+-- 'Show Watch Quest Level' CheckBox
+local ShowWatchLevel = CreateFrame("CheckButton", O.."WatchLevel", OptionsPanel, "OptionsCheckButtonTemplate")
+_G[ShowWatchLevel:GetName().."Text"]:SetText(L["watchlevel"])
+ShowWatchLevel:SetScript("OnClick", function(self) 
+	ptable.TempConfig.watchlevel = self:GetChecked() == 1 
+end)
 
 -- Control placement
 title:SetPoint("TOPLEFT", 16, -16)
@@ -159,20 +172,21 @@ subText:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 ResetButton:SetPoint("TOPRIGHT", OptionsPanel, "TOPRIGHT", -10, -10)
 Enable:SetPoint("TOPLEFT", subText, "BOTTOMLEFT", 0, -16)
 QuestLabel:SetPoint("BOTTOMLEFT", QuestDropDown, "TOPLEFT", 18, 0)
-QuestDropDown:SetPoint("TOPLEFT", Enable, "BOTTOMLEFT", -15, -35)
+QuestDropDown:SetPoint("TOPLEFT", Enable, "BOTTOMLEFT", -15, -30)
 TrivialQuests:SetPoint("TOPLEFT", QuestDropDown, "TOPRIGHT", 30, 0)
 LootLabel:SetPoint("BOTTOMLEFT", LootDropDown, "TOPLEFT", 18, 0)
 LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -30)
 TournamentDropDownLabel:SetPoint("BOTTOMLEFT", TournamentDropDown, "TOPLEFT", 18, 0)
 TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
-DarkMoonCannon:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -16)
+EquipReward:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -16)
+ShowRewardText:SetPoint("TOPLEFT", EquipReward, "BOTTOMLEFT", 0, -16)
+DarkMoonCannon:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", 0, -16)
 DarkMoonAutoStart:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -16)
-ShowRewardText:SetPoint("TOPLEFT", DarkMoonAutoStart, "BOTTOMLEFT", 0, -16)
-EquipReward:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", 0, -16)
 Debug:SetPoint("TOPLEFT", ResetButton, "BOTTOMLEFT", 0, -16)
-
 ToggleKeyLabel:SetPoint("BOTTOMLEFT", ToggleKeyDropDown, "TOPLEFT", 18, 0)
-ToggleKeyDropDown:SetPoint("TOPLEFT", EquipReward, "BOTTOMLEFT", -15, -30)
+ToggleKeyDropDown:SetPoint("TOPLEFT", DarkMoonAutoStart, "BOTTOMLEFT", -15, -30)
+ShowQuestLevel:SetPoint("TOPLEFT", ToggleKeyDropDown, "BOTTOMLEFT", 16, -16)
+ShowWatchLevel:SetPoint("TOPLEFT", ShowQuestLevel, "BOTTOMLEFT", 0, -16)
 
 OptionsPanel.refresh = function()
 	if ( MakeACopy ) then 
@@ -195,6 +209,8 @@ OptionsPanel.refresh = function()
 	EquipReward:SetChecked(ptable.TempConfig.autoequip)
 	Debug:SetChecked(ptable.TempConfig.debug)
 	TrivialQuests:SetChecked(ptable.TempConfig.trivial)
+	ShowQuestLevel:SetChecked(ptable.TempConfig.questlevel)	
+	ShowWatchLevel:SetChecked(ptable.TempConfig.watchlevel)	
 	
 	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)
 	UIDropDownMenu_SetText(ToggleKeyDropDown,  ToggleKeyConst[ptable.TempConfig.togglekey])
@@ -208,6 +224,8 @@ end
 OptionsPanel.okay = function()
 	AutoTurnInCharacterDB = CopyTable(ptable.TempConfig)
 	AutoTurnIn:SetEnabled(AutoTurnInCharacterDB.enabled)
+	QuestLog_Update()
+	WatchFrame_Update(WatchFrame)
 end
 
 InterfaceOptions_AddCategory(OptionsPanel)

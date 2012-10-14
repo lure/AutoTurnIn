@@ -38,6 +38,8 @@ privateTable.L = setmetatable({
 	["DarkmoonAutoLabel"]="Darkmoon: start the game!",	
 	
 	["rewardtext"]="Print quest reward text",
+	["questlevel"]="Show quest level",
+	["watchlevel"]="Show watched quest level",	
 	["autoequip"]="Equip received reward",
 	["togglekey"]="Enable/disable key",
 	

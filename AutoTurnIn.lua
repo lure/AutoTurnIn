@@ -14,7 +14,9 @@ AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "Ace
 AutoTurnIn.defaults = {enabled = true, all = false, trivial = false, lootreward = 1, tournament = 2,
 					   darkmoonteleport=true, togglekey=4, darkmoonautostart=true, showrewardtext=true, 
 					   version=TOCVersion, autoequip = false, debug=false,
+					   questlevel=true, watchlevel=true,
 					   armor = {}, weapon = {}, stat = {}, secondary = {}}
+					   
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
@@ -62,24 +64,28 @@ function AutoTurnIn:OnEnable()
 	if not AutoTurnInCharacterDB then
 		_G.AutoTurnInCharacterDB = CopyTable(self.defaults)
 	end
-	if (tonumber(AutoTurnInCharacterDB.lootreward) == nil) then
-		AutoTurnInCharacterDB.lootreward = 1
+	local DB = AutoTurnInCharacterDB
+	
+	if (tonumber(DB.lootreward) == nil) then
+		DB.lootreward = 1
 	end
-	if (tonumber(AutoTurnInCharacterDB.togglekey) == nil) then
-		AutoTurnInCharacterDB.togglekey = 1
+	if (tonumber(DB.togglekey) == nil) then
+		DB.togglekey = 1
 	end
-	AutoTurnInCharacterDB.armor = AutoTurnInCharacterDB.armor and AutoTurnInCharacterDB.armor or {}
-	AutoTurnInCharacterDB.weapon = AutoTurnInCharacterDB.weapon and AutoTurnInCharacterDB.weapon or {}
-	AutoTurnInCharacterDB.stat = AutoTurnInCharacterDB.stat and AutoTurnInCharacterDB.stat or {}
-	AutoTurnInCharacterDB.secondary = AutoTurnInCharacterDB.secondary and AutoTurnInCharacterDB.secondary or {}
-	AutoTurnInCharacterDB.trivial = AutoTurnInCharacterDB.trivial ~= nil and AutoTurnInCharacterDB.trivial or false
+	DB.armor = DB.armor and DB.armor or {}
+	DB.weapon = DB.weapon and DB.weapon or {}
+	DB.stat = DB.stat and DB.stat or {}
+	DB.secondary = DB.secondary and DB.secondary or {}
+	DB.trivial = DB.trivial ~= nil and DB.trivial or false
+	DB.questlevel = DB.questlevel ~= nil and DB.questlevel or true
+	DB.watchlevel = DB.watchlevel ~= nil and DB.watchlevel or true
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 	if LDB then
 		self.ldb = LDB:NewDataObject("AutoTurnIn", self.ldbstruct)
 	end
 
-	self:SetEnabled(AutoTurnInCharacterDB.enabled)
+	self:SetEnabled(DB.enabled)
 	self:RegisterGossipEvents()
 end
 
@@ -545,3 +551,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 		end
     end
 end
+
+-- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
+-- sometimes some parts of this chain is skipped. For example, priest in Honor Hold show quest window directly. This is a trick to handle 'toggle key'
+hooksecurefunc(QuestFrame, "Hide", function() AutoTurnIn.allowed = nil end)

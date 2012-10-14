@@ -36,6 +36,8 @@ privateTable.L = setmetatable({
 	["Scared Pandaren Cub"]="verängstigte Pandarenkinder",
 
 	["rewardtext"]="Show quest reward text",
+	["questlevel"]="Show quest level",
+	["watchlevel"]="Show watched quest level",		
 	["autoequip"]="tragen Belohnung",
 	["togglekey"]="aktivieren/deaktivieren Taste",
 	

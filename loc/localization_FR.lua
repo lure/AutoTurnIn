@@ -33,6 +33,8 @@ privateTable.L = setmetatable({
 	["Scared Pandaren Cub"]="Bébé pandaren apeuré",
 
 	["rewardtext"]="Écrire le texte de quête dans le chat",
+	["questlevel"]="Show quest level",
+	["watchlevel"]="Show watched quest level",		
 	["autoequip"]="Équiper les objets de récompense",
 	["togglekey"]="touche activer/désactiver",
 

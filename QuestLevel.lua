@@ -5,7 +5,24 @@ local L = ptable.L
 local C = ptable.CONST
 
 AutoTurnIn.QuestLevelFormat = " [%d] %s"
+AutoTurnIn.WatchFrameLevelFormat = "[%d%s%s] %s"
+AutoTurnIn.QuestTypesIndex = {
+	[0] = "",           --default
+	[1] = "g",			--Group
+	[41] = "+",			--PvP
+	[62] = "r",			--Raid
+	[81] = "d",			--Dungeon
+	[83] = "L", 		--Legendary
+	[85] = "h",			--Heroic 
+	[98] = "s", 		--Scenario QUEST_TYPE_SCENARIO
+	[102] = "a", 		-- Account
+}
+
 function AutoTurnIn:ShowQuestLevelInLog()
+	if not AutoTurnInCharacterDB.questlevel then 
+		return
+	end
+	
 	-- see function QuestLog_Update() in function QuestLogFrame.lua for details
 	local scrollOffset = HybridScrollFrame_GetOffset(QuestLogScrollFrame);
 	local numEntries, numQuests = GetNumQuestLogEntries();
@@ -22,28 +39,15 @@ function AutoTurnIn:ShowQuestLevelInLog()
 		end
 	end
 end
-	
--- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
--- sometimes some parts of this chain is skipped. For example, priest in Honor Hold show quest window directly. This is a trick to handle 'toggle key'
-hooksecurefunc(QuestFrame, "Hide", function() AutoTurnIn.allowed = nil end)
-
 -- Quest level in a log. 
 hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
 hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
 
-AutoTurnIn.WatchFrameLevelFormat = "[%d%s%s] %s"
-AutoTurnIn.QuestTypesIndex = {
-	[0] = "",           --default
-	[1] = "g",			--Group
-	[41] = "+",			--PvP
-	[62] = "r",			--Raid
-	[81] = "d",			--Dungeon
-	[83] = "L", 		--Legendary
-	[85] = "h",			--Heroic 
-	[98] = "s", 		--Scenario QUEST_TYPE_SCENARIO
-	[102] = "a", 		-- Account
-}
 function AutoTurnIn:ShowQuestLevelInWatchFrame()
+	if not AutoTurnInCharacterDB.watchlevel then 
+		return
+	end
+	
 	for i = 1, #WATCHFRAME_LINKBUTTONS do
 		button = WATCHFRAME_LINKBUTTONS[i]
 
