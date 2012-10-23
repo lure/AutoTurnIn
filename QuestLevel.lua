@@ -39,9 +39,6 @@ function AutoTurnIn:ShowQuestLevelInLog()
 		end
 	end
 end
--- Quest level in a log. 
-hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
-hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
 
 function AutoTurnIn:ShowQuestLevelInWatchFrame()
 	if not AutoTurnInCharacterDB.watchlevel then 
@@ -69,4 +66,3 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 		end
 	end
 end
-hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)

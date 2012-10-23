@@ -87,6 +87,9 @@ function AutoTurnIn:OnEnable()
 
 	self:SetEnabled(DB.enabled)
 	self:RegisterGossipEvents()
+	hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
+	hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
+	hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)	
 end
 
 function AutoTurnIn:OnDisable()
