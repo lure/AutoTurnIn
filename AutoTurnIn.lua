@@ -77,8 +77,9 @@ function AutoTurnIn:OnEnable()
 	DB.stat = DB.stat and DB.stat or {}
 	DB.secondary = DB.secondary and DB.secondary or {}
 	DB.trivial = DB.trivial ~= nil and DB.trivial or false
-	DB.questlevel = DB.questlevel ~= nil and DB.questlevel or true
-	DB.watchlevel = DB.watchlevel ~= nil and DB.watchlevel or true
+	
+	DB.questlevel = DB.questlevel == nil and true or DB.questlevel
+	DB.watchlevel = DB.watchlevel == nil and true or DB.watchlevel
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 	if LDB then
