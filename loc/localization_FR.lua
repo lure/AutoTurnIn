@@ -3,40 +3,40 @@
 if (GetLocale() == "frFR")  then
 privateTable.L = setmetatable({
 	["usage1"]="'on'/'off' pour activer/désactiver l'addon",
-	["usage2"]="'all'/'list' pour prendre en compte toutes les quêtes ou juste une liste spécifique",
-	["usage3"]="'loot' Ne pas rendre les quêtes à objets de récompense ou rendre les quêtes en choisissant l'objet de récompense le plus cher",
-	["all"]="ready to handle every quest",
-	["list"]="only daily quests will be handled",
-	["dontlootfalse"]="choisir la récompense la plus chère",
-	["dontloottrue"]="ne pas rendre les quêtes à objets de récompense",
-	["resetbutton"]="réinitialiser",
-	
-	["questTypeLabel"] = "quêtes à prendre en compte",
-	["questTypeAll"] =  "toutes",
-	["TrivialQuests"]= "accepter les quêtes 'grise'", 
-	["questTypeList"] = "quêtes journalières",
+    ["usage2"]="'all'/'list' pour prendre en compte toutes les quêtes ou juste une liste spécifique",
+    ["usage3"]="'loot' Ne pas rendre les quêtes à objets de récompense ou rendre les quêtes en choisissant l'objet de récompense le plus cher",
+    ["all"]="Ready to handle every quest",
+    ["list"]="only daily quests will be handled",
+    ["dontlootfalse"]="Choisir la récompense la plus chère",
+    ["dontloottrue"]="Ne pas rendre les quêtes à objets de récompense",
+    ["resetbutton"]="Réinitialiser",
+    
+    ["questTypeLabel"] = "Quêtes à prendre en compte",
+    ["questTypeAll"] =  "Toutes",
+    ["TrivialQuests"]= "Accepter les quêtes 'grise'",
+    ["questTypeList"] = "Quêtes journalières",
 
-	["lootTypeLabel"]="quêtes à récompense d'objet",
-	["lootTypeFalse"]="ne pas rendre",
-	["lootTypeGreed"]="choisir la récompense la plus chère",
-	["lootTypeNeed"]="choisir la récompense selon les paramètres",
-	
-	["tournamentLabel"]="Tournoi d'argent",
-	["tournamentWrit"]="Commission de champion", -- 46114
-	["tournamentPurse"]="Bourse de champion",  -- 45724
-	
-	["DarkmoonTeleLabel"]="Sombrelune: téléporter au canon",
-	["DarkmoonFaireTeleport"]="Téléportologue Mélébou",
-	["DarkmoonAutoLabel"]="Sombrelune: Lancer le jeu!",    
+    ["lootTypeLabel"]="Quêtes à récompense d'objet",
+    ["lootTypeFalse"]="Ne pas rendre",
+    ["lootTypeGreed"]="Vhoisir la récompense la plus chère",
+    ["lootTypeNeed"]="choisir la récompense selon les paramètres",
+    
+    ["tournamentLabel"]="Tournoi d'argent",
+    ["tournamentWrit"]="Commission de champion", -- 46114
+    ["tournamentPurse"]="Bourse de champion",  -- 45724
+    
+    ["DarkmoonTeleLabel"]="Sombrelune : téléporter au canon",
+    ["DarkmoonFaireTeleport"]="Téléportologue Mélébou",
+    ["DarkmoonAutoLabel"]="Sombrelune : Lancer le jeu!",    
 
-	["The Jade Forest"]="La forêt de Jade",
-	["Scared Pandaren Cub"]="Bébé pandaren apeuré",
+    ["The Jade Forest"]="La forêt de Jade",
+    ["Scared Pandaren Cub"]="Bébé pandaren apeuré",
 
-	["rewardtext"]="Écrire le texte de quête dans le chat",
-	["questlevel"]="Show quest level",
-	["watchlevel"]="Show watched quest level",		
-	["autoequip"]="Équiper les objets de récompense",
-	["togglekey"]="touche activer/désactiver",
+    ["rewardtext"]="Écrire le texte de quête dans le chat",
+    ["questlevel"]="Indiquer le niveau des quêtes",
+    ["watchlevel"]="Indiquer le niveau des quêtes en suivi",        
+    ["autoequip"]="Équiper les objets de récompense",
+    ["togglekey"]="Touche activer/désactiver",
 
 	['Jewelry']="Joaillerie",
     ["rewardlootoptions"]="Règles d'objets de récompense",

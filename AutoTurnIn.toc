@@ -4,9 +4,9 @@
 ## Author: Lur
 ## Notes: Auto accept and complete daily or any quests
 ## Notes-ruRU: Автоматически принимает и сдает ежедневные либо все задания
-## Notes-enUS: Auto accept and complete daily or any quests 
-## Notes-frFR: Auto accept and complete quests (need help with french localization)
-## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests (send your translation to luraddon@gmail.com pls)
+## Notes-enUS: Auto accept and complete daily or any quests
+## Notes-frFR: Accepte et rend automatiquement les quêtes
+## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests
 ## OptionalDeps: Ace3
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
 ## X-Date: 2012-01-16
