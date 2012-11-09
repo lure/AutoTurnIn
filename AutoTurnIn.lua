@@ -252,7 +252,7 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 	end
 end
 
-function AutoTurnIn:isDarkmoonAndAllowed()
+function AutoTurnIn:isDarkmoonAndAllowed(questCount)
 	return (self.DarkmoonAllowToProceed and questCount) and 
 			AutoTurnInCharacterDB.darkmoonautostart and 
 			(GetZoneText() == L["Darkmoon Island"]) 
@@ -273,13 +273,16 @@ function AutoTurnIn:GOSSIP_SHOW()
 		SelectGossipOption(1)
 		StaticPopup1Button1:Click()
 	end
+	
 	-- darkmoon fairy gossip sometime turns in quest too fast so I can't relay only on quest number count. It often lie.
-	self.DarkmoonAllowToProceed = true
+	-- this flag is set in VarArgForActiveQuests if any quest may be turned in
+	self.DarkmoonAllowToProceed = true	
 	local questCount = GetNumGossipActiveQuests() > 0
+	
 	self:VarArgForActiveQuests(GetGossipActiveQuests())
 	self:VarArgForAvailableQuests(GetGossipAvailableQuests())
 
-	if self:isDarkmoonAndAllowed() then
+	if self:isDarkmoonAndAllowed(questCount) then
 		local options = {GetGossipOptions()}
 		for k, v in pairs(options) do
 			if ((v ~= "gossip") and strfind(v, "|cFF0008E8%(")) then
