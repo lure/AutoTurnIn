@@ -95,6 +95,12 @@ privateTable.L.quests = {
 ["Покровительство братства, черное железо"]={item="Руда черного железа", amount=10, currency=false},
 ["Покровительство братства, ядро лавы"]={item="Ядро лавы", amount=1, currency=false},
 
+-- Fiona's Caravan
+["Счастливый талисман Фионы"]={donotaccept=true},
+["Поручи Векс'тула"]={donotaccept=true},
+["Талисман Таренара"]={donotaccept=true},
+["Оружейная смазка Гидвина"]={donotaccept=true},
+
 
 --[[Burning Crusade]]--
 --Lower City

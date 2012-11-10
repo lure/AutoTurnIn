@@ -96,6 +96,11 @@ privateTable.L.quests = {
 ['Gaining Acceptance']={item="Dark Iron Residue", amount=4, currency=false},
 ['Gaining Even More Acceptance']={item="Dark Iron Residue", amount=100, currency=false},
 
+-- Fiona's Caravan
+["Fiona's Lucky Charm"]={donotaccept=true},
+["Vex'tul's Armbands"]={donotaccept=true},
+["Tarenar's Talisman"]={donotaccept=true},
+["Gidwin's Weapon Oil"]={donotaccept=true},
 
 --[[Burning Crusade]]--
 --Lower City

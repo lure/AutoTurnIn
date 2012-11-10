@@ -92,6 +92,12 @@ privateTable.L.quests = {
 ['Se faire accepter']={item="Résidu de sombrefer", amount=4, currency=false},
 ['Se faire encore mieux accepter']={item="Résidu de sombrefer", amount=100, currency=false},
 
+-- Fiona's Caravan
+["Le porte-bonheur de Fiona"]={donotaccept=true},
+["Les bracières de Vex'tul"]={donotaccept=true},
+["Le talisman de Tarenar"]={donotaccept=true},
+["L'huile d'arme de Gidwin"]={donotaccept=true},
+
 --[[Burning Crusade]]--
 --Lower City
 ["Plus de plumes"]={item="Plume d'arakkoa", amount=30, currency=false},

@@ -95,6 +95,12 @@ privateTable.L.quests = {
 ['Anerkennung erlangen']={item="Dunkeleisenrückstände", amount=4, currency=false},
 ['Noch mehr Anerkennung erlangen']={item="Dunkeleisenrückstände", amount=100, currency=false},
 
+-- Fiona's Caravan
+['Tarenars Talisman']={donotaccept=true},
+['Gidwins Waffenöl']={donotaccept=true},
+["Vex'tuls Armbinden"]={donotaccept=true},
+['Fionas Glücksbringer']={donotaccept=true},
+
 --[[Burning Crusade]]--
 --Lower City
 ["Mehr Federn"]={item="Arakkoafeder", amount=30, currency=false},
