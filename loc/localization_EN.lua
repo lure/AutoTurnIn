@@ -97,10 +97,15 @@ privateTable.L.quests = {
 ['Gaining Even More Acceptance']={item="Dark Iron Residue", amount=100, currency=false},
 
 -- Fiona's Caravan
+["Argus' Journal"]={donotaccept=true},
+["Beezil's Cog"]={donotaccept=true},
 ["Fiona's Lucky Charm"]={donotaccept=true},
-["Vex'tul's Armbands"]={donotaccept=true},
-["Tarenar's Talisman"]={donotaccept=true},
 ["Gidwin's Weapon Oil"]={donotaccept=true},
+["Pamela's Doll"]={donotaccept=true},
+["Rimblat's Stone"]={donotaccept=true},
+["Tarenar's Talisman"]={donotaccept=true},
+["Vex'tul's Armbands"]={donotaccept=true},
+
 
 --[[Burning Crusade]]--
 --Lower City

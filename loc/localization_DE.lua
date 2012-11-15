@@ -96,10 +96,14 @@ privateTable.L.quests = {
 ['Noch mehr Anerkennung erlangen']={item="Dunkeleisenrückstände", amount=100, currency=false},
 
 -- Fiona's Caravan
-['Tarenars Talisman']={donotaccept=true},
-['Gidwins Waffenöl']={donotaccept=true},
-["Vex'tuls Armbinden"]={donotaccept=true},
+["Argus' Tagebuch"]={donotaccept=true},
+['Beezils Zahnrad']={donotaccept=true},
 ['Fionas Glücksbringer']={donotaccept=true},
+['Gidwins Waffenöl']={donotaccept=true},
+['Pamelas Puppe']={donotaccept=true},
+['Rimblats Stein']={donotaccept=true},
+['Tarenars Talisman']={donotaccept=true},
+["Vex'tuls Armbinden"]={donotaccept=true},
 
 --[[Burning Crusade]]--
 --Lower City

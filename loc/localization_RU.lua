@@ -96,10 +96,14 @@ privateTable.L.quests = {
 ["Покровительство братства, ядро лавы"]={item="Ядро лавы", amount=1, currency=false},
 
 -- Fiona's Caravan
-["Счастливый талисман Фионы"]={donotaccept=true},
-["Поручи Векс'тула"]={donotaccept=true},
-["Талисман Таренара"]={donotaccept=true},
-["Оружейная смазка Гидвина"]={donotaccept=true},
+['Дневник Аргуса']={donotaccept=true},
+['Камень Римблата']={donotaccept=true},
+['Кукла Памелы']={donotaccept=true},
+['Оружейная смазка Гидвина']={donotaccept=true},
+['Поручи Векс'тула']={donotaccept=true},
+['Счастливый талисман Фионы']={donotaccept=true},
+['Талисман Таренара']={donotaccept=true},
+['Шестеренка Бизила']={donotaccept=true},
 
 
 --[[Burning Crusade]]--
