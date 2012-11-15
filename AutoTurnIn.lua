@@ -325,7 +325,7 @@ function AutoTurnIn:IsJewelryAndRequired(equipSlot)
 	return AutoTurnInCharacterDB.armor['Jewelry'] and (C.JEWELRY[equipSlot])
 end
 
--- initiated in AutoTurnIn:TurnInQuest
+-- initiated in AutoTurnIn:TurnInQuest PLAYER_LEAVE_COMBAT ?
 AutoTurnIn.delayFrame = CreateFrame('Frame')
 AutoTurnIn.delayFrame:Hide()
 AutoTurnIn.delayFrame:SetScript('OnUpdate', function()
@@ -334,7 +334,11 @@ AutoTurnIn.delayFrame:SetScript('OnUpdate', function()
 		return
 	end
 
-	if(time() < AutoTurnIn.delayFrame.delay) then
+	if (InCombatLockdown()) then 
+		return
+	end
+
+	if (time() < AutoTurnIn.delayFrame.delay) then
 		return
 	end
 
@@ -352,6 +356,16 @@ AutoTurnIn.delayFrame:SetScript('OnUpdate', function()
 		end
 	end
 end)
+
+-- return 0 if itemlink is null, item level or math.huge if the item is heirloom
+function AutoTurnIn:ItemLevel(itemLink)
+	if (not itemLink) then
+		return 0
+	end
+	-- 7 for heirloom http://wowprogramming.com/docs/api_types#itemQuality
+	local invQuality, invLevel = select(3, GetItemInfo(invLink))
+	return (invQuality == 7) and math.huge or invLink
+end
 
 -- turns quest in printing reward text if `showrewardtext` option is set.
 -- prints appropriate message if item is taken by greed
@@ -373,23 +387,24 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 			-- Compares reward and already equiped item levels. If reward level is greater than equiped item, auto equip reward
 			local slot = C.SLOTS[equipSlot]
 			if (slot) then
-				local slotNumber = GetInventorySlotInfo(slot[1])
-				local invLink = GetInventoryItemLink("player", slotNumber)
-				local eqLevel = invLink and select(4, GetItemInfo(invLink)) or 0
+				local firstSlot = GetInventorySlotInfo(slot[1])
+				local invLink = GetInventoryItemLink("player", firstSlot)
+				local eqLevel = self:ItemLevel(invLink)
 
 				-- If reward is a ring  trinket or one-handed weapons all slots must be checked in order to swap one with a lesser item-level
 				if (#slot > 1) then
-					local slot2Number = GetInventorySlotInfo(slot[2]) 
-					invLink = GetInventoryItemLink("player", slot2Number)
+					local secondSlot = GetInventorySlotInfo(slot[2]) 
+					invLink = GetInventoryItemLink("player", secondSlot)
 					if (invLink) then 
-						local eq2Level = select(4, GetItemInfo(invLink)) or 0						
-						-- do not reorder number and level assignments.
-						slotNumber = (eqLevel > eq2Level) and slot2Number or slotNumber
+						local eq2Level = self:ItemLevel(invLink)
+						firstSlot = (eqLevel > eq2Level) and secondSlot or firstSlot
 						eqLevel = (eqLevel > eq2Level) and eq2Level or eqLevel
 					end
 				end
+				
+				-- comparing lowest equiped item level with reward's item level
 				if(lootLevel > eqLevel) then
-					self.autoEquipList[name] = slotNumber
+					self.autoEquipList[name] = firstSlot
 					self.delayFrame.delay = time() + 2
 					self.delayFrame:Show()
 				end
