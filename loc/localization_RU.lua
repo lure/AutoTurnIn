@@ -100,7 +100,7 @@ privateTable.L.quests = {
 ['Камень Римблата']={donotaccept=true},
 ['Кукла Памелы']={donotaccept=true},
 ['Оружейная смазка Гидвина']={donotaccept=true},
-['Поручи Векс'тула']={donotaccept=true},
+["Поручи Векс'тула"]={donotaccept=true},
 ['Счастливый талисман Фионы']={donotaccept=true},
 ['Талисман Таренара']={donotaccept=true},
 ['Шестеренка Бизила']={donotaccept=true},
