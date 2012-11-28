@@ -363,8 +363,8 @@ function AutoTurnIn:ItemLevel(itemLink)
 		return 0
 	end
 	-- 7 for heirloom http://wowprogramming.com/docs/api_types#itemQuality
-	local invQuality, invLevel = select(3, GetItemInfo(invLink))
-	return (invQuality == 7) and math.huge or invLink
+	local invQuality, invLevel = select(3, GetItemInfo(itemLink))
+	return (invQuality == 7) and math.huge or itemLink
 end
 
 -- turns quest in printing reward text if `showrewardtext` option is set.
@@ -374,9 +374,10 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 	if (AutoTurnInCharacterDB.showrewardtext) then
 		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
 	end
-
-	if self.forceGreed then
-		if GetNumQuestChoices() > 0 then
+	
+	-- Greed or just a single reward
+	if (self.forceGreed) or (GetNumQuestChoices() == 1) then
+		if (GetNumQuestChoices() > 1) then
 			self:Print(L["gogreedy"])
 		end
 	else
@@ -440,6 +441,7 @@ function AutoTurnIn:Greed()
 	end
 
 	if money > 0 then  -- some quests, like tournament ones, offer reputation rewards and they have no cost.
+		self.forceGreed = true
 		self:TurnInQuest(index)
 	end
 end
