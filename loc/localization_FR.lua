@@ -148,7 +148,7 @@ privateTable.L.quests = {
 --Darkmoon Faire
 ["Les petits s'amusent aussi"] = {item=393, amount=15, currency=true},
 --MoP
-["Les graines de la peur"]={item="Eclats d’ambre d’effroi", amount=20, currency=false},
+["Les graines de la peur"]={item="Eclats d’ambre d’effroi", amount=5, currency=false},
 ["Remplir le garde-manger"]={item="Panier de vivres", amount=1, currency=false},
 ["Un plat pour Jogu"]={item="Carottes sautées", amount=5, currency=false},
 

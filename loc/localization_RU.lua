@@ -149,7 +149,7 @@ privateTable.L.quests = {
 ["Развлечения для самых маленьких"] = {item=393, amount=15, currency=true},
 
 --MoP
-["Семена Страха"]={item="Осколки жуткого янтаря", amount=20, currency=false},
+["Семена Страха"]={item="Осколки жуткого янтаря", amount=5, currency=false},
 ["Поход за продуктами"]={item="Пакет с продуктами", amount=1, currency=false},
 
 ["Угощение для Йогу"]={item="Пассерованная морковь", amount=5, currency=false},

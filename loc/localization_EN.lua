@@ -144,7 +144,7 @@ privateTable.L.quests = {
 ["The Forlorn Spire"]={donotaccept=true},
 ["Fun for the Little Ones"] = {item=393, amount=15, currency=true},
 --MoP
-["Seeds of Fear"]={item="Dread Amber Shards", amount=20, currency=false},
+["Seeds of Fear"]={item="Dread Amber Shards", amount=5, currency=false},
 ["Replenishing the Pantry"]={item="Bundle of Groceries", amount=1, currency=false},
 ["A Dish for Jogu"]={item="Sauteed Carrots", amount=5, currency=false},
 
