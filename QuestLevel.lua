@@ -57,7 +57,7 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 					local questTypeIndex = GetQuestLogQuestType(questIndex)
 					tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex]
 					if (not tagString) then
-						AutoTurnIn:Print("Please, inform addon author unknown QT for: " ..title)
+						--AutoTurnIn:Print("Please, inform addon author unknown QT for: " ..title)
 						tagString = ""
 					end
 					textLine.text:SetText(AutoTurnIn.WatchFrameLevelFormat:format(level, tagString, isDaily and "\*" or "", title))
