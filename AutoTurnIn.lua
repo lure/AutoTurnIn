@@ -23,6 +23,7 @@ AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=
 AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 AutoTurnIn.autoEquipList={}
 AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log 
+AutoTurnIn.TillerGifts={["79264"]=1, ["79265"]=1, ["79266"]=1, ["79267"]=1, ["79268"]=1}
 
 AutoTurnIn.ldbstruct = {
 		type = "data source",
@@ -550,16 +551,26 @@ function AutoTurnIn:QUEST_COMPLETE()
 		return
 	end
 
+	--/script faction = (GameTooltip:NumLines() > 2 and not UnitIsPlayer(select(2,GameTooltip:GetUnit()))) and 
+    -- getglobal("GameTooltipTextLeft"..GameTooltip:NumLines()):GetText() DEFAULT_CHAT_FRAME:AddMessage(faction or "NIL")
     if self:AllOrDaily() then
 		local questname = GetTitleText()
 		local quest = L.quests[questname]
-		-- Tournament quest found
-		if (quest == "tournament") then
-			self:TurnInQuest(AutoTurnInCharacterDB.tournament)
-			return
-		end
-		--It's not tournament, so decide about loot by general settings
+
 		if GetNumQuestChoices() > 1 then
+			local link = GetQuestItemLink("choice", 1)
+			local itemID = link:match("%b::"):gsub(":", "")
+
+			if (itemID == "46114" or itemID == "45724") then -- Tournament quest found
+				self:TurnInQuest(AutoTurnInCharacterDB.tournament)
+				return
+			end
+
+			--ignorind Marsh Lily,Lovely Apple,Jade Cat,Blue Feather,Ruby Shard
+			if (AutoTurnIn.TillerGifts[itemID]) then
+				return
+			end
+
 			if AutoTurnInCharacterDB.lootreward > 1 then -- Auto Loot enabled!
 				self.forceGreed = false
 
