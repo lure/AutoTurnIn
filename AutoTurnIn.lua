@@ -23,6 +23,7 @@ AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=
 AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 AutoTurnIn.autoEquipList={}
 AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log 
+			--ignorind Marsh Lily,Lovely Apple,Jade Cat,Blue Feather,Ruby Shard
 AutoTurnIn.TillerGifts={["79264"]=1, ["79265"]=1, ["79266"]=1, ["79267"]=1, ["79268"]=1}
 
 AutoTurnIn.ldbstruct = {
@@ -563,11 +564,6 @@ function AutoTurnIn:QUEST_COMPLETE()
 
 			if (itemID == "46114" or itemID == "45724") then -- Tournament quest found
 				self:TurnInQuest(AutoTurnInCharacterDB.tournament)
-				return
-			end
-
-			--ignorind Marsh Lily,Lovely Apple,Jade Cat,Blue Feather,Ruby Shard
-			if (AutoTurnIn.TillerGifts[itemID]) then
 				return
 			end
 
