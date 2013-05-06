@@ -1,4 +1,4 @@
-﻿## Interface: 50100
+﻿## Interface: 50200
 ## Title: AutoTurnIn
 ## Version: 3.0
 ## Author: Lur
