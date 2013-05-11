@@ -27,10 +27,12 @@ privateTable.L = setmetatable({
 	["tournamentWrit"]="Verfügung des Champions", -- 46114
 	["tournamentPurse"]="Geldbeutel des Champions",  -- 45724
 
-	["DarkmoonTeleLabel"]="Dunkelmond-Jahrmarkt: Zurück zur Kanone!",	 
+	["DarkmoonTeleLabel"]="Dunkelmond-Jahrmarkt: Zurück zur Kanone!",
+	["ToDarkmoonLabel"]="Dunkelmond-Jahrmarkt: Zurück zur Insel", -- darkmoon
 	["Teleportologe Fosselbab"]="Teleportologist Fozlebub",
 	["DarkmoonAutoLabel"]="Dunkelmond-Jahrmarkt: Spiel starten!",
 	["Darkmoon Island"]="Dunkelmondinsel",
+	["Darkmoon Faire Mystic Mage"]="Mystischer Magier des Dunkelmond-Jahrmarkts",	
 
 	["The Jade Forest"]="Der Jadewald",
 	["Scared Pandaren Cub"]="verängstigte Pandarenkinder",

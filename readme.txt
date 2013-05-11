@@ -1,5 +1,5 @@
 == AutoTurnIn ==
-author: lurkerrr
+author: alex.shubert@gmail.com
 http://wow.curseforge.com/addons/autoturnin/
 Accepts and turn in quest to NPC. May handle any quests or specified list. 
 May turn in quests with rewards and choose most expensive one for future selling.

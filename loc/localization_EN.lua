@@ -35,7 +35,7 @@ privateTable.L = setmetatable({
 	
 	["DarkmoonTeleLabel"]="Darkmoon: teleport to the cannon",
 	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub",
-	["DarkmoonAutoLabel"]="Darkmoon: start the game!",	
+	["DarkmoonAutoLabel"]="Darkmoon: start the game!",		
 	
 	["rewardtext"]="Print quest reward text",
 	["questlevel"]="Show quest level",

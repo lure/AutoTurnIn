@@ -26,8 +26,10 @@ privateTable.L = setmetatable({
     ["tournamentPurse"]="Bourse de champion",  -- 45724
     
     ["DarkmoonTeleLabel"]="Sombrelune : téléporter au canon",
+	["ToDarkmoonLabel"]="Sombrelune : téléporter au île", -- darkmoon	
     ["DarkmoonFaireTeleport"]="Téléportologue Mélébou",
     ["DarkmoonAutoLabel"]="Sombrelune : Lancer le jeu!",    
+	["Darkmoon Faire Mystic Mage"]="Mage mystique de la foire de Sombrelune",
 
     ["The Jade Forest"]="La forêt de Jade",
     ["Scared Pandaren Cub"]="Bébé pandaren apeuré",

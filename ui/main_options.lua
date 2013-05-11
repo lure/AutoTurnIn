@@ -98,6 +98,13 @@ end)
 UIDropDownMenu_SetWidth(LootDropDown, 200);
 UIDropDownMenu_JustifyText(LootDropDown, "LEFT")
 
+-- Teleport to Darkmoon Faire
+local ToDarkMoon= CreateFrame("CheckButton", O.."ToDarkMoon", OptionsPanel, "OptionsCheckButtonTemplate")
+_G[O.."ToDarkMoonText"]:SetText(L["ToDarkmoonLabel"])
+ToDarkMoon:SetScript("OnClick", function(self) 
+	ptable.TempConfig.todarkmoon = self:GetChecked() == 1 
+end)
+
 -- DarkmoonTeleport
 local DarkMoonCannon = CreateFrame("CheckButton", O.."DarkMoonCannon", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[O.."DarkMoonCannonText"]:SetText(L["DarkmoonTeleLabel"])
@@ -178,15 +185,16 @@ LootLabel:SetPoint("BOTTOMLEFT", LootDropDown, "TOPLEFT", 18, 0)
 LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -30)
 TournamentDropDownLabel:SetPoint("BOTTOMLEFT", TournamentDropDown, "TOPLEFT", 18, 0)
 TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
-EquipReward:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -16)
-ShowRewardText:SetPoint("TOPLEFT", EquipReward, "BOTTOMLEFT", 0, -16)
-DarkMoonCannon:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", 0, -16)
-DarkMoonAutoStart:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -16)
-Debug:SetPoint("TOPLEFT", ResetButton, "BOTTOMLEFT", 0, -16)
+EquipReward:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -14)
+ShowRewardText:SetPoint("TOPLEFT", EquipReward, "BOTTOMLEFT", 0, -14)
+ToDarkMoon:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", 0, -14)
+DarkMoonCannon:SetPoint("TOPLEFT", ToDarkMoon, "BOTTOMLEFT", 0, -14)
+DarkMoonAutoStart:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -14)
+Debug:SetPoint("TOPLEFT", ResetButton, "BOTTOMLEFT", 0, -14)
 ToggleKeyLabel:SetPoint("BOTTOMLEFT", ToggleKeyDropDown, "TOPLEFT", 18, 0)
 ToggleKeyDropDown:SetPoint("TOPLEFT", DarkMoonAutoStart, "BOTTOMLEFT", -15, -30)
-ShowQuestLevel:SetPoint("TOPLEFT", ToggleKeyDropDown, "BOTTOMLEFT", 16, -16)
-ShowWatchLevel:SetPoint("TOPLEFT", ShowQuestLevel, "BOTTOMLEFT", 0, -16)
+ShowQuestLevel:SetPoint("TOPLEFT", ToggleKeyDropDown, "BOTTOMLEFT", 16, -14)
+ShowWatchLevel:SetPoint("TOPLEFT", ShowQuestLevel, "BOTTOMLEFT", 0, -14)
 
 OptionsPanel.refresh = function()
 	if ( MakeACopy ) then 
@@ -203,6 +211,7 @@ OptionsPanel.refresh = function()
 	
 	UIDropDownMenu_SetSelectedID(TournamentDropDown, ptable.TempConfig.tournament)
 	UIDropDownMenu_SetText(TournamentDropDown,TournamentConst[ptable.TempConfig.tournament])
+	ToDarkMoon:SetChecked(ptable.TempConfig.todarkmoon)
 	DarkMoonCannon:SetChecked(ptable.TempConfig.darkmoonteleport)
 	DarkMoonAutoStart:SetChecked(ptable.TempConfig.darkmoonautostart)
 	ShowRewardText:SetChecked(ptable.TempConfig.showrewardtext)

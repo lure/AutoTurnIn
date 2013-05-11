@@ -12,7 +12,7 @@ local TOCVersion = GetAddOnMetadata(addonName, "Version")
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 AutoTurnIn.defaults = {enabled = true, all = false, trivial = false, lootreward = 1, tournament = 2,
-					   darkmoonteleport=true, togglekey=4, darkmoonautostart=true, showrewardtext=true, 
+					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true, 
 					   version=TOCVersion, autoequip = false, debug=false,
 					   questlevel=true, watchlevel=true,
 					   armor = {}, weapon = {}, stat = {}, secondary = {}}
@@ -240,7 +240,7 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 		
 		local quest = L.quests[questname] -- this quest exists in addons quest DB. There are mostly daily quests
 		local notBlackListed = not (quest and quest.donotaccept)		
-			
+
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
 		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all or isDaily )) then
 			if quest and quest.amount then
@@ -262,18 +262,22 @@ end
 
 function AutoTurnIn:isYoungPandaren()
 	return (UnitName("npc")== L["Scared Pandaren Cub"]) and
-			(GetRealZoneText() == L["The Jade Forest"]) 
+		(GetRealZoneText() == L["The Jade Forest"]) 
 end
 
+function AutoTurnIn:isDarkmoonFaireMysticMage()
+	return AutoTurnInCharacterDB.todarkmoon and 
+		(UnitName("npc")== L["Darkmoon Faire Mystic Mage"]) and
+		(GetRealZoneText() ~= L["Darkmoon Island"])  
+end
+
+function AutoTurnIn:isDarkmoonFaireTeleportologist()
+	return AutoTurnInCharacterDB.darkmoonteleport and (L["DarkmoonFaireTeleport"]==UnitName("target"))
+end
 
 function AutoTurnIn:GOSSIP_SHOW()
 	if (not self:AllowedToHandle(true)) then
 		return
-	end
-
-	if (AutoTurnInCharacterDB.darkmoonteleport and (L["DarkmoonFaireTeleport"]==UnitName("target"))) then
-		SelectGossipOption(1)
-		StaticPopup1Button1:Click()
 	end
 	
 	-- darkmoon fairy gossip sometime turns in quest too fast so I can't relay only on quest number count. It often lie.
@@ -288,13 +292,19 @@ function AutoTurnIn:GOSSIP_SHOW()
 		local options = {GetGossipOptions()}
 		for k, v in pairs(options) do
 			if ((v ~= "gossip") and strfind(v, "|cFF0008E8%(")) then
-				SelectGossipOption(math.floor(k / GetNumGossipOptions())+1)
+				local opcount = GetNumGossipOptions()
+				SelectGossipOption((opcount == 1) and 1 or  math.floor(k / GetNumGossipOptions()) + 1)
 			end
 		end
 	end
 
 	if self:isYoungPandaren() then
 		SelectGossipOption(1)
+	end
+	
+	if self:isDarkmoonFaireMysticMage() or self:isDarkmoonFaireTeleportologist() then 
+		SelectGossipOption(1)
+		StaticPopup1Button1:Click()
 	end
 end
 

@@ -28,9 +28,11 @@ privateTable.L = setmetatable({
 	["tournamentPurse"]="Кошелек чемпиона",  -- 45724
 	
 	["DarkmoonTeleLabel"]="Ярмарка Новолуния: телепортация к пушке", -- darkmoon
+	["ToDarkmoonLabel"]="Ярмарка Новолуния: телепортация на остров", -- darkmoon
 	["DarkmoonFaireTeleport"]="Телепортолог Фоцлебульб",
 	["DarkmoonAutoLabel"]="Ярмарка Новолуния: начинать игру",	
 	["Darkmoon Island"]="Остров Новолуния",
+	["Darkmoon Faire Mystic Mage"]="Гадалка ярмарки Новолуния",
 	
 	["The Jade Forest"]="Нефритовый лес",
 	["Scared Pandaren Cub"]="Испуганный юный пандарен",
