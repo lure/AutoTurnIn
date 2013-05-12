@@ -26,6 +26,17 @@ ResetButton:SetScript("OnClick", function()
 	AutoTurnIn.OptionsPanel.refresh();
 end)
 
+--[[
+local function CreateCheckbox(name, marginx, marginy)
+	local cb = CreateFrame("CheckButton", O..name,  OptionsPanel, "OptionsCheckButtonTemplate")
+	_G[cb:GetName().."Text"]:SetText(L[name])
+	cb:SetPoint("TOPLEFT", parent, "BOTTOMLEFT", marginx, marginy)
+	cb:SetScript("OnClick", function(self)
+		ptable.TempConfig[name] = self:GetChecked() == 1
+	end)
+	return cb
+end 
+]]--
 
 -- 'Enable' CheckBox
 local Enable = CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsCheckButtonTemplate")
@@ -140,6 +151,12 @@ Debug:SetScript("OnClick", function(self)
 	ptable.TempConfig.debug = self:GetChecked() == 1 
 end)
 
+local ShareQuests = CreateFrame("CheckButton", O.."ShareQuests", OptionsPanel, "OptionsCheckButtonTemplate")
+_G[ShareQuests:GetName().."Text"]:SetText(L["ShareQuestsLabel"])
+ShareQuests:SetScript("OnClick", function(self)
+	ptable.TempConfig.questshare = self:GetChecked() == 1
+end)
+
 -- Auto toggle key
 local ToggleKeyLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 ToggleKeyLabel:SetText(L["togglekey"])
@@ -177,24 +194,25 @@ end)
 title:SetPoint("TOPLEFT", 16, -16)
 subText:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 ResetButton:SetPoint("TOPRIGHT", OptionsPanel, "TOPRIGHT", -10, -10)
-Enable:SetPoint("TOPLEFT", subText, "BOTTOMLEFT", 0, -16)
+Enable:SetPoint("TOPLEFT", subText, "BOTTOMLEFT", 0, -14)
 QuestLabel:SetPoint("BOTTOMLEFT", QuestDropDown, "TOPLEFT", 18, 0)
-QuestDropDown:SetPoint("TOPLEFT", Enable, "BOTTOMLEFT", -15, -30)
+QuestDropDown:SetPoint("TOPLEFT", Enable, "BOTTOMLEFT", -15, -22)
 TrivialQuests:SetPoint("TOPLEFT", QuestDropDown, "TOPRIGHT", 30, 0)
 LootLabel:SetPoint("BOTTOMLEFT", LootDropDown, "TOPLEFT", 18, 0)
-LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -30)
+LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -22)
 TournamentDropDownLabel:SetPoint("BOTTOMLEFT", TournamentDropDown, "TOPLEFT", 18, 0)
 TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
-EquipReward:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -14)
-ShowRewardText:SetPoint("TOPLEFT", EquipReward, "BOTTOMLEFT", 0, -14)
-ToDarkMoon:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", 0, -14)
-DarkMoonCannon:SetPoint("TOPLEFT", ToDarkMoon, "BOTTOMLEFT", 0, -14)
-DarkMoonAutoStart:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -14)
-Debug:SetPoint("TOPLEFT", ResetButton, "BOTTOMLEFT", 0, -14)
+EquipReward:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -10)
+ShowRewardText:SetPoint("TOPLEFT", EquipReward, "BOTTOMLEFT", 0, -10)
+ToDarkMoon:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", 0, -10)
+DarkMoonCannon:SetPoint("TOPLEFT", ToDarkMoon, "BOTTOMLEFT", 0, -10)
+DarkMoonAutoStart:SetPoint("TOPLEFT", DarkMoonCannon, "BOTTOMLEFT", 0, -10)
+Debug:SetPoint("TOPLEFT", ResetButton, "BOTTOMLEFT", 0, -10)
 ToggleKeyLabel:SetPoint("BOTTOMLEFT", ToggleKeyDropDown, "TOPLEFT", 18, 0)
-ToggleKeyDropDown:SetPoint("TOPLEFT", DarkMoonAutoStart, "BOTTOMLEFT", -15, -30)
-ShowQuestLevel:SetPoint("TOPLEFT", ToggleKeyDropDown, "BOTTOMLEFT", 16, -14)
-ShowWatchLevel:SetPoint("TOPLEFT", ShowQuestLevel, "BOTTOMLEFT", 0, -14)
+ToggleKeyDropDown:SetPoint("TOPLEFT", DarkMoonAutoStart, "BOTTOMLEFT", -15, -22)
+ShowQuestLevel:SetPoint("TOPLEFT", ToggleKeyDropDown, "BOTTOMLEFT", 16, -10)
+ShowWatchLevel:SetPoint("TOPLEFT", ShowQuestLevel, "BOTTOMLEFT", 0, -10)
+ShareQuests:SetPoint("TOPLEFT", ShowWatchLevel, "BOTTOMLEFT", 0, -10)
 
 OptionsPanel.refresh = function()
 	if ( MakeACopy ) then 
@@ -218,8 +236,9 @@ OptionsPanel.refresh = function()
 	EquipReward:SetChecked(ptable.TempConfig.autoequip)
 	Debug:SetChecked(ptable.TempConfig.debug)
 	TrivialQuests:SetChecked(ptable.TempConfig.trivial)
-	ShowQuestLevel:SetChecked(ptable.TempConfig.questlevel)	
-	ShowWatchLevel:SetChecked(ptable.TempConfig.watchlevel)	
+	ShowQuestLevel:SetChecked(ptable.TempConfig.questlevel)
+	ShowWatchLevel:SetChecked(ptable.TempConfig.watchlevel)
+	ShareQuests:SetChecked(ptable.TempConfig.questshare)
 	
 	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)
 	UIDropDownMenu_SetText(ToggleKeyDropDown,  ToggleKeyConst[ptable.TempConfig.togglekey])

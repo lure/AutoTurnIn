@@ -15,6 +15,7 @@ privateTable.L = setmetatable({
     ["questTypeAll"] =  "Toutes",
     ["TrivialQuests"]= "Accepter les quêtes 'grise'",
     ["questTypeList"] = "Quêtes journalières",
+	["ShareQuestsLabel"] = "partager la quête",
 
     ["lootTypeLabel"]="Quêtes à récompense d'objet",
     ["lootTypeFalse"]="Ne pas rendre",

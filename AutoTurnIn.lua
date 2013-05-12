@@ -14,7 +14,7 @@ AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "Ace
 AutoTurnIn.defaults = {enabled = true, all = false, trivial = false, lootreward = 1, tournament = 2,
 					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true, 
 					   version=TOCVersion, autoequip = false, debug=false,
-					   questlevel=true, watchlevel=true,
+					   questlevel=true, watchlevel=true, questshare=false,
 					   armor = {}, weapon = {}, stat = {}, secondary = {}}
 					   
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
@@ -47,7 +47,7 @@ AutoTurnIn.ldbstruct = {
 function AutoTurnIn:OnInitialize()
 	self:RegisterChatCommand("au", "ConsoleComand")
 end	
-	
+
 function AutoTurnIn:SetEnabled(enabled)
 	AutoTurnInCharacterDB.enabled = not not enabled
 	if self.ldb then
@@ -67,7 +67,7 @@ function AutoTurnIn:OnEnable()
 		_G.AutoTurnInCharacterDB = CopyTable(self.defaults)
 	end
 	local DB = AutoTurnInCharacterDB
-	
+
 	if (tonumber(DB.lootreward) == nil) then
 		DB.lootreward = 1
 	end
@@ -79,9 +79,10 @@ function AutoTurnIn:OnEnable()
 	DB.stat = DB.stat and DB.stat or {}
 	DB.secondary = DB.secondary and DB.secondary or {}
 	DB.trivial = DB.trivial ~= nil and DB.trivial or false
-	
+
 	DB.questlevel = DB.questlevel == nil and true or DB.questlevel
 	DB.watchlevel = DB.watchlevel == nil and true or DB.watchlevel
+	DB.questshare = DB.questshare == nil and false or DB.questshare
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 	if LDB then
@@ -182,11 +183,11 @@ function AutoTurnIn:QUEST_GREETING()
 	end
 
 	for index=1, GetNumAvailableQuests() do
-		local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)		
+		local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)
 		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
 		local quest = L.quests[GetAvailableTitle(index)]
 		local notBlackListed = not (quest and quest.donotaccept)
-		
+
 		if isDaily then 
 			self:CacheAsDaily(GetAvailableTitle(index))
 		end
@@ -208,7 +209,7 @@ end
 -- with ending `nil`. So: '#' for {1,nil, "b", nil} returns 1
 function AutoTurnIn:VarArgForActiveQuests(...)
     local MOP_INDEX_CONST = 5 -- was '4' in Cataclysm
-	
+
 	for i=1, select("#", ...), MOP_INDEX_CONST do
 		local isComplete = select(i+3, ...) -- complete status
 		if ( isComplete ) then  
@@ -317,6 +318,13 @@ function AutoTurnIn:QUEST_DETAIL()
 		QuestInfoDescriptionText:SetAlphaGradient(0, -1)
 		QuestInfoDescriptionText:SetAlpha(1)
 		AcceptQuest()
+	end
+end
+
+function AutoTurnIn:QUEST_ACCEPTED(event, index)
+	if AutoTurnInCharacterDB.questshare and GetQuestLogPushable() and GetNumGroupMembers() >= 1 then
+		SelectQuestLogEntry(index);
+		QuestLogPushQuest();
 	end
 end
 
