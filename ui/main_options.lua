@@ -26,24 +26,26 @@ ResetButton:SetScript("OnClick", function()
 	AutoTurnIn.OptionsPanel.refresh();
 end)
 
---[[
 local function CreateCheckbox(name, marginx, marginy)
-	local cb = CreateFrame("CheckButton", O..name,  OptionsPanel, "OptionsCheckButtonTemplate")
-	_G[cb:GetName().."Text"]:SetText(L[name])
+	local nm = O..name
+	local cb = CreateFrame("CheckButton", nm,  OptionsPanel, "OptionsCheckButtonTemplate")
+	_G[nm.."Text"]:SetText(L[name])
 	cb:SetPoint("TOPLEFT", parent, "BOTTOMLEFT", marginx, marginy)
 	cb:SetScript("OnClick", function(self)
 		ptable.TempConfig[name] = self:GetChecked() == 1
 	end)
 	return cb
-end 
-]]--
+end
 
 -- 'Enable' CheckBox
-local Enable = CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsCheckButtonTemplate")
+local Enable = CreateCheckbox("enabled", subText, 0, -14)
+--[[
+CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsCheckButtonTemplate")
 _G[O.."EnableText"]:SetText(L["enabled"])
 Enable:SetScript("OnClick", function(self) 
 	ptable.TempConfig.enabled = self:GetChecked() == 1
 end)
+]]--
 
 -- Quest types to handle 
 local QuestLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
