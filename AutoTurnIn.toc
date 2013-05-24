@@ -1,7 +1,7 @@
-﻿## Interface: 50200
+﻿## Interface: 50300
 ## Title: AutoTurnIn
-## Version: 3.0
-## Author: Lur
+## Version: 4.1
+## Author: Alex Shubert
 ## Notes: Auto accept and complete daily or any quests
 ## Notes-ruRU: Автоматически принимает и сдает ежедневные либо все задания
 ## Notes-enUS: Auto accept and complete daily or any quests
@@ -9,7 +9,7 @@
 ## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests
 ## OptionalDeps: Ace3
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
-## X-Date: 2012-01-16
+## X-Date: 2013-05-25
 ## X-Category: Quest
 ## X-Embeds: Ace3
 
