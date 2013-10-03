@@ -169,6 +169,7 @@ privateTable.L.quests = {
 ["Ein Gericht für den alten Hügelpranke"]={item="Geschmorte Schildkröte", amount=5, currency=false},
 ["Ein Gericht für Sho"]={item="Blütenfischfilet", amount=5, currency=false},
 ["Ein Gericht für Tina"]={item="Feuergeisterlachs", amount=5, currency=false},
+["Auffüllen der Speisekammer"]={item="Bündel mit Zutaten", amount=1, currency=false},
 
 }
 end

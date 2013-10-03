@@ -158,5 +158,7 @@ privateTable.L.quests = {
 ["A Dish for Old Hillpaw"]={item="Braised Turtle", amount=5, currency=false},
 ["A Dish for Sho"]={item="Eternal Blossom Fish", amount=5, currency=false},
 ["A Dish for Tina"]={item="Fire Spirit Salmon", amount=5, currency=false},
+["Replenishing the Pantry"]={item="Bundle of Groceries", amount=1, currency=false},
+
 }
 end

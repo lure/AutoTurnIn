@@ -164,5 +164,6 @@ privateTable.L.quests = {
 ["Un plat pour le Vieux Patte des Hauts"]={item="Tortue braisée", amount=5, currency=false},
 ["Un plat pour Sho"]={item="Poisson de l’Éternel printemps", amount=5, currency=false},
 ["Un plat pour Tina"]={item="Saumon de l’esprit du feu", amount=5, currency=false},
+["Remplir le garde-manger"]={item="Panier de vivres", amount=1, currency=false},
 }
 end

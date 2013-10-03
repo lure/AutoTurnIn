@@ -164,7 +164,8 @@ privateTable.L.quests = {
 ["Угощение для Хаоханя"]={item="Жареный на углях стейк из тигриного мяса", amount=5, currency=false},
 ["Угощение для старика Горной Лапы"]={item="Тушеное черепашье мясо", amount=5, currency=false},
 ["Угощение для Шо"]={item="Рыба по-дольски", amount=5, currency=false},
-["Угощение для Тины"]={item="Лосось духов огня", amount=5, currency=false},
+["Угощение длDZя Тины"]={item="Лосось духов огня", amount=5, currency=false},
+["Поход за продуктами"]={item="Пакет с продуктами", amount=1, currency=false},
 
 
 }
