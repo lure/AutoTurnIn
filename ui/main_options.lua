@@ -30,7 +30,7 @@ local function CreateCheckbox(name, marginx, marginy)
 	local nm = O..name
 	local cb = CreateFrame("CheckButton", nm,  OptionsPanel, "OptionsCheckButtonTemplate")
 	_G[nm.."Text"]:SetText(L[name])
-	cb:SetPoint("TOPLEFT", parent, "BOTTOMLEFT", marginx, marginy)
+	cb:SetPoint("TOPLEFT", OptionsPanel, "BOTTOMLEFT", marginx, marginy)
 	cb:SetScript("OnClick", function(self)
 		ptable.TempConfig[name] = self:GetChecked() == 1
 	end)
@@ -38,14 +38,7 @@ local function CreateCheckbox(name, marginx, marginy)
 end
 
 -- 'Enable' CheckBox
-local Enable = CreateCheckbox("enabled", subText, 0, -14)
---[[
-CreateFrame("CheckButton", O.."Enable", OptionsPanel, "OptionsCheckButtonTemplate")
-_G[O.."EnableText"]:SetText(L["enabled"])
-Enable:SetScript("OnClick", function(self) 
-	ptable.TempConfig.enabled = self:GetChecked() == 1
-end)
-]]--
+local Enable = CreateCheckbox("enabled", 0, -14)
 
 -- Quest types to handle 
 local QuestLabel = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
