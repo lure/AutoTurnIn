@@ -31,6 +31,7 @@ local function CreateCheckbox(name, marginx, marginy)
 	local cb = CreateFrame("CheckButton", nm,  OptionsPanel, "OptionsCheckButtonTemplate")
 	_G[nm.."Text"]:SetText(L[name])
 	cb:SetPoint("TOPLEFT", OptionsPanel, "BOTTOMLEFT", marginx, marginy)
+	
 	cb:SetScript("OnClick", function(self)
 		ptable.TempConfig[name] = self:GetChecked() == 1
 	end)
