@@ -30,9 +30,9 @@ privateTable.L = setmetatable({
 
 	["DarkmoonTeleLabel"]="Dunkelmond-Jahrmarkt: Zurück zur Kanone!",
 	["ToDarkmoonLabel"]="Dunkelmond-Jahrmarkt: Zurück zur Insel", -- darkmoon
-	["Teleportologe Fosselbab"]="Teleportologist Fozlebub",
+	["DarkmoonFaireTeleport"]="Teleportologe Fosselbab",
 	["DarkmoonAutoLabel"]="Dunkelmond-Jahrmarkt: Spiel starten!",
-	["Darkmoon Island"]="Dunkelmondinsel",
+	["Darkmoon Island"]="Dunkelmond-Insel",
 	["Darkmoon Faire Mystic Mage"]="Mystischer Magier des Dunkelmond-Jahrmarkts",	
 
 	["The Jade Forest"]="Der Jadewald",
