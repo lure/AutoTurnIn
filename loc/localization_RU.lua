@@ -11,7 +11,7 @@ privateTable.L = setmetatable({
 	["list"]="принимать и сдавать только внесенные в список задания",
 	["dontlootfalse"]="завершать задания с выбором наград, брать самый дорогой предмет",
 	["dontloottrue"]="не завершать задания, где есть выбор наград",
-	["resetbutton"]="сброс",
+	["resetbutton"]="Сброс",
 	
 	["questTypeLabel"] = "задания", 
 	["questTypeAll"] = "все",

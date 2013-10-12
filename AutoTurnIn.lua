@@ -23,7 +23,7 @@ AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=
 AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 AutoTurnIn.autoEquipList={}
 AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log 
-			--ignorind Marsh Lily,Lovely Apple,Jade Cat,Blue Feather,Ruby Shard
+--ignoring Marsh Lily,Lovely Apple,Jade Cat,Blue Feather,Ruby Shard DOESNT WORK && NOT USED maybe I should use 'required' in  http://wowprogramming.com/docs/api/GetQuestItemLink
 AutoTurnIn.TillerGifts={["79264"]=1, ["79265"]=1, ["79266"]=1, ["79267"]=1, ["79268"]=1}
 
 AutoTurnIn.ldbstruct = {
@@ -93,7 +93,8 @@ function AutoTurnIn:OnEnable()
 	self:RegisterGossipEvents()
 	hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
 	hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
-	hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)	
+	hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
+	self:Print("Hi! AutoTurnIn author needs your help. If you have any ideas on how to improve addon, may help with translation or just notice a bug let me know pls via curse.com addon page. Your help is greatly appreciated. ")
 end
 
 function AutoTurnIn:OnDisable()
@@ -140,6 +141,8 @@ local p2 = {[true]=L["all"], [false]=L["list"]}
 function AutoTurnIn:ConsoleComand(arg)
 	arg = strlower(arg)
 	if (#arg == 0) then
+		-- http://wowpedia.org/Patch_5.3.0/API_changes double call is a workaround
+		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
 		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
 	elseif arg == "on" then
 		self:SetEnabled(true)
@@ -157,7 +160,7 @@ function AutoTurnIn:GetItemAmount(isCurrency, item)
 end
 
 -- returns set 'self.allowed' to true if addon is allowed to handle current gossip conversation
--- Cases when it may not : (addon is enabled and toggle key was pressed) or (addon is disabled and toggle key is not presse)
+-- Cases when it may not : (addon is enabled and toggle key was pressed) or (addon is disabled and toggle key is not pressed)
 -- 'forcecheck' does what it name says: forces check
 function AutoTurnIn:AllowedToHandle(forcecheck)
 	if ( self.allowed == nil or forcecheck ) then
@@ -405,7 +408,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		if (AutoTurnInCharacterDB.autoequip and (strlen(name) > 0)) then
 			local lootLevel, _, _, _, _, equipSlot = select(4, GetItemInfo(GetQuestItemLink("choice", rewardIndex)))
 
-			-- Compares reward and already equiped item levels. If reward level is greater than equiped item, auto equip reward
+			-- Compares reward and already equipped item levels. If reward level is greater than equipped item, auto equip reward
 			local slot = C.SLOTS[equipSlot]
 			if (slot) then
 				local firstSlot = GetInventorySlotInfo(slot[1])
@@ -414,16 +417,16 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 
 				-- If reward is a ring  trinket or one-handed weapons all slots must be checked in order to swap one with a lesser item-level
 				if (#slot > 1) then
-					local secondSlot = GetInventorySlotInfo(slot[2]) 
+					local secondSlot = GetInventorySlotInfo(slot[2])
 					invLink = GetInventoryItemLink("player", secondSlot)
-					if (invLink) then 
+					if (invLink) then
 						local eq2Level = self:ItemLevel(invLink)
 						firstSlot = (eqLevel > eq2Level) and secondSlot or firstSlot
 						eqLevel = (eqLevel > eq2Level) and eq2Level or eqLevel
 					end
 				end
-				
-				-- comparing lowest equiped item level with reward's item level
+
+				-- comparing lowest equipped item level with reward's item level
 				if(lootLevel > eqLevel) then
 					self.autoEquipList[name] = firstSlot
 					self.delayFrame.delay = time() + 2
@@ -438,7 +441,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		if (link) then
 			self:Print("Debug: item to loot=", GetQuestItemLink("choice", rewardIndex))
 		elseif (GetNumQuestChoices() == 0) then
-			self:Print("Debug: turning quest in")
+			self:Print("Debug: turning quest in, no choice required")
 		end
 	else		
 		GetQuestReward(rewardIndex)
@@ -563,7 +566,7 @@ function AutoTurnIn:Need()
 	return ( foundCount ~= 0 )
 end
 
--- I was forced to make decision on offhands, cloack and shileds separate from armor but I can't pick up my mind about the reason...
+-- I was forced to make decision on offhand, cloak and shields separate from armor but I can't pick up my mind about the reason...
 function AutoTurnIn:QUEST_COMPLETE()
 	-- blasted Lands citadel wonderful NPC. They do not trigger any events except quest_complete.
 	if not self:AllowedToHandle() then
@@ -577,11 +580,20 @@ function AutoTurnIn:QUEST_COMPLETE()
 		local quest = L.quests[questname]
 
 		if GetNumQuestChoices() > 1 then
-			local link = GetQuestItemLink("choice", 1)
-			local itemID = link:match("%b::"):gsub(":", "")
+			local function getItemId(typeStr)
+				local link = GetQuestItemLink(typeStr, 1) --first item is enough
+				return link:match("%b::"):gsub(":", "")
+			end
 
+			local itemID = getItemId("choice")
 			if (itemID == "46114" or itemID == "45724") then -- Tournament quest found
 				self:TurnInQuest(AutoTurnInCharacterDB.tournament)
+				return
+			end
+
+			itemID = getItemId("required")
+			if (AutoTurnIn.TillerGifts[itemID]) then --ignoring tiller gift's quest
+				self:Print("tiller's gift ignored")
 				return
 			end
 

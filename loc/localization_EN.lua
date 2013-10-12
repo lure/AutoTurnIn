@@ -35,10 +35,11 @@ privateTable.L = setmetatable({
 	["tournamentPurse"]="Champion's Purse",  -- 45724
 	
 	["DarkmoonTeleLabel"]="Darkmoon: teleport to the cannon",
+	["ToDarkmoonLabel"]="Darkmoon: teleport to island",
 	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub",
 	["DarkmoonAutoLabel"]="Darkmoon: start the game!",		
 	
-	["rewardtext"]="Print quest reward text",
+	["rewardtext"]="Print quest competition text",
 	["questlevel"]="Show quest level",
 	["watchlevel"]="Show watched quest level",	
 	["autoequip"]="Equip received reward",
