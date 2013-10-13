@@ -400,7 +400,7 @@ function AutoTurnIn:ItemLevel(itemLink)
 	end
 	-- 7 for heirloom http://wowprogramming.com/docs/api_types#itemQuality
 	local invQuality, invLevel = select(3, GetItemInfo(itemLink))
-	return (invQuality == 7) and math.huge or itemLink
+	return (invQuality == 7) and math.huge or invLevel
 end
 
 -- turns quest in printing reward text if `showrewardtext` option is set.
@@ -416,8 +416,10 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		if (GetNumQuestChoices() > 1) then
 			self:Print(L["gogreedy"])
 		end
-	else
-		local name = GetQuestItemInfo("choice", rewardIndex)
+	end
+	
+	if (not self.forceGreed) then
+		local name = GetQuestItemInfo("choice", (GetNumQuestChoices() == 1) and 1 or rewardIndex)
 		if (AutoTurnInCharacterDB.autoequip and (strlen(name) > 0)) then
 			local lootLevel, _, _, _, _, equipSlot = select(4, GetItemInfo(GetQuestItemLink("choice", rewardIndex)))
 
