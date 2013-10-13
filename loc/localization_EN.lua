@@ -108,7 +108,6 @@ privateTable.L.quests = {
 ["Tarenar's Talisman"]={donotaccept=true},
 ["Vex'tul's Armbands"]={donotaccept=true},
 
-
 --[[Burning Crusade]]--
 --Lower City
 ["More Feathers"]={item="Arakkoa Feather", amount=30, currency=false},
@@ -167,6 +166,15 @@ privateTable.L.quests = {
 ['Pristine Firestorm Egg']={item="Pristine Firestorm Egg", amount=1, currency=false},
 ['Thick Tiger Haunch']={item="Thick Tiger Haunch", amount=1, currency=false},
 
-
 }
+
+privateTable.L.ignoreList = {
+--MOP Tillers
+["A Marsh Lily for"]="",
+["A Lovely Apple for"]="",
+["A Jade Cat for"]="",
+["A Blue Feather for"]="",
+["A Ruby Shard for"]="",
+}
+
 end

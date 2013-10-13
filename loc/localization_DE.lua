@@ -178,4 +178,13 @@ privateTable.L.quests = {
 ['Schwere Yakrippe']={item="Schwere Yakrippe", amount=1, currency=false},
 
 }
+
+privateTable.L.ignoreList = {
+--MOP Tillers
+["Eine Sumpflilie für"]="",
+["Ein hübscher Apfel für"]="",
+["Eine Jadekatze für"]="",
+["Eine blaue Feder für"]="",
+["Ein Rubinsplitter für"]="",
+}
 end

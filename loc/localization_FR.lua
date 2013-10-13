@@ -173,4 +173,13 @@ privateTable.L.quests = {
 ['Viande de grande tortue']={item="Viande de grande tortue", amount=1, currency=false},
 
 }
+
+privateTable.L.ignoreList = {
+--MOP Tillers
+["Un lys des marais pour"]="",
+["Une pomme délicieuse pour"]="",
+["Un chat de jade pour"]="",
+["Une plume bleue pour"]="",
+["Un éclat de rubis pour"]="",
+}
 end

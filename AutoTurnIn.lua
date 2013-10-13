@@ -23,8 +23,6 @@ AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=
 AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 AutoTurnIn.autoEquipList={}
 AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log 
---ignoring Marsh Lily,Lovely Apple,Jade Cat,Blue Feather,Ruby Shard DOESNT WORK && NOT USED maybe I should use 'required' in  http://wowprogramming.com/docs/api/GetQuestItemLink
-AutoTurnIn.TillerGifts={["79264"]=1, ["79265"]=1, ["79266"]=1, ["79267"]=1, ["79268"]=1}
 
 AutoTurnIn.ldbstruct = {
 		type = "data source",
@@ -136,6 +134,20 @@ function AutoTurnIn:CacheAsDaily(gossipQuest)
 	self.questCache[gossipQuest] = true
 end
 
+function AutoTurnIn:IsIgnoredQuest(quest)
+	local function startsWith(str,template)
+		return (string.len(str) >= string.len(template)) and (string.sub(str,1,string.len(template))==template)
+	end
+
+	for q in pairs(L.ignoreList) do
+		if (startsWith(quest, q)) then
+			return true
+		end
+	end
+
+	return false
+end
+
 local p1 = {[true]=L["enabled"], [false]=L["disabled"]}
 local p2 = {[true]=L["all"], [false]=L["list"]}
 function AutoTurnIn:ConsoleComand(arg)
@@ -172,7 +184,7 @@ function AutoTurnIn:AllowedToHandle(forcecheck)
 	return self.allowed
 end
 
--- OldGossip interaction system. Burn in hell. See http://wowprogramming.com/docs/events/QUEST_GREETING
+-- Old 'Quest NPC' interaction system. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
 	if (not self:AllowedToHandle(true)) then
 		return
@@ -188,8 +200,9 @@ function AutoTurnIn:QUEST_GREETING()
 	for index=1, GetNumAvailableQuests() do
 		local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)
 		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
-		local quest = L.quests[GetAvailableTitle(index)]
-		local notBlackListed = not (quest and quest.donotaccept)
+		local title = GetAvailableTitle(index)
+		local quest = L.quests[title]
+		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
 
 		if isDaily then 
 			self:CacheAsDaily(GetAvailableTitle(index))
@@ -237,13 +250,13 @@ end
 function AutoTurnIn:VarArgForAvailableQuests(...)
 	local MOP_INDEX_CONST = 6 -- was '5' in Cataclysm
 	for i=1, select("#", ...), MOP_INDEX_CONST do
-		local questname = select(i, ...)
+		local title = select(i, ...)
 		local isTrivial = select(i+2, ...)		
 		local isDaily  = select(i+3, ...)		
-		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial	
+		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
 		
-		local quest = L.quests[questname] -- this quest exists in addons quest DB. There are mostly daily quests
-		local notBlackListed = not (quest and quest.donotaccept)		
+		local quest = L.quests[title] -- this quest exists in addons quest DB. There are mostly daily quests
+		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
 
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
 		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all or isDaily )) then
