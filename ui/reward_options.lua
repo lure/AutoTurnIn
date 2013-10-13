@@ -95,7 +95,7 @@ end)
 UIDropDownMenu_SetWidth(ArmorDropDown, 200);
 UIDropDownMenu_JustifyText(ArmorDropDown, "LEFT")
 ArmorDropDown:SetPoint("TOPLEFT", ArmorPanel, 0, -8)
-CreateCheckbox(armor[6], ArmorPanel, 402, -8)
+CreateCheckbox(armor[7], ArmorPanel, 402, -8)
 	-- 2nd line 
 CreateCheckbox("Jewelry", ArmorPanel, 10, -40, L['Jewelry'] )
 CreateCheckbox('INVTYPE_HOLDABLE', ArmorPanel, 206, -40, INVTYPE_HOLDABLE)

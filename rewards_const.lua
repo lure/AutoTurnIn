@@ -33,7 +33,7 @@ C.ITEMS = {
 	['Leather'] = armor[3],
 	['Mail'] = armor[4],
 	['Plate'] = armor[5],
-	['Shields'] = armor[6],
+	['Shields'] = armor[7], -- from 5.4 '6' is a cosmetic
 	--[[3rd slot
 	['Librams'] = armor[7],
 	['Idols'] = armor[8],
