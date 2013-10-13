@@ -3,8 +3,8 @@ Feel free to use this source code for any purpose ( except developing nuclear we
 Please keep original author statement.
 @author Alex Shubert (alex.shubert@gmail.com)
 ]]--
-local _G = _G 	--Rumors say that global _G is called by lookup in a super-global table. Have no idea whether it is true. 
-local _ 		--Sometimes blizzard exposes "_" variable as a global. 
+local _G = _G 	--Rumors say that global _G is called by lookup in a super-global table. Have no idea whether it is true.
+local _ 		--Sometimes blizzard exposes "_" variable as a global.
 local addonName, ptable = ...
 local L = ptable.L
 local C = ptable.CONST
@@ -12,7 +12,7 @@ local TOCVersion = GetAddOnMetadata(addonName, "Version")
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 AutoTurnIn.defaults = {enabled = true, all = false, trivial = false, lootreward = 1, tournament = 2,
-					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true, 
+					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true,
 					   version=TOCVersion, autoequip = false, debug=false,
 					   questlevel=true, watchlevel=true, questshare=false,
 					   armor = {}, weapon = {}, stat = {}, secondary = {}}
@@ -22,7 +22,7 @@ AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
 AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 AutoTurnIn.autoEquipList={}
-AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log 
+AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log
 
 AutoTurnIn.ldbstruct = {
 		type = "data source",
@@ -204,7 +204,7 @@ function AutoTurnIn:QUEST_GREETING()
 		local quest = L.quests[title]
 		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
 
-		if isDaily then 
+		if isDaily then
 			self:CacheAsDaily(GetAvailableTitle(index))
 		end
 
@@ -228,7 +228,7 @@ function AutoTurnIn:VarArgForActiveQuests(...)
 
 	for i=1, select("#", ...), MOP_INDEX_CONST do
 		local isComplete = select(i+3, ...) -- complete status
-		if ( isComplete ) then  
+		if ( isComplete ) then
 			local questname = select(i, ...)
 			if self:AllOrCachedDaily(questname) then
 				local quest = L.quests[questname]
@@ -272,20 +272,20 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 end
 
 function AutoTurnIn:isDarkmoonAndAllowed(questCount)
-	return (self.DarkmoonAllowToProceed and questCount) and 
-			AutoTurnInCharacterDB.darkmoonautostart and 
-			(GetZoneText() == L["Darkmoon Island"]) 
+	return (self.DarkmoonAllowToProceed and questCount) and
+			AutoTurnInCharacterDB.darkmoonautostart and
+			(GetZoneText() == L["Darkmoon Island"])
 end
 
 function AutoTurnIn:isYoungPandaren()
 	return (UnitName("npc")== L["Scared Pandaren Cub"]) and
-		(GetRealZoneText() == L["The Jade Forest"]) 
+		(GetRealZoneText() == L["The Jade Forest"])
 end
 
 function AutoTurnIn:isDarkmoonFaireMysticMage()
-	return AutoTurnInCharacterDB.todarkmoon and 
+	return AutoTurnInCharacterDB.todarkmoon and
 		(UnitName("npc")== L["Darkmoon Faire Mystic Mage"]) and
-		(GetRealZoneText() ~= L["Darkmoon Island"])  
+		(GetRealZoneText() ~= L["Darkmoon Island"])
 end
 
 function AutoTurnIn:isDarkmoonFaireTeleportologist()
@@ -319,14 +319,14 @@ function AutoTurnIn:GOSSIP_SHOW()
 		SelectGossipOption(1)
 	end
 	
-	if self:isDarkmoonFaireMysticMage() or self:isDarkmoonFaireTeleportologist() then 
+	if self:isDarkmoonFaireMysticMage() or self:isDarkmoonFaireTeleportologist() then
 		SelectGossipOption(1)
 		StaticPopup1Button1:Click()
 	end
 end
 
 function AutoTurnIn:QUEST_DETAIL()
-	if (QuestIsDaily() or QuestIsWeekly()) then 
+	if (QuestIsDaily() or QuestIsWeekly()) then
 		self:CacheAsDaily(GetTitleText())
 	end
 	
@@ -370,7 +370,7 @@ AutoTurnIn.delayFrame:SetScript('OnUpdate', function()
 		return
 	end
 
-	if (InCombatLockdown()) then 
+	if (InCombatLockdown()) then
 		return
 	end
 
@@ -588,7 +588,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 		return
 	end
 
-	--/script faction = (GameTooltip:NumLines() > 2 and not UnitIsPlayer(select(2,GameTooltip:GetUnit()))) and 
+	--/script faction = (GameTooltip:NumLines() > 2 and not UnitIsPlayer(select(2,GameTooltip:GetUnit()))) and
     -- getglobal("GameTooltipTextLeft"..GameTooltip:NumLines()):GetText() DEFAULT_CHAT_FRAME:AddMessage(faction or "NIL")
     if self:AllOrDaily() then
 		local questname = GetTitleText()
@@ -623,7 +623,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 				end
 			end
 		else
-			self:TurnInQuest(1) -- index greater than '0' enables autoequip check. 
+			self:TurnInQuest(1) -- index greater than '0' enables autoequip check.
 		end
     end
 end
