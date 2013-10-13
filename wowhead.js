@@ -1,6 +1,6 @@
 var quests={}, _result="", x;
 var area = $("div.comment-edit-body textarea");
-$("table.listview-mode-default tr").find("td:first div a").each(function (){
+$("table.listview-mode-default tr").find("td div a").each(function (){
     if ($(this).text() != "") quests[$(this).text()]= "";
 });
 for(x in quests) {

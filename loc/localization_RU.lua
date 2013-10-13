@@ -166,6 +166,12 @@ privateTable.L.quests = {
 ["Угощение для Шо"]={item="Рыба по-дольски", amount=5, currency=false},
 ["Угощение длDZя Тины"]={item="Лосось духов огня", amount=5, currency=false},
 ["Поход за продуктами"]={item="Пакет с продуктами", amount=1, currency=false},
+--MOP timeless Island
+['Бок тяжелого яка']={item="Бок тяжелого яка", amount=1, currency=false},
+['Мясистая нога журавля']={item="Мясистая нога журавля", amount=1, currency=false},
+['Мясо большой черепахи']={item="Мясо большой черепахи", amount=1, currency=false},
+['Нетронутое яйцо огненной бури']={item="Нетронутое яйцо огненной бури", amount=1, currency=false},
+['Толстый тигриный окорок']={item="Толстый тигриный окорок", amount=1, currency=false},
 
 
 }

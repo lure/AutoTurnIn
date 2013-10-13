@@ -170,6 +170,12 @@ privateTable.L.quests = {
 ["Ein Gericht für Sho"]={item="Blütenfischfilet", amount=5, currency=false},
 ["Ein Gericht für Tina"]={item="Feuergeisterlachs", amount=5, currency=false},
 ["Auffüllen der Speisekammer"]={item="Bündel mit Zutaten", amount=1, currency=false},
+--MOP timeless Island
+['Dicke Tigerkeule']={item="Dicke Tigerkeule", amount=1, currency=false},
+['Fleischige Kranichkeule']={item="Fleischige Kranichkeule", amount=1, currency=false},
+['Großschildkrötenfleisch']={item="Großschildkrötenfleisch", amount=1, currency=false},
+['Makelloses Feuersturmei']={item="Makelloses Feuersturmei", amount=1, currency=false},
+['Schwere Yakrippe']={item="Schwere Yakrippe", amount=1, currency=false},
 
 }
 end

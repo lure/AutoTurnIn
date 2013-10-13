@@ -160,6 +160,13 @@ privateTable.L.quests = {
 ["A Dish for Sho"]={item="Eternal Blossom Fish", amount=5, currency=false},
 ["A Dish for Tina"]={item="Fire Spirit Salmon", amount=5, currency=false},
 ["Replenishing the Pantry"]={item="Bundle of Groceries", amount=1, currency=false},
+--MOP timeless Island
+['Great Turtle Meat']={item="Great Turtle Meat", amount=1, currency=false},
+['Heavy Yak Flank']={item="Heavy Yak Flank", amount=1, currency=false},
+['Meaty Crane Leg']={item="Meaty Crane Leg", amount=1, currency=false},
+['Pristine Firestorm Egg']={item="Pristine Firestorm Egg", amount=1, currency=false},
+['Thick Tiger Haunch']={item="Thick Tiger Haunch", amount=1, currency=false},
+
 
 }
 end

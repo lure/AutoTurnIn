@@ -165,5 +165,12 @@ privateTable.L.quests = {
 ["Un plat pour Sho"]={item="Poisson de l’Éternel printemps", amount=5, currency=false},
 ["Un plat pour Tina"]={item="Saumon de l’esprit du feu", amount=5, currency=false},
 ["Remplir le garde-manger"]={item="Panier de vivres", amount=1, currency=false},
+--MOP timeless Island
+['Cuissot de tigre épais']={item="Cuissot de tigre épais", amount=1, currency=false},
+['Flanchet de yack épais']={item="Flanchet de yack épais", amount=1, currency=false},
+['Oeuf tempête-de-feu en parfait état']={item="Oeuf tempête-de-feu en parfait état", amount=1, currency=false},
+['Patte de grue charnue']={item="Patte de grue charnue", amount=1, currency=false},
+['Viande de grande tortue']={item="Viande de grande tortue", amount=1, currency=false},
+
 }
 end
