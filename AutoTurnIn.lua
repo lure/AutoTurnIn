@@ -606,12 +606,6 @@ function AutoTurnIn:QUEST_COMPLETE()
 				return
 			end
 
-			itemID = getItemId("required")
-			if (AutoTurnIn.TillerGifts[itemID]) then --ignoring tiller gift's quest
-				self:Print("tiller's gift ignored")
-				return
-			end
-
 			if AutoTurnInCharacterDB.lootreward > 1 then -- Auto Loot enabled!
 				self.forceGreed = false
 
