@@ -361,7 +361,7 @@ function AutoTurnIn:IsJewelryAndRequired(equipSlot)
 	return AutoTurnInCharacterDB.armor['Jewelry'] and (C.JEWELRY[equipSlot])
 end
 
--- initiated in AutoTurnIn:TurnInQuest PLAYER_LEAVE_COMBAT ?
+-- initiated in AutoTurnIn:TurnInQuest PLAYER_LEAVE_COMBAT ? PLAYER_REGEN_ENABLED ?
 AutoTurnIn.delayFrame = CreateFrame('Frame')
 AutoTurnIn.delayFrame:Hide()
 AutoTurnIn.delayFrame:SetScript('OnUpdate', function()
@@ -410,15 +410,12 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 	if (AutoTurnInCharacterDB.showrewardtext) then
 		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
 	end
-	
-	-- Greed or just a single reward
-	if (self.forceGreed) or (GetNumQuestChoices() == 1) then
-		if (GetNumQuestChoices() > 1) then
+
+	if (self.forceGreed) then
+		if  (GetNumQuestChoices() > 1) then
 			self:Print(L["gogreedy"])
 		end
-	end
-	
-	if (not self.forceGreed) then
+	else
 		local name = GetQuestItemInfo("choice", (GetNumQuestChoices() == 1) and 1 or rewardIndex)
 		if (AutoTurnInCharacterDB.autoequip and (strlen(name) > 0)) then
 			local lootLevel, _, _, _, _, equipSlot = select(4, GetItemInfo(GetQuestItemLink("choice", rewardIndex)))
@@ -442,7 +439,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 				end
 
 				-- comparing lowest equipped item level with reward's item level
-				if(lootLevel > eqLevel) then
+				if (lootLevel > eqLevel) then
 					self.autoEquipList[name] = firstSlot
 					self.delayFrame.delay = time() + 2
 					self.delayFrame:Show()
@@ -454,7 +451,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 	if (AutoTurnInCharacterDB.debug) then
 		local link = GetQuestItemLink("choice", rewardIndex)
 		if (link) then
-			self:Print("Debug: item to loot=", GetQuestItemLink("choice", rewardIndex))
+			self:Print("Debug: item to loot=", link)
 		elseif (GetNumQuestChoices() == 0) then
 			self:Print("Debug: turning quest in, no choice required")
 		end
@@ -606,18 +603,17 @@ function AutoTurnIn:QUEST_COMPLETE()
 				return
 			end
 
-			if AutoTurnInCharacterDB.lootreward > 1 then -- Auto Loot enabled!
+			if (AutoTurnInCharacterDB.lootreward > 1) then -- Auto Loot enabled!
 				self.forceGreed = false
-
-				if (AutoTurnInCharacterDB.lootreward == 3) then
+				if (AutoTurnInCharacterDB.lootreward == 3) then -- 3 == Need
 					self.forceGreed = (not self:Need() ) and AutoTurnInCharacterDB.greedifnothingfound
 				end
-				if (AutoTurnInCharacterDB.lootreward == 2 or self.forceGreed) then
+				if (AutoTurnInCharacterDB.lootreward == 2 or self.forceGreed) then -- 2 == Greed
 					self:Greed()
 				end
 			end
 		else
-			self:TurnInQuest(1) -- index greater than '0' enables autoequip check.
+			self:TurnInQuest(1) -- for autoequip to work index must be greater that 0. That's required by Blizzard API
 		end
     end
 end
