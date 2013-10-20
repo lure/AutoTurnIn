@@ -1,10 +1,10 @@
 ﻿## Interface: 50400
 ## Title: AutoTurnIn
-## Version: 4.1
+## Version: 4.3
 ## Author: Alex Shubert
-## Notes: Auto accept and complete daily or any quests
-## Notes-ruRU: Автоматически принимает и сдает ежедневные либо все задания
-## Notes-enUS: Auto accept and complete daily or any quests
+## Notes: Quest handling automation
+## Notes-ruRU: Автоматически обработка заданий
+## Notes-enUS: Quest handling automation
 ## Notes-frFR: Accepte et rend automatiquement les quêtes
 ## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests
 ## OptionalDeps: Ace3

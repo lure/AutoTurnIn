@@ -9,10 +9,9 @@ local MakeACopy=true
 
 -- Title
 local title = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-title:SetText(addonName)
+title:SetText(addonName .." ".. AutoTurnIn.defaults.version)
 -- Description
-local notes = GetAddOnMetadata(addonName, "Notes-" .. GetLocale())
-notes = notes or GetAddOnMetadata(addonName, "Notes")
+local notes = GetAddOnMetadata(addonName, "Notes-" .. GetLocale()) or GetAddOnMetadata(addonName, "Notes")
 local subText = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 subText:SetText(notes)
 -- Reset button

@@ -92,7 +92,6 @@ function AutoTurnIn:OnEnable()
 	hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
 	hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
 	hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
-	self:Print("Hi! AutoTurnIn author needs your help. If you have any ideas on how to improve addon, may help with translation or just notice a bug let me know pls via curse.com addon page. Your help is greatly appreciated. ")
 end
 
 function AutoTurnIn:OnDisable()
