@@ -152,7 +152,6 @@ privateTable.L.quests = {
 ["Les petits s'amusent aussi"] = {item=393, amount=15, currency=true},
 --MoP
 ["Les graines de la peur"]={item="Eclats d’ambre d’effroi", amount=5, currency=false},
-["Remplir le garde-manger"]={item="Panier de vivres", amount=1, currency=false},
 ["Un plat pour Jogu"]={item="Carottes sautées", amount=5, currency=false},
 
 ["Un plat pour Ella"]={item="Raviolis aux crevettes", amount=5, currency=false},
