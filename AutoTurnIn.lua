@@ -11,7 +11,7 @@ local C = ptable.CONST
 local TOCVersion = GetAddOnMetadata(addonName, "Version")
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
-AutoTurnIn.defaults = {enabled = true, all = false, trivial = false, lootreward = 1, tournament = 2,
+AutoTurnIn.defaults = {enabled = true, all = 2, trivial = false, lootreward = 1, tournament = 2,
 					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true,
 					   version=TOCVersion, autoequip = false, debug=false,
 					   questlevel=true, watchlevel=true, questshare=false,
@@ -57,7 +57,7 @@ end
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
 	if (not AutoTurnInCharacterDB) or (not AutoTurnInCharacterDB.version or (AutoTurnInCharacterDB.version < TOCVersion)) then
-		AutoTurnInCharacterDB = nil
+        AutoTurnInCharacterDB = nil
 		self:Print(L["reset"])
 	end
 
@@ -121,11 +121,11 @@ end
 
 -- returns true if quest offered by gossip is daily
 function AutoTurnIn:AllOrCachedDaily(questname)
-	return AutoTurnInCharacterDB.all or (not not self.questCache[questname])
+	return AutoTurnInCharacterDB.all == 1 or (not not self.questCache[questname])
 end
 
 function AutoTurnIn:AllOrDaily(questname)
-	return AutoTurnInCharacterDB.all or (QuestIsDaily() or QuestIsWeekly())
+	return AutoTurnInCharacterDB.all == 1 or (QuestIsDaily() or QuestIsWeekly())
 end
 
 -- caches offered by gossip quest as daily
@@ -207,7 +207,7 @@ function AutoTurnIn:QUEST_GREETING()
 			self:CacheAsDaily(GetAvailableTitle(index))
 		end
 
-		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all or isDaily)) then
+		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all == 1  or isDaily)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectAvailableQuest(index)
@@ -258,7 +258,7 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
 
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
-		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all or isDaily )) then
+		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all == 1 or isDaily )) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)

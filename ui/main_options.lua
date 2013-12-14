@@ -122,8 +122,8 @@ OptionsPanel.refresh = function()
 
 	Enable:SetChecked(ptable.TempConfig.enabled)
 
-	UIDropDownMenu_SetSelectedID(QuestDropDown, ptable.TempConfig.all and 1 or 2)
-	UIDropDownMenu_SetText(QuestDropDown, ptable.TempConfig.all and L["questTypeAll"] or L["questTypeList"]  )
+	UIDropDownMenu_SetSelectedID(QuestDropDown, ptable.TempConfig.all)
+	UIDropDownMenu_SetText(QuestDropDown, QuestConst[ptable.TempConfig.all])
 
 	UIDropDownMenu_SetSelectedID(LootDropDown, ptable.TempConfig.lootreward)
 	UIDropDownMenu_SetText(LootDropDown, LootConst[ptable.TempConfig.lootreward])
