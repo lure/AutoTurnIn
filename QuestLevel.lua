@@ -46,7 +46,7 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 	end
 	
 	for i = 1, #WATCHFRAME_LINKBUTTONS do
-		button = WATCHFRAME_LINKBUTTONS[i]
+		local button = WATCHFRAME_LINKBUTTONS[i]
 
 		if( button.type == "QUEST" ) then
 			local questIndex = GetQuestIndexForWatch(button.index)
@@ -55,7 +55,7 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 				if textLine.text:GetText() and (not string.find("", "^%[.*%].*")) then
 					local title, level, _, _, _, _, _, isDaily = GetQuestLogTitle(questIndex)					
 					local questTypeIndex = GetQuestLogQuestType(questIndex)
-					tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex]
+					local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex]
 					if (not tagString) then
 						--AutoTurnIn:Print("Please, inform addon author unknown QT for: " ..title)
 						tagString = ""
