@@ -85,7 +85,7 @@ local ShowWatchLevel = newCheckbox("WatchLevel", L["watchlevel"], "watchlevel")
 local ToggleKeyConst = {NONE_KEY, ALT_KEY, CTRL_KEY, SHIFT_KEY}
 local ToggleKeyDropDown = newDropDown(L["togglekey"], "ToggleKeyDropDown", ToggleKeyConst, "ToggleKeyConst")
 -- Quest types to handle
-local QuestConst = {L["questTypeAll"], L["questTypeList"]}
+local QuestConst = {L["questTypeAll"], L["questTypeList"], L["questTypeExceptDaily"]}
 local QuestDropDown = newDropDown(L["questTypeLabel"], "QuestDropDown", QuestConst, "all")   -- self:GetID() == 1
 -- Tournament loot type
 local TournamentConst = {L["tournamentWrit"], L["tournamentPurse"]}

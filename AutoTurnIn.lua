@@ -9,6 +9,8 @@ local addonName, ptable = ...
 local L = ptable.L
 local C = ptable.CONST
 local TOCVersion = GetAddOnMetadata(addonName, "Version")
+local Q_ALL, Q_DAILY, Q_EXCEPTDAILY = 1, 2, 3
+
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 AutoTurnIn.defaults = {enabled = true, all = 2, trivial = false, lootreward = 1, tournament = 2,
@@ -119,18 +121,30 @@ function AutoTurnIn:QUEST_LOG_UPDATE()
 	end
 end
 
--- returns true if quest offered by gossip is daily
-function AutoTurnIn:AllOrCachedDaily(questname)
-	return AutoTurnInCharacterDB.all == 1 or (not not self.questCache[questname])
+-- Available check requires cache
+-- Active check query API function Returns true if quest matches options
+function AutoTurnIn:isAppropriate(questname, byCache)
+    local daily
+    if byCache then
+        daily = (not not self.questCache[questname])
+    else
+        daily = (QuestIsDaily() or QuestIsWeekly())
+    end
+    return self:_isAppropriate(daily)
 end
 
-function AutoTurnIn:AllOrDaily(questname)
-	return AutoTurnInCharacterDB.all == 1 or (QuestIsDaily() or QuestIsWeekly())
+-- 'private' function
+function AutoTurnIn:_isAppropriate(daily)
+    if daily then
+        return (AutoTurnInCharacterDB.all ~= Q_EXCEPTDAILY)
+    else
+        return (AutoTurnInCharacterDB.all ~= Q_DAILY)
+    end
 end
 
 -- caches offered by gossip quest as daily
-function AutoTurnIn:CacheAsDaily(gossipQuest)
-	self.questCache[gossipQuest] = true
+function AutoTurnIn:CacheAsDaily(questname)
+	self.questCache[questname] = true
 end
 
 function AutoTurnIn:IsIgnoredQuest(quest)
@@ -185,13 +199,14 @@ end
 
 -- Old 'Quest NPC' interaction system. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
+    print("OLD")
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
 
 	for index=1, GetNumActiveQuests() do
 		local quest, isComplete = GetActiveTitle(index)
-		if isComplete and (self:AllOrCachedDaily(quest)) then
+		if isComplete and (self:isAppropriate(quest, true)) then
 			SelectActiveQuest(index)
 		end
 	end
@@ -207,7 +222,7 @@ function AutoTurnIn:QUEST_GREETING()
 			self:CacheAsDaily(GetAvailableTitle(index))
 		end
 
-		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all == 1  or isDaily)) then
+		if (triviaAndAllowedOrNotTrivia and notBlackListed and self:_isAppropriate(isDaily)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectAvailableQuest(index)
@@ -229,7 +244,7 @@ function AutoTurnIn:VarArgForActiveQuests(...)
 		local isComplete = select(i+3, ...) -- complete status
 		if ( isComplete ) then
 			local questname = select(i, ...)
-			if self:AllOrCachedDaily(questname) then
+			if self:isAppropriate(questname, true) then
 				local quest = L.quests[questname]
 				if quest and quest.amount then
 					if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
@@ -258,7 +273,7 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
 
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
-		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all == 1 or isDaily )) then
+		if (triviaAndAllowedOrNotTrivia and notBlackListed and self:_isAppropriate(isDaily)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
@@ -329,7 +344,7 @@ function AutoTurnIn:QUEST_DETAIL()
 		self:CacheAsDaily(GetTitleText())
 	end
 	
-	if self:AllowedToHandle() and self:AllOrDaily() then
+	if self:AllowedToHandle() and self:isAppropriate() then
 		QuestInfoDescriptionText:SetAlphaGradient(0, -1)
 		QuestInfoDescriptionText:SetAlpha(1)
 		AcceptQuest()
@@ -344,7 +359,7 @@ function AutoTurnIn:QUEST_ACCEPTED(event, index)
 end
 
 function AutoTurnIn:QUEST_PROGRESS()
-    if  self:AllowedToHandle() and IsQuestCompletable() and self:AllOrDaily() then	
+    if  self:AllowedToHandle() and IsQuestCompletable() and self:isAppropriate() then
 		CompleteQuest()
     end
 end
@@ -586,7 +601,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 
 	--/script faction = (GameTooltip:NumLines() > 2 and not UnitIsPlayer(select(2,GameTooltip:GetUnit()))) and
     -- getglobal("GameTooltipTextLeft"..GameTooltip:NumLines()):GetText() DEFAULT_CHAT_FRAME:AddMessage(faction or "NIL")
-    if self:AllOrDaily() then
+    if self:isAppropriate() then
 		local questname = GetTitleText()
 		local quest = L.quests[questname]
 

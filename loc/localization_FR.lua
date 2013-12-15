@@ -13,8 +13,9 @@ privateTable.L = setmetatable({
     
     ["questTypeLabel"] = "Quêtes à prendre en compte",
     ["questTypeAll"] =  "Toutes",
+    ["questTypeList"] = "journalières",
+    ["questTypeExceptDaily"] = "excepté journalières",
     ["TrivialQuests"]= "Accepter les quêtes 'grise'",
-    ["questTypeList"] = "Quêtes journalières",
 	["ShareQuestsLabel"] = "partager la quête",
 
     ["lootTypeLabel"]="Quêtes à récompense d'objet",

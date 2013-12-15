@@ -15,8 +15,9 @@ privateTable.L = setmetatable({
 
 	["questTypeLabel"] = "quests", 
 	["questTypeAll"] = "alle",
-	["TrivialQuests"]="'graue' Quests annehmen", 	
-	["questTypeList"] = "Tägliche Quests",
+    ["questTypeList"] = "Tägliche",
+    ["questTypeExceptDaily"] = "außer Tägliche",
+    ["TrivialQuests"]="'graue' Quests annehmen",
 	["ShareQuestsLabel"] = "teilen die Quest",
 
 	["lootTypeLabel"]="Jobs mit Belohnungen",
