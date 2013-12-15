@@ -470,7 +470,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 			self:Print("Debug: turning quest in, no choice required")
 		end
 	else		
-		GetQuestReward(rewardIndex)
+		--GetQuestReward(rewardIndex)
 	end
 end
 
@@ -519,7 +519,7 @@ function AutoTurnIn:Need()
 			self:Print(L["stopitemfound"]:format(_G[equipSlot]))
 			return true
 		end
-		local itemCandidate = {index=i, points=0, type="", stat="NOTCHOSEN", secondary={}}
+		local itemCandidate = {index=i, points=0, type="", stat="", secondary={}} --DEBUG structure
 
 		-- TYPE: item is suitable if there are no type specified at all or item type is chosen
 		local OkByType = false
@@ -533,23 +533,30 @@ function AutoTurnIn:Need()
 		itemCandidate.type=subclass .. ((not not OkByType) and "=>OK" or "=>FAIL")
 
 		--STAT+SECONDARY: Same here: if no stat specified or item stat is chosen then item is wanted
-		local OkByStat = not next(AutoTurnInCharacterDB.stat) 					-- true if table is empty
+		local OkByStat = not next(AutoTurnInCharacterDB.stat) 			-- true if table is empty
 		local OkBySecondary = not next(AutoTurnInCharacterDB.secondary) -- true if table is empty
 		if (not (OkByStat and OkBySecondaryStat)) then
 			wipe(self.stattable)
 			GetItemStats(link, self.stattable)
+            local count = 0
 			for stat, value in pairs(self.stattable) do
+                count = count + 1
 				if ( AutoTurnInCharacterDB.stat[stat] ) then
 					OkByStat = true
-					itemCandidate.stat=_G[stat].."=>OK"
+					itemCandidate.stat = _G[stat].. "=>OK"
 				end
 				if ( AutoTurnInCharacterDB.secondary[stat] ) then
 					OkBySecondary = true
 					itemCandidate.points =  itemCandidate.points + 1
 					tinsert(itemCandidate.secondary, _G[stat])
 				end
-			end
-		end
+            end
+            if (count == 1) then
+                OkByStat, OkBySecondary = true, true -- плозое решение. теряется основная илея
+            end
+        else
+            itemCandidate.stat = "NO_STAT_SETTINGS"
+        end
 
 		-- User may not choose any options hence any item became 'ok'. That situation is undoubtly incorrect.
 		local SettingsExists = (class == C.WEAPONLABEL and next(AutoTurnInCharacterDB.weapon) or next(AutoTurnInCharacterDB.armor))
