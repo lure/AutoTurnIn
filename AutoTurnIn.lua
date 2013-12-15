@@ -470,7 +470,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 			self:Print("Debug: turning quest in, no choice required")
 		end
 	else		
-		--GetQuestReward(rewardIndex)
+		GetQuestReward(rewardIndex)
 	end
 end
 
@@ -551,8 +551,8 @@ function AutoTurnIn:Need()
 					tinsert(itemCandidate.secondary, _G[stat])
 				end
             end
-            if (count == 1) then
-                OkByStat, OkBySecondary = true, true -- плозое решение. теряется основная илея
+            if (count == 1) then -- Common quality items have only 1 attribute. This 'if' makes them suitable loot candidates.
+                OkByStat, OkBySecondary = true, true
             end
         else
             itemCandidate.stat = "NO_STAT_SETTINGS"
