@@ -61,7 +61,8 @@ end
 local Enable = newCheckbox("enabled", L["enabled"], "enabled")
 -- trivial, so called grayed quests
 local TrivialQuests = newCheckbox("TrivialQuests", L["TrivialQuests"], "trivial")
-
+-- Only hand in the quest
+local CompleteOnly = newCheckbox("CompleteOnly", L["CompleteOnly"], "completeonly")
 -- DarkmoonTeleport
 local ToDarkMoon = newCheckbox("ToDarkMoon", L["ToDarkmoonLabel"], "todarkmoon")
 -- Darkmoon Teleport to cannon
@@ -102,8 +103,9 @@ ResetButton:SetPoint("TOPRIGHT", OptionsPanel, "TOPRIGHT", -10, -10)
 Enable:SetPoint("TOPLEFT", subText, "BOTTOMLEFT", 0, -14)
 QuestDropDown:SetPoint("TOPLEFT", Enable, "BOTTOMLEFT", -15, -22)
 TrivialQuests:SetPoint("TOPLEFT", QuestDropDown, "TOPRIGHT", 30, 0)
+CompleteOnly:SetPoint("TOPLEFT", TrivialQuests, "BOTTOMLEFT", 0, -10)
 LootDropDown:SetPoint("TOPLEFT", QuestDropDown, "BOTTOMLEFT", 0, -22)
-TournamentDropDown:SetPoint("TOPLEFT", LootDropDown, "TOPRIGHT", 17, 0)
+TournamentDropDown:SetPoint("TOPLEFT", ToggleKeyDropDown, "TOPRIGHT", 17, 0)
 EquipReward:SetPoint("TOPLEFT", LootDropDown, "BOTTOMLEFT", 16, -10)
 ShowRewardText:SetPoint("TOPLEFT", EquipReward, "BOTTOMLEFT", 0, -10)
 ToDarkMoon:SetPoint("TOPLEFT", ShowRewardText, "BOTTOMLEFT", 0, -10)
@@ -137,6 +139,7 @@ OptionsPanel.refresh = function()
 	EquipReward:SetChecked(ptable.TempConfig.autoequip)
 	Debug:SetChecked(ptable.TempConfig.debug)
 	TrivialQuests:SetChecked(ptable.TempConfig.trivial)
+    CompleteOnly:SetChecked(ptable.TempConfig.completeonly)
 	ShowQuestLevel:SetChecked(ptable.TempConfig.questlevel)
 	ShowWatchLevel:SetChecked(ptable.TempConfig.watchlevel)
 	ShareQuests:SetChecked(ptable.TempConfig.questshare)

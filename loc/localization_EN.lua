@@ -19,19 +19,20 @@ privateTable.L = setmetatable({
 	["dontloottrue"]="do not complete quests with rewards",
 	["resetbutton"]="reset",
 	
-	["questTypeLabel"] = "Quests to handle", 
+	["questTypeLabel"] = "quests to handle",
 	["questTypeAll"] = "all",
     ["questTypeList"] = "daily",
     ["questTypeExceptDaily"] = "except daily",
     ["TrivialQuests"]="Accept 'grey' quests",
-	["ShareQuestsLabel"] = "Quest auto sharing",
+	["ShareQuestsLabel"] = "quest auto sharing",
+    ["CompleteOnly"] = "turn in only",
 
-	["lootTypeLabel"]="Quests with rewards",
+	["lootTypeLabel"]="quests with rewards",
 	["lootTypeFalse"]="don't turn in",
 	["lootTypeGreed"]="loot most expensive reward",
 	["lootTypeNeed"]="loot by parameters",
 	
-	["tournamentLabel"]="Tournament", 
+	["tournamentLabel"]="Argent Tournament",
 	["tournamentWrit"]="Champion's Writ", -- 46114
 	["tournamentPurse"]="Champion's Purse",  -- 45724
 	
@@ -40,11 +41,11 @@ privateTable.L = setmetatable({
 	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub",
 	["DarkmoonAutoLabel"]="Darkmoon: start the game!",		
 	
-	["rewardtext"]="Print quest competition text",
-	["questlevel"]="Show quest level",
-	["watchlevel"]="Show watched quest level",	
-	["autoequip"]="Equip received reward",
-	["togglekey"]="Enable/disable key",
+	["rewardtext"]="print quest competition text",
+	["questlevel"]="show quest level",
+	["watchlevel"]="show watched quest level",
+	["autoequip"]="equip received reward",
+	["togglekey"]="enable/disable key",
 	
 	['Jewelry']="Jewelry",
 	["rewardlootoptions"]="Reward loot rules",

@@ -17,13 +17,14 @@ privateTable.L = setmetatable({
     ["questTypeExceptDaily"] = "excepté journalières",
     ["TrivialQuests"]= "Accepter les quêtes 'grise'",
 	["ShareQuestsLabel"] = "partager la quête",
+    ["CompleteOnly"] = "turn in only",
 
     ["lootTypeLabel"]="Quêtes à récompense d'objet",
     ["lootTypeFalse"]="Ne pas rendre",
     ["lootTypeGreed"]="Vhoisir la récompense la plus chère",
     ["lootTypeNeed"]="choisir la récompense selon les paramètres",
     
-    ["tournamentLabel"]="Tournoi d'argent",
+    ["tournamentLabel"]="Le tournoi d'Argent",
     ["tournamentWrit"]="Commission de champion", -- 46114
     ["tournamentPurse"]="Bourse de champion",  -- 45724
     

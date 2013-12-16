@@ -19,13 +19,14 @@ privateTable.L = setmetatable({
     ["questTypeExceptDaily"] = "außer Tägliche",
     ["TrivialQuests"]="'graue' Quests annehmen",
 	["ShareQuestsLabel"] = "teilen die Quest",
+    ["CompleteOnly"] = "zurückliefern bloß",
 
 	["lootTypeLabel"]="Jobs mit Belohnungen",
 	["lootTypeFalse"]="nicht abgeben",
 	["lootTypeGreed"]="Teuerste Belohnung wählen",
 	["lootTypeNeed"]="Wähle Belohnung nach Parametern",
 
-	["tournamentLabel"]="Turnier", 
+	["tournamentLabel"]="Das Argentumturnier",
 	["tournamentWrit"]="Verfügung des Champions", -- 46114
 	["tournamentPurse"]="Geldbeutel des Champions",  -- 45724
 

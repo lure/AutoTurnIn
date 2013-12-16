@@ -13,7 +13,8 @@ local Q_ALL, Q_DAILY, Q_EXCEPTDAILY = 1, 2, 3
 
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
-AutoTurnIn.defaults = {enabled = true, all = 2, trivial = false, lootreward = 1, tournament = 2,
+AutoTurnIn.defaults = {enabled = true, all = 2, trivial = false, completeonly = false,
+                       lootreward = 1, tournament = 2,
 					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true,
 					   version=TOCVersion, autoequip = false, debug=false,
 					   questlevel=true, watchlevel=true, questshare=false,
@@ -199,7 +200,6 @@ end
 
 -- Old 'Quest NPC' interaction system. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
-    print("OLD")
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
@@ -211,27 +211,29 @@ function AutoTurnIn:QUEST_GREETING()
 		end
 	end
 
-	for index=1, GetNumAvailableQuests() do
-		local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)
-		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
-		local title = GetAvailableTitle(index)
-		local quest = L.quests[title]
-		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
+    if not AutoTurnInCharacterDB.completeonly then
+        for index=1, GetNumAvailableQuests() do
+            local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)
+            local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
+            local title = GetAvailableTitle(index)
+            local quest = L.quests[title]
+            local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
 
-		if isDaily then
-			self:CacheAsDaily(GetAvailableTitle(index))
-		end
+            if isDaily then
+                self:CacheAsDaily(GetAvailableTitle(index))
+            end
 
-		if (triviaAndAllowedOrNotTrivia and notBlackListed and self:_isAppropriate(isDaily)) then
-			if quest and quest.amount then
-				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
-					SelectAvailableQuest(index)
-				end
-			else
-				SelectAvailableQuest(index)
-			end
-		end
-	end
+            if (triviaAndAllowedOrNotTrivia and notBlackListed and self:_isAppropriate(isDaily)) then
+                if quest and quest.amount then
+                    if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
+                        SelectAvailableQuest(index)
+                    end
+                else
+                    SelectAvailableQuest(index)
+                end
+            end
+        end
+    end
 end
 
 -- (gaq[i+3]) equals "1" if quest is complete, "nil" otherwise
@@ -317,7 +319,9 @@ function AutoTurnIn:GOSSIP_SHOW()
 	local questCount = GetNumGossipActiveQuests() > 0
 	
 	self:VarArgForActiveQuests(GetGossipActiveQuests())
-	self:VarArgForAvailableQuests(GetGossipAvailableQuests())
+    if not AutoTurnInCharacterDB.completeonly then
+	    self:VarArgForAvailableQuests(GetGossipAvailableQuests())
+    end
 
 	if self:isDarkmoonAndAllowed(questCount) then
 		local options = {GetGossipOptions()}
@@ -343,8 +347,8 @@ function AutoTurnIn:QUEST_DETAIL()
 	if (QuestIsDaily() or QuestIsWeekly()) then
 		self:CacheAsDaily(GetTitleText())
 	end
-	
-	if self:AllowedToHandle() and self:isAppropriate() then
+
+	if self:AllowedToHandle() and self:isAppropriate() and (not AutoTurnInCharacterDB.completeonly)then
 		QuestInfoDescriptionText:SetAlphaGradient(0, -1)
 		QuestInfoDescriptionText:SetAlpha(1)
 		AcceptQuest()
@@ -360,7 +364,7 @@ end
 
 function AutoTurnIn:QUEST_PROGRESS()
     if  self:AllowedToHandle() and IsQuestCompletable() and self:isAppropriate() then
-		CompleteQuest()
+        CompleteQuest()
     end
 end
 
@@ -469,7 +473,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		elseif (GetNumQuestChoices() == 0) then
 			self:Print("Debug: turning quest in, no choice required")
 		end
-	else		
+    else
 		GetQuestReward(rewardIndex)
 	end
 end
