@@ -84,7 +84,7 @@ local ShowWatchLevel = newCheckbox("WatchLevel", L["watchlevel"], "watchlevel")
 
 -- Auto toggle key
 local ToggleKeyConst = {NONE_KEY, ALT_KEY, CTRL_KEY, SHIFT_KEY}
-local ToggleKeyDropDown = newDropDown(L["togglekey"], "ToggleKeyDropDown", ToggleKeyConst, "ToggleKeyConst")
+local ToggleKeyDropDown = newDropDown(L["togglekey"], "ToggleKeyDropDown", ToggleKeyConst, "togglekey")
 -- Quest types to handle
 local QuestConst = {L["questTypeAll"], L["questTypeList"], L["questTypeExceptDaily"]}
 local QuestDropDown = newDropDown(L["questTypeLabel"], "QuestDropDown", QuestConst, "all")   -- self:GetID() == 1
@@ -145,7 +145,7 @@ OptionsPanel.refresh = function()
 	ShareQuests:SetChecked(ptable.TempConfig.questshare)
 	
 	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)
-	UIDropDownMenu_SetText(ToggleKeyDropDown,  ToggleKeyConst[ptable.TempConfig.togglekey])
+	UIDropDownMenu_SetText(ToggleKeyDropDown, ToggleKeyConst[ptable.TempConfig.togglekey])
 	MakeACopy = true
 end
 
