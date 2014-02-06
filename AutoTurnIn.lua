@@ -162,8 +162,6 @@ function AutoTurnIn:IsIgnoredQuest(quest)
 	return false
 end
 
-local p1 = {[true]=L["enabled"], [false]=L["disabled"]}
-local p2 = {[true]=L["all"], [false]=L["list"]}
 function AutoTurnIn:ConsoleComand(arg)
 	arg = strlower(arg)
 	if (#arg == 0) then
