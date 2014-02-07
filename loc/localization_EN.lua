@@ -6,6 +6,7 @@ local replaceTable = {
 		["esES"]=true, 
 		["esMX"]=true, 
 		["zhTW"]=true, 
+		["ptBR"]=true, 
 		["zhCN"]=true }
 		
 if (replaceTable[GetLocale()])  then
