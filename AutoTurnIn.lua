@@ -108,6 +108,7 @@ function AutoTurnIn:RegisterGossipEvents()
 	self:RegisterEvent("QUEST_PROGRESS")
 	self:RegisterEvent("QUEST_COMPLETE")
 	self:RegisterEvent("QUEST_LOG_UPDATE")
+	self:RegisterEvent("QUEST_ACCEPTED")
 end
 
 function AutoTurnIn:QUEST_LOG_UPDATE()
