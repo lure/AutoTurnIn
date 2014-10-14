@@ -1,7 +1,7 @@
-﻿## Interface: 50400
+﻿## Interface: 60000
 ## Title: AutoTurnIn
-## Version: 4.4
-## Author: Alex Shubert
+## Version: 4.5.N
+## Author: Alexandr Shubert
 ## Notes: Quest handling automation
 ## Notes-ruRU: Автоматически обработка заданий
 ## Notes-enUS: Quest handling automation
