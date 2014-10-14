@@ -15,9 +15,11 @@ privateTable.L = setmetatable({
 	
 	["questTypeLabel"] = "задания", 
 	["questTypeAll"] = "все",
-	["TrivialQuests"]="брать 'серые' квесты",
-	["questTypeList"] = "ежедневные",
+    ["questTypeList"] = "ежедневные",
+    ["questTypeExceptDaily"] = "кроме ежедневных",
+    ["TrivialQuests"]="брать 'серые' квесты",
 	["ShareQuestsLabel"] = "Предлагать задание группе",
+    ["CompleteOnly"] = "только завершать",
 
 	["lootTypeLabel"]="задания с наградами",
 	["lootTypeFalse"]="не сдавать",

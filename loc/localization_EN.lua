@@ -6,6 +6,7 @@ local replaceTable = {
 		["esES"]=true, 
 		["esMX"]=true, 
 		["zhTW"]=true, 
+		["ptBR"]=true, 
 		["zhCN"]=true }
 		
 if (replaceTable[GetLocale()])  then
@@ -19,18 +20,20 @@ privateTable.L = setmetatable({
 	["dontloottrue"]="do not complete quests with rewards",
 	["resetbutton"]="reset",
 	
-	["questTypeLabel"] = "Quests to handle", 
+	["questTypeLabel"] = "quests to handle",
 	["questTypeAll"] = "all",
-	["TrivialQuests"]="Accept 'grey' quests", 
-	["questTypeList"] = "daily",
-	["ShareQuestsLabel"] = "Quest auto sharing",
+    ["questTypeList"] = "daily",
+    ["questTypeExceptDaily"] = "except daily",
+    ["TrivialQuests"]="Accept 'grey' quests",
+	["ShareQuestsLabel"] = "quest auto sharing",
+    ["CompleteOnly"] = "turn in only",
 
-	["lootTypeLabel"]="Quests with rewards",
+	["lootTypeLabel"]="quests with rewards",
 	["lootTypeFalse"]="don't turn in",
 	["lootTypeGreed"]="loot most expensive reward",
 	["lootTypeNeed"]="loot by parameters",
 	
-	["tournamentLabel"]="Tournament", 
+	["tournamentLabel"]="Argent Tournament",
 	["tournamentWrit"]="Champion's Writ", -- 46114
 	["tournamentPurse"]="Champion's Purse",  -- 45724
 	
@@ -39,11 +42,11 @@ privateTable.L = setmetatable({
 	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub",
 	["DarkmoonAutoLabel"]="Darkmoon: start the game!",		
 	
-	["rewardtext"]="Print quest competition text",
-	["questlevel"]="Show quest level",
-	["watchlevel"]="Show watched quest level",	
-	["autoequip"]="Equip received reward",
-	["togglekey"]="Enable/disable key",
+	["rewardtext"]="print quest competition text",
+	["questlevel"]="show quest level",
+	["watchlevel"]="show watched quest level",
+	["autoequip"]="equip received reward",
+	["togglekey"]="enable/disable key",
 	
 	['Jewelry']="Jewelry",
 	["rewardlootoptions"]="Reward loot rules",
@@ -146,7 +149,6 @@ privateTable.L.quests = {
 ["Fun for the Little Ones"] = {item=393, amount=15, currency=true},
 --MoP
 ["Seeds of Fear"]={item="Dread Amber Shards", amount=5, currency=false},
-["Replenishing the Pantry"]={item="Bundle of Groceries", amount=1, currency=false},
 ["A Dish for Jogu"]={item="Sauteed Carrots", amount=5, currency=false},
 
 ["A Dish for Ella"]={item="Shrimp Dumplings", amount=5, currency=false},

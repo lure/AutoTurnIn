@@ -9,9 +9,12 @@ local addonName, ptable = ...
 local L = ptable.L
 local C = ptable.CONST
 local TOCVersion = GetAddOnMetadata(addonName, "Version")
+local Q_ALL, Q_DAILY, Q_EXCEPTDAILY = 1, 2, 3
+
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
-AutoTurnIn.defaults = {enabled = true, all = false, trivial = false, lootreward = 1, tournament = 2,
+AutoTurnIn.defaults = {enabled = true, all = 2, trivial = false, completeonly = false,
+                       lootreward = 1, tournament = 2,
 					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true,
 					   version=TOCVersion, autoequip = false, debug=false,
 					   questlevel=true, watchlevel=true, questshare=false,
@@ -57,7 +60,7 @@ end
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
 	if (not AutoTurnInCharacterDB) or (not AutoTurnInCharacterDB.version or (AutoTurnInCharacterDB.version < TOCVersion)) then
-		AutoTurnInCharacterDB = nil
+        AutoTurnInCharacterDB = nil
 		self:Print(L["reset"])
 	end
 
@@ -107,6 +110,7 @@ function AutoTurnIn:RegisterGossipEvents()
 	self:RegisterEvent("QUEST_PROGRESS")
 	self:RegisterEvent("QUEST_COMPLETE")
 	self:RegisterEvent("QUEST_LOG_UPDATE")
+	self:RegisterEvent("QUEST_ACCEPTED")
 end
 
 function AutoTurnIn:QUEST_LOG_UPDATE()
@@ -121,18 +125,30 @@ function AutoTurnIn:QUEST_LOG_UPDATE()
 	end
 end
 
--- returns true if quest offered by gossip is daily
-function AutoTurnIn:AllOrCachedDaily(questname)
-	return AutoTurnInCharacterDB.all or (not not self.questCache[questname])
+-- Available check requires cache
+-- Active check query API function Returns true if quest matches options
+function AutoTurnIn:isAppropriate(questname, byCache)
+    local daily
+    if byCache then
+        daily = (not not self.questCache[questname])
+    else
+        daily = (QuestIsDaily() or QuestIsWeekly())
+    end
+    return self:_isAppropriate(daily)
 end
 
-function AutoTurnIn:AllOrDaily(questname)
-	return AutoTurnInCharacterDB.all or (QuestIsDaily() or QuestIsWeekly())
+-- 'private' function
+function AutoTurnIn:_isAppropriate(daily)
+    if daily then
+        return (AutoTurnInCharacterDB.all ~= Q_EXCEPTDAILY)
+    else
+        return (AutoTurnInCharacterDB.all ~= Q_DAILY)
+    end
 end
 
 -- caches offered by gossip quest as daily
-function AutoTurnIn:CacheAsDaily(gossipQuest)
-	self.questCache[gossipQuest] = true
+function AutoTurnIn:CacheAsDaily(questname)
+	self.questCache[questname] = true
 end
 
 function AutoTurnIn:IsIgnoredQuest(quest)
@@ -149,8 +165,6 @@ function AutoTurnIn:IsIgnoredQuest(quest)
 	return false
 end
 
-local p1 = {[true]=L["enabled"], [false]=L["disabled"]}
-local p2 = {[true]=L["all"], [false]=L["list"]}
 function AutoTurnIn:ConsoleComand(arg)
 	arg = strlower(arg)
 	if (#arg == 0) then
@@ -193,32 +207,34 @@ function AutoTurnIn:QUEST_GREETING()
 
 	for index=1, GetNumActiveQuests() do
 		local quest, isComplete = GetActiveTitle(index)
-		if isComplete and (self:AllOrCachedDaily(quest)) then
+		if isComplete and (self:isAppropriate(quest, true)) then
 			SelectActiveQuest(index)
 		end
 	end
 
-	for index=1, GetNumAvailableQuests() do
-		local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)
-		local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
-		local title = GetAvailableTitle(index)
-		local quest = L.quests[title]
-		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
+    if not AutoTurnInCharacterDB.completeonly then
+        for index=1, GetNumAvailableQuests() do
+            local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)
+            local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
+            local title = GetAvailableTitle(index)
+            local quest = L.quests[title]
+            local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
 
-		if isDaily then
-			self:CacheAsDaily(GetAvailableTitle(index))
-		end
+            if isDaily then
+                self:CacheAsDaily(GetAvailableTitle(index))
+            end
 
-		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all or isDaily)) then
-			if quest and quest.amount then
-				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
-					SelectAvailableQuest(index)
-				end
-			else
-				SelectAvailableQuest(index)
-			end
-		end
-	end
+            if (triviaAndAllowedOrNotTrivia and notBlackListed and self:_isAppropriate(isDaily)) then
+                if quest and quest.amount then
+                    if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
+                        SelectAvailableQuest(index)
+                    end
+                else
+                    SelectAvailableQuest(index)
+                end
+            end
+        end
+    end
 end
 
 -- (gaq[i+3]) equals "1" if quest is complete, "nil" otherwise
@@ -231,7 +247,7 @@ function AutoTurnIn:VarArgForActiveQuests(...)
 		local isComplete = select(i+3, ...) -- complete status
 		if ( isComplete ) then
 			local questname = select(i, ...)
-			if self:AllOrCachedDaily(questname) then
+			if self:isAppropriate(questname, true) then
 				local quest = L.quests[questname]
 				if quest and quest.amount then
 					if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
@@ -260,7 +276,7 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
 
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
-		if (triviaAndAllowedOrNotTrivia and notBlackListed and (AutoTurnInCharacterDB.all or isDaily )) then
+		if (triviaAndAllowedOrNotTrivia and notBlackListed and self:_isAppropriate(isDaily)) then
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
 					SelectGossipAvailableQuest(math.floor(i/MOP_INDEX_CONST)+1)
@@ -304,7 +320,9 @@ function AutoTurnIn:GOSSIP_SHOW()
 	local questCount = GetNumGossipActiveQuests() > 0
 	
 	self:VarArgForActiveQuests(GetGossipActiveQuests())
-	self:VarArgForAvailableQuests(GetGossipAvailableQuests())
+    if not AutoTurnInCharacterDB.completeonly then
+	    self:VarArgForAvailableQuests(GetGossipAvailableQuests())
+    end
 
 	if self:isDarkmoonAndAllowed(questCount) then
 		local options = {GetGossipOptions()}
@@ -330,8 +348,8 @@ function AutoTurnIn:QUEST_DETAIL()
 	if (QuestIsDaily() or QuestIsWeekly()) then
 		self:CacheAsDaily(GetTitleText())
 	end
-	
-	if self:AllowedToHandle() and self:AllOrDaily() then
+
+	if self:AllowedToHandle() and self:isAppropriate() and (not AutoTurnInCharacterDB.completeonly)then
 		QuestInfoDescriptionText:SetAlphaGradient(0, -1)
 		QuestInfoDescriptionText:SetAlpha(1)
 		AcceptQuest()
@@ -346,8 +364,8 @@ function AutoTurnIn:QUEST_ACCEPTED(event, index)
 end
 
 function AutoTurnIn:QUEST_PROGRESS()
-    if  self:AllowedToHandle() and IsQuestCompletable() and self:AllOrDaily() then	
-		CompleteQuest()
+    if  self:AllowedToHandle() and IsQuestCompletable() and self:isAppropriate() then
+        CompleteQuest()
     end
 end
 
@@ -456,7 +474,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 		elseif (GetNumQuestChoices() == 0) then
 			self:Print("Debug: turning quest in, no choice required")
 		end
-	else		
+    else
 		GetQuestReward(rewardIndex)
 	end
 end
@@ -506,7 +524,7 @@ function AutoTurnIn:Need()
 			self:Print(L["stopitemfound"]:format(_G[equipSlot]))
 			return true
 		end
-		local itemCandidate = {index=i, points=0, type="", stat="NOTCHOSEN", secondary={}}
+		local itemCandidate = {index=i, points=0, type="", stat="", secondary={}} --DEBUG structure
 
 		-- TYPE: item is suitable if there are no type specified at all or item type is chosen
 		local OkByType = false
@@ -520,23 +538,30 @@ function AutoTurnIn:Need()
 		itemCandidate.type=subclass .. ((not not OkByType) and "=>OK" or "=>FAIL")
 
 		--STAT+SECONDARY: Same here: if no stat specified or item stat is chosen then item is wanted
-		local OkByStat = not next(AutoTurnInCharacterDB.stat) 					-- true if table is empty
+		local OkByStat = not next(AutoTurnInCharacterDB.stat) 			-- true if table is empty
 		local OkBySecondary = not next(AutoTurnInCharacterDB.secondary) -- true if table is empty
 		if (not (OkByStat and OkBySecondaryStat)) then
 			wipe(self.stattable)
 			GetItemStats(link, self.stattable)
+            local count = 0
 			for stat, value in pairs(self.stattable) do
+                count = count + 1
 				if ( AutoTurnInCharacterDB.stat[stat] ) then
 					OkByStat = true
-					itemCandidate.stat=_G[stat].."=>OK"
+					itemCandidate.stat = _G[stat].. "=>OK"
 				end
 				if ( AutoTurnInCharacterDB.secondary[stat] ) then
 					OkBySecondary = true
 					itemCandidate.points =  itemCandidate.points + 1
 					tinsert(itemCandidate.secondary, _G[stat])
 				end
-			end
-		end
+            end
+            if (count == 1) then -- Common quality items have only 1 attribute. This 'if' makes them suitable loot candidates.
+                OkByStat, OkBySecondary = true, true
+            end
+        else
+            itemCandidate.stat = "NO_STAT_SETTINGS"
+        end
 
 		-- User may not choose any options hence any item became 'ok'. That situation is undoubtly incorrect.
 		local SettingsExists = (class == C.WEAPONLABEL and next(AutoTurnInCharacterDB.weapon) or next(AutoTurnInCharacterDB.armor))
@@ -588,7 +613,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 
 	--/script faction = (GameTooltip:NumLines() > 2 and not UnitIsPlayer(select(2,GameTooltip:GetUnit()))) and
     -- getglobal("GameTooltipTextLeft"..GameTooltip:NumLines()):GetText() DEFAULT_CHAT_FRAME:AddMessage(faction or "NIL")
-    if self:AllOrDaily() then
+    if self:isAppropriate() then
 		local questname = GetTitleText()
 		local quest = L.quests[questname]
 
