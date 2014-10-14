@@ -13,6 +13,7 @@ local Q_ALL, Q_DAILY, Q_EXCEPTDAILY = 1, 2, 3
 
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
+AutoTurnIn.TOC = select(4, GetBuildInfo())
 AutoTurnIn.defaults = {enabled = true, all = 2, trivial = false, completeonly = false,
                        lootreward = 1, tournament = 2,
 					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true,
@@ -92,7 +93,7 @@ function AutoTurnIn:OnEnable()
 
 	self:SetEnabled(DB.enabled)
 	self:RegisterGossipEvents()
-	if select(4, GetBuildInfo()) < 60000 then 
+	if self.TOC < 60000 then
 		hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
 		hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
 		hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)

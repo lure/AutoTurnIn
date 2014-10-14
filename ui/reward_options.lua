@@ -11,7 +11,11 @@ local function CreateCheckbox(name, parent, marginx, marginy, text)
 	cb:SetPoint("TOPLEFT", parent, marginx, marginy)
 	_G[cb:GetName().."Text"]:SetText(text and text or name)
 	cb:SetScript("OnClick", function(self)
-		parent.GetConfig()[name] = self:GetChecked() == 1 and true or nil
+		if (AutoTurnIn.TOC < 60000) then
+			parent.GetConfig()[name] = (self:GetChecked() == 1 and true or nil)
+		else
+			parent.GetConfig()[name] = (self:GetChecked() or nil)
+		end
 	end)
 	tinsert(parent.buttons, cb)
 	return cb

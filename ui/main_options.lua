@@ -30,7 +30,11 @@ local function newCheckbox(name, caption, config)
     local cb = CreateFrame("CheckButton", "$parent"..name, OptionsPanel, "OptionsCheckButtonTemplate")
     _G[cb:GetName().."Text"]:SetText(caption and caption or name)
     cb:SetScript("OnClick", function(self)
-        ptable.TempConfig[config] = self:GetChecked() == 1
+		if (AutoTurnIn.TOC < 60000) then
+			ptable.TempConfig[config] = (self:GetChecked() == 1)
+		else
+			ptable.TempConfig[config] = self:GetChecked()
+		end
     end)
     return cb
 end
@@ -121,7 +125,6 @@ OptionsPanel.refresh = function()
 	if ( MakeACopy ) then 
 		ptable.TempConfig = CopyTable(AutoTurnInCharacterDB)
 	end
-
 	Enable:SetChecked(ptable.TempConfig.enabled)
 
 	UIDropDownMenu_SetSelectedID(QuestDropDown, ptable.TempConfig.all)
@@ -156,8 +159,10 @@ end
 OptionsPanel.okay = function()
 	AutoTurnInCharacterDB = CopyTable(ptable.TempConfig)
 	AutoTurnIn:SetEnabled(AutoTurnInCharacterDB.enabled)
-	QuestLog_Update()
-	WatchFrame_Update(WatchFrame)
+	if AutoTurnIn.TOC < 60000 then
+		QuestLog_Update()
+		WatchFrame_Update(WatchFrame)
+	end
 end
 
 InterfaceOptions_AddCategory(OptionsPanel)
