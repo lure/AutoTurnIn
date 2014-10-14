@@ -89,9 +89,11 @@ function AutoTurnIn:OnEnable()
 
 	self:SetEnabled(DB.enabled)
 	self:RegisterGossipEvents()
-	hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
-	hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
-	hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
+	if select(4, GetBuildInfo()) < 60000 then 
+		hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
+		hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
+		hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
+	end
 end
 
 function AutoTurnIn:OnDisable()
@@ -620,3 +622,6 @@ end
 -- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
 -- sometimes some parts of this chain is skipped. For example, priest in Honor Hold show quest window directly. This is a trick to handle 'toggle key'
 hooksecurefunc(QuestFrame, "Hide", function() AutoTurnIn.allowed = nil end)
+-- if (GetItemCount(45724, false) > 0) then 
+	-- UseItemByName(45724) 
+-- end
