@@ -3,13 +3,13 @@
 ## Version: 4.5.N
 ## Author: Alexandr Shubert
 ## Notes: Quest handling automation
-## Notes-ruRU: Автоматически обработка заданий
+## Notes-ruRU: Автоматическая обработка заданий
 ## Notes-enUS: Quest handling automation
 ## Notes-frFR: Accepte et rend automatiquement les quêtes
 ## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests
 ## OptionalDeps: Ace3
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
-## X-Date: 2013-05-25
+## X-Date: 2014-10-16
 ## X-Category: Quest
 ## X-Embeds: Ace3
 

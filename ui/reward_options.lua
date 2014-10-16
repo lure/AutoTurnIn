@@ -11,11 +11,7 @@ local function CreateCheckbox(name, parent, marginx, marginy, text)
 	cb:SetPoint("TOPLEFT", parent, marginx, marginy)
 	_G[cb:GetName().."Text"]:SetText(text and text or name)
 	cb:SetScript("OnClick", function(self)
-		if (AutoTurnIn.TOC < 60000) then
-			parent.GetConfig()[name] = (self:GetChecked() == 1 and true or nil)
-		else
-			parent.GetConfig()[name] = (self:GetChecked() or nil)
-		end
+		parent.GetConfig()[name] = (self:GetChecked() or nil)
 	end)
 	tinsert(parent.buttons, cb)
 	return cb
@@ -114,23 +110,23 @@ CreateCheckbox('ITEM_MOD_SPIRIT_SHORT', StatPanel, 436, -8, SPELL_STAT5_NAME)
 
 local SecStatPanel = CreatePanel("SecStatPanel", STAT_CATEGORY_ATTRIBUTES .. "-2", 590, 102) 
 CreateCheckbox('ITEM_MOD_CRIT_RATING_SHORT', SecStatPanel, 10, -8, ITEM_MOD_CRIT_RATING_SHORT)
-CreateCheckbox('ITEM_MOD_DODGE_RATING_SHORT', SecStatPanel, 206, -8, ITEM_MOD_DODGE_RATING_SHORT)
-CreateCheckbox('ITEM_MOD_PARRY_RATING_SHORT', SecStatPanel, 402, -8, ITEM_MOD_PARRY_RATING_SHORT)
+CreateCheckbox('ITEM_MOD_CR_LIFESTEAL_SHORT', SecStatPanel, 206, -8, ITEM_MOD_CR_LIFESTEAL_SHORT)
+CreateCheckbox('ITEM_MOD_HASTE_RATING_SHORT', SecStatPanel, 402, -8, ITEM_MOD_HASTE_RATING_SHORT)
 	-- 2nd line 
-CreateCheckbox('ITEM_MOD_CR_LIFESTEAL_SHORT', SecStatPanel, 10, -40, ITEM_MOD_CR_LIFESTEAL_SHORT)
-CreateCheckbox('ITEM_MOD_HASTE_RATING_SHORT', SecStatPanel, 206, -40, ITEM_MOD_HASTE_RATING_SHORT)
-CreateCheckbox('ITEM_MOD_CR_MULTISTRIKE_SHORT', SecStatPanel, 402, -40, ITEM_MOD_CR_MULTISTRIKE_SHORT)
+CreateCheckbox('ITEM_MOD_CR_MULTISTRIKE_SHORT', SecStatPanel, 10, -40, ITEM_MOD_CR_MULTISTRIKE_SHORT)
+CreateCheckbox('ITEM_MOD_MASTERY_RATING_SHORT', SecStatPanel, 206, -40, ITEM_MOD_MASTERY_RATING_SHORT)
+CreateCheckbox('ITEM_MOD_VERSATILITY', SecStatPanel, 402, -40, ITEM_MOD_VERSATILITY)
     -- 3rd line
-CreateCheckbox('ITEM_MOD_MASTERY_RATING_SHORT', SecStatPanel, 10, -72, ITEM_MOD_MASTERY_RATING_SHORT)
-CreateCheckbox('ITEM_MOD_SPELL_POWER_SHORT', SecStatPanel, 206, -72, ITEM_MOD_SPELL_POWER_SHORT)
-CreateCheckbox('ITEM_MOD_VERSATILITY', SecStatPanel, 402, -72, ITEM_MOD_VERSATILITY)
+CreateCheckbox('ITEM_MOD_SPELL_POWER_SHORT', SecStatPanel, 10, -72, ITEM_MOD_SPELL_POWER_SHORT)
+-- CreateCheckbox('ITEM_MOD_SPELL_POWER_SHORT', SecStatPanel, 206, -72, ITEM_MOD_SPELL_POWER_SHORT)
+-- CreateCheckbox('ITEM_MOD_VERSATILITY', SecStatPanel, 402, -72, ITEM_MOD_VERSATILITY)
 
 
 -- 'Greed' CheckBox
 local GreedAfterNeed = CreateFrame("CheckButton", O.."Enable", RewardPanel, "OptionsCheckButtonTemplate")
 _G[GreedAfterNeed:GetName().."Text"]:SetText(L["greedifnothing"])
-GreedAfterNeed:SetScript("OnClick", function(self) 
-	ptable.TempConfig.greedifnothingfound = self:GetChecked() == 1
+GreedAfterNeed:SetScript("OnClick", function(self)
+	ptable.TempConfig.greedifnothingfound = self:GetChecked()
 end)
 
 --[[ CONTROL PLACEMENT]]--
