@@ -155,9 +155,10 @@ end
 OptionsPanel.okay = function()
 	AutoTurnInCharacterDB = CopyTable(ptable.TempConfig)
 	AutoTurnIn:SetEnabled(AutoTurnInCharacterDB.enabled)
+
+	ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_ALL)
 	if AutoTurnIn.TOC < 60000 then
 		QuestLog_Update()
-		WatchFrame_Update(WatchFrame)
 	end
 end
 

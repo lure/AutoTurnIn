@@ -44,24 +44,24 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 	if not AutoTurnInCharacterDB.watchlevel then 
 		return
 	end
-	
-	for i = 1, #WATCHFRAME_LINKBUTTONS do
-		local button = WATCHFRAME_LINKBUTTONS[i]
 
-		if( button.type == "QUEST" ) then
-			local questIndex = GetQuestIndexForWatch(button.index)
-			if questIndex then				
-				local textLine = button.lines[button.startLine]
-				if textLine.text:GetText() and (not string.find("", "^%[.*%].*")) then
-					local title, level, _, _, _, _, _, isDaily = GetQuestLogTitle(questIndex)					
-					local questTypeIndex = GetQuestLogQuestType(questIndex)
-					local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex]
-					if (not tagString) then
-						--AutoTurnIn:Print("Please, inform addon author unknown QT for: " ..title)
-						tagString = ""
-					end
-					textLine.text:SetText(AutoTurnIn.WatchFrameLevelFormat:format(level, tagString, isDaily and "\*" or "", title))
-				end
+	local tracker = ObjectiveTrackerFrame
+	if ( not tracker.initialized )then
+		return
+	end
+
+	for i = 1, #tracker.MODULES do
+		for id,block in pairs( tracker.MODULES[i].Header.module.usedBlocks) do
+			local text = block.HeaderText:GetText()
+			if text and (not string.find(text, "^%[.*%].*")) then
+				local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID,
+					  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(block.questLogIndex)
+
+				local questTypeIndex = GetQuestLogQuestType(block.questLogIndex)
+				local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex] or ""
+				local dailyMod = (frequency == LE_QUEST_FREQUENCY_DAILY or frequency == LE_QUEST_FREQUENCY_WEEKLY) and "\*" or ""
+
+				block.HeaderText:SetText(AutoTurnIn.WatchFrameLevelFormat:format(level, tagString, dailyMod, title))
 			end
 		end
 	end

@@ -96,8 +96,8 @@ function AutoTurnIn:OnEnable()
 	if self.TOC < 60000 then
 		hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
 		hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
-		hooksecurefunc("WatchFrame_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
 	end
+	hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
 end
 
 function AutoTurnIn:OnDisable()
