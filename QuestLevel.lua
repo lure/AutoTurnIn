@@ -21,22 +21,22 @@ AutoTurnIn.QuestTypesIndex = {
 function AutoTurnIn:ShowQuestLevelInLog()
 	if not AutoTurnInCharacterDB.questlevel then 
 		return
-	end
-	
+	end	
+
 	for i = 1, #QuestMapFrame.QuestsFrame.Contents.Titles do
 		local button = QuestMapFrame.QuestsFrame.Contents.Titles[i]
 		if (button and button.questLogIndex) then
 			local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID,
 				  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(button.questLogIndex)
 			local text = button.Text:GetText()
-			if text and (not string.find(text, "^%[.*%].*")) then
-				--local prevHeight = button:GetHeight() - button.Text:GetHeight()  H:looks like adjusted automatically 
+			if title and text and (not string.find(text, "^%[.*%].*")) then
 				button.Text:SetText(AutoTurnIn.QuestLevelFormat:format(level, title))
+				-- replacind checkbox image to the new position
 				button.Check:SetPoint("LEFT", button.Text, button.Text:GetWrappedWidth() + 2, 0);
-				--button:SetHeight(prevHeight + button.Text:GetHeight())   H:looks like adjusted automatically 
 			end
 		end
 	end
+
 end
 
 function AutoTurnIn:ShowQuestLevelInWatchFrame()
