@@ -93,11 +93,9 @@ function AutoTurnIn:OnEnable()
 
 	self:SetEnabled(DB.enabled)
 	self:RegisterGossipEvents()
-	if self.TOC < 60000 then
-		hooksecurefunc("QuestLog_Update", AutoTurnIn.ShowQuestLevelInLog)
-		hooksecurefunc(QuestLogScrollFrame, "update", AutoTurnIn.ShowQuestLevelInLog)
-	end
+
 	hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
+	hooksecurefunc("QuestLogQuests_Update", AutoTurnIn.ShowQuestLevelInLog)
 end
 
 function AutoTurnIn:OnDisable()

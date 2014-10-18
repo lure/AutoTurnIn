@@ -157,9 +157,7 @@ OptionsPanel.okay = function()
 	AutoTurnIn:SetEnabled(AutoTurnInCharacterDB.enabled)
 
 	ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_ALL)
-	if AutoTurnIn.TOC < 60000 then
-		QuestLog_Update()
-	end
+	QuestMapFrame_UpdateAll()
 end
 
 InterfaceOptions_AddCategory(OptionsPanel)

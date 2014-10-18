@@ -23,18 +23,17 @@ function AutoTurnIn:ShowQuestLevelInLog()
 		return
 	end
 	
-	-- see function QuestLog_Update() in function QuestLogFrame.lua for details
-	local scrollOffset = HybridScrollFrame_GetOffset(QuestLogScrollFrame);
-	local numEntries, numQuests = GetNumQuestLogEntries();
-	
-	for i=1, #QuestLogScrollFrame.buttons do
-		local questIndex = i + scrollOffset;		
-		local button = QuestLogScrollFrame.buttons[i]
-		if ( questIndex <= numEntries ) then
-			local title, level, _, _, isHeader = GetQuestLogTitle(questIndex);
-			if (not isHeader and title) then 
-				button:SetText(AutoTurnIn.QuestLevelFormat:format(level, title))
-				QuestLogTitleButton_Resize(button)
+	for i = 1, #QuestMapFrame.QuestsFrame.Contents.Titles do
+		local button = QuestMapFrame.QuestsFrame.Contents.Titles[i]
+		if (button and button.questLogIndex) then
+			local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID,
+				  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(button.questLogIndex)
+			local text = button.Text:GetText()
+			if text and (not string.find(text, "^%[.*%].*")) then
+				--local prevHeight = button:GetHeight() - button.Text:GetHeight()  H:looks like adjusted automatically 
+				button.Text:SetText(AutoTurnIn.QuestLevelFormat:format(level, title))
+				button.Check:SetPoint("LEFT", button.Text, button.Text:GetWrappedWidth() + 2, 0);
+				--button:SetHeight(prevHeight + button.Text:GetHeight())   H:looks like adjusted automatically 
 			end
 		end
 	end
@@ -53,15 +52,18 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 	for i = 1, #tracker.MODULES do
 		for id,block in pairs( tracker.MODULES[i].Header.module.usedBlocks) do
 			local text = block.HeaderText:GetText()
-			if text and (not string.find(text, "^%[.*%].*")) then
+			if block.questLogIndex and text and (not string.find(text, "^%[.*%].*")) then
 				local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID,
 					  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(block.questLogIndex)
-
 				local questTypeIndex = GetQuestLogQuestType(block.questLogIndex)
 				local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex] or ""
 				local dailyMod = (frequency == LE_QUEST_FREQUENCY_DAILY or frequency == LE_QUEST_FREQUENCY_WEEKLY) and "\*" or ""
 
+				-- resizing the block if new line requires more spaces.
+				local h = block.height - block.HeaderText:GetHeight()
 				block.HeaderText:SetText(AutoTurnIn.WatchFrameLevelFormat:format(level, tagString, dailyMod, title))
+				block.height = h + block.HeaderText:GetHeight()
+				block:SetHeight(block.height)
 			end
 		end
 	end
