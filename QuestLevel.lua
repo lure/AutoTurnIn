@@ -30,7 +30,9 @@ function AutoTurnIn:ShowQuestLevelInLog()
 				  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(button.questLogIndex)
 			local text = button.Text:GetText()
 			if title and text and (not string.find(text, "^%[.*%].*")) then
+				local prevHeight = button:GetHeight() - button.Text:GetHeight()
 				button.Text:SetText(AutoTurnIn.QuestLevelFormat:format(level, title))
+				button:SetHeight(prevHeight + button.Text:GetHeight())
 				-- replacind checkbox image to the new position
 				button.Check:SetPoint("LEFT", button.Text, button.Text:GetWrappedWidth() + 2, 0);
 			end
@@ -50,7 +52,7 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 	end
 
 	for i = 1, #tracker.MODULES do
-		for id,block in pairs( tracker.MODULES[i].Header.module.usedBlocks) do						
+		for id,block in pairs( tracker.MODULES[i].Header.module.usedBlocks) do
 			if block.questLogIndex and block.HeaderText:GetText() and (not string.find(block.HeaderText:GetText(), "^%[.*%].*")) then
 				local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID,
 					  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(block.questLogIndex)
