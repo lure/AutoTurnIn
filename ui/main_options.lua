@@ -156,7 +156,7 @@ OptionsPanel.okay = function()
 	AutoTurnInCharacterDB = CopyTable(ptable.TempConfig)
 	AutoTurnIn:SetEnabled(AutoTurnInCharacterDB.enabled)
 
-	ObjectiveTracker_Update(OBJECTIVE_TRACKER_UPDATE_ALL)
+	securecall(ObjectiveTracker_Update, OBJECTIVE_TRACKER_UPDATE_ALL)
 	QuestMapFrame_UpdateAll()
 end
 
