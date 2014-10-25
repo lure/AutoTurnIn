@@ -60,7 +60,7 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 				local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex] or ""
 				local dailyMod = (frequency == LE_QUEST_FREQUENCY_DAILY or frequency == LE_QUEST_FREQUENCY_WEEKLY) and "\*" or ""
 
-				-- resizing the block if new line requires more spaces.
+				--resizing the block if new line requires more spaces.
 				local h = block.height - block.HeaderText:GetHeight()
 				block.HeaderText:SetText(AutoTurnIn.WatchFrameLevelFormat:format(level, tagString, dailyMod, title))
 				block.height = h + block.HeaderText:GetHeight()

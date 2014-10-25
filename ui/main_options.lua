@@ -156,8 +156,33 @@ OptionsPanel.okay = function()
 	AutoTurnInCharacterDB = CopyTable(ptable.TempConfig)
 	AutoTurnIn:SetEnabled(AutoTurnInCharacterDB.enabled)
 
+	--[[ 
+	-- any of the calls below taints the UseQuestLogSpecialItem. Expand-collapse is a workaround
 	securecall(ObjectiveTracker_Update, OBJECTIVE_TRACKER_UPDATE_ALL)
 	QuestMapFrame_UpdateAll()
+	
+	-- this one happens too fast and "onUpdate' event does not occur. The custome frame with delay and 'OnUpdate' event can help.
+	if (ObjectiveTrackerFrame.collapsed == nil) then
+		ObjectiveTracker_Collapse();
+		ObjectiveTracker_Expand();
+	end
+	]]--
+	-- and here goes the dirty hack!!! No direct update calls, hence, no global variable taints!!!
+	if GetNumQuestWatches() > 0 then
+		local inLog = GetQuestIndexForWatch(1);
+		if IsQuestWatched(inLog) then
+			RemoveQuestWatch (inLog);
+			AddQuestWatch(inLog);
+		else
+			AddQuestWatch(inLog);
+			RemoveQuestWatch (inLog);
+		end
+	else
+		if  (GetNumQuestLogEntries() > 0) then
+			AddQuestWatch(2); 
+			RemoveQuestWatch (2);
+		end
+	end
 end
 
 InterfaceOptions_AddCategory(OptionsPanel)
