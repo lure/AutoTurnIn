@@ -2,52 +2,52 @@
 -- translators wanted :(
 if (GetLocale() == "itIT")  then
 privateTable.L = setmetatable({
-	["reset"]="setting was resetted",
-	["usage1"]="'on'/'off' to enable or disable addon",
-	["usage2"]="'all'/'list' to handle any quest or just specified in a list",
-	["usage3"]="'loot' do not complete quests with a list of rewards or complete it and choose most expensive one of rewards",
+	["reset"]="Le impostazioni sono state resettate",
+	["usage1"]="'on'/'off' per abilitare o disabilitare l'addon",
+	["usage2"]="'all'/'list' per gestire qualsiasi missione o solo quelle specificate in una lista",
+	["usage3"]="'loot' non completare le missioni con una lista di ricompense o completarle scegliendo la più costosa tra le ricompense",
 	["enabled"]="abilitato",
-	["disabled"]="disabili",	
-	["all"]="ready to handle every quest",
-	["list"]="only daily quests will be handled",
-	["dontlootfalse"]="loot most expensive reward",
-	["dontloottrue"]="do not complete quests with rewards",
-	["resetbutton"]="reset",
-	
-	["questTypeLabel"] = "quests to handle",
-	["questTypeAll"] = "all",
-    ["questTypeList"] = "daily",
-    ["questTypeExceptDaily"] = "except daily",
-    ["TrivialQuests"]="Accept 'grey' quests",
-	["ShareQuestsLabel"] = "quest auto sharing",
-    ["CompleteOnly"] = "turn in only",
+	["disabled"]="disabilitato",
+	["all"]="pronto a gestire ogni missione",
+	["list"]="solo le missioni giornaliere verranno gestite",
+	["dontlootfalse"]="scegli la ricompensa più costosa",
+	["dontloottrue"]="non completare le missioni con ricompense",
+	["resetbutton"]="resetta",
 
-	["lootTypeLabel"]="quests with rewards",
-	["lootTypeFalse"]="don't turn in",
-	["lootTypeGreed"]="loot most expensive reward",
-	["lootTypeNeed"]="loot by parameters",
+	["questTypeLabel"] = "missioni da gestire",
+	["questTypeAll"] = "Tutte",
+	["questTypeList"] = "giornaliere",
+	["questTypeExceptDaily"] = "escuso le giornaliere",
+	["TrivialQuests"]="accetta le missioni 'grigie'",
+	["ShareQuestsLabel"] = "condivisione automatica delle missioni",
+	["CompleteOnly"] = "completa solamente",
+
+	["lootTypeLabel"]="missioni con ricompensa",
+	["lootTypeFalse"]="non consegnare",
+	["lootTypeGreed"]="scegli la ricompensa più costosa",
+	["lootTypeNeed"]="scegli la ricompensa da parametri",
+
+	["tournamentLabel"]="Torneo d'argento",
+	["tournamentWrit"]="Decreto del Campione", -- 46114
+	["tournamentPurse"]="Borsellino del Campione", -- 45724
+
+	["DarkmoonTeleLabel"]="Lunacupa: teletrasportarsi al cannone",
+	["ToDarkmoonLabel"]="Lunacupa: teletrasportarsi a isola",
+	["DarkmoonFaireTeleport"]="Teletrasportologo Fozlebub",
+	["DarkmoonAutoLabel"]="Lunacupa: avviare il gioco!",
+	["Darkmoon Island"]="Isola di Lunacupa",
+	["Darkmoon Faire Mystic Mage"]="Maga Mistica di Lunacupa",
 	
-	["tournamentLabel"]="Argent Tournament",
-	["tournamentWrit"]="Champion's Writ", -- 46114
-	["tournamentPurse"]="Champion's Purse",  -- 45724
-	
-	["DarkmoonTeleLabel"]="Darkmoon: teleport to the cannon",
-	["ToDarkmoonLabel"]="Darkmoon: teleport to island",
-	["DarkmoonFaireTeleport"]="Teleportologist Fozlebub",
-	["DarkmoonAutoLabel"]="Darkmoon: start the game!",
-	["Darkmoon Island"]="Darkmoon Island",
-	["Darkmoon Faire Mystic Mage"]="Darkmoon Faire Mystic Mage",
-	
-	["The Jade Forest"]="The Jade Forest",
-    ["Scared Pandaren Cub"]="Scared Pandaren Cub",
+	["The Jade Forest"]="Foresta di Giada",
+	["Scared Pandaren Cub"]="Cucciolo Pandaren Spaventato",
 	
 	["rewardtext"]="print quest competition text",
-	["questlevel"]="show quest level",
+	["questlevel"]="mostra il livello della missione",
 	["watchlevel"]="show watched quest level",
-	["autoequip"]="equip received reward",
-	["togglekey"]="enable/disable key",
+	["autoequip"]="indossa ricompensa ricevuta",
+	["togglekey"]="tasto di abilitazione/disablilitazione",
 	
-	['Jewelry']="Jewelry",
+	['Gioielli']="Gioielli",
 	["rewardlootoptions"]="Reward loot rules",
 	['greedifnothing']='Greed if nothing found',
 	["multiplefound"]="Multiple reward candidates found. "..ERR_QUEST_MUST_CHOOSE,
