@@ -1,6 +1,6 @@
 ﻿local addonName, privateTable = ...
 -- translators wanted :(
-if (GetLocale() ~= "itIT")  then
+if (GetLocale() == "itIT")  then
 privateTable.L = setmetatable({
 	["reset"]="setting was resetted",
 	["usage1"]="'on'/'off' to enable or disable addon",
