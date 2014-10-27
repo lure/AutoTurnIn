@@ -2,9 +2,12 @@
 -- translated by http://www.curse.com/users/whitelightelgringo
 if (GetLocale() == "frFR")  then
 privateTable.L = setmetatable({
+	["reset"]="setting was resetted",
 	["usage1"]="'on'/'off' pour activer/désactiver l'addon",
     ["usage2"]="'all'/'list' pour prendre en compte toutes les quêtes ou juste une liste spécifique",
     ["usage3"]="'loot' Ne pas rendre les quêtes à objets de récompense ou rendre les quêtes en choisissant l'objet de récompense le plus cher",
+	["enabled"]="enabled",
+	["disabled"]="disabled",	
     ["all"]="Ready to handle every quest",
     ["list"]="only daily quests will be handled",
     ["dontlootfalse"]="Choisir la récompense la plus chère",
@@ -31,7 +34,8 @@ privateTable.L = setmetatable({
     ["DarkmoonTeleLabel"]="Sombrelune : téléporter au canon",
 	["ToDarkmoonLabel"]="Sombrelune : téléporter au île", -- darkmoon	
     ["DarkmoonFaireTeleport"]="Téléportologue Mélébou",
-    ["DarkmoonAutoLabel"]="Sombrelune : Lancer le jeu!",    
+    ["DarkmoonAutoLabel"]="Sombrelune : Lancer le jeu!",
+	["Darkmoon Island"]="Île de Sombrelune",
 	["Darkmoon Faire Mystic Mage"]="Mage mystique de la foire de Sombrelune",
 
     ["The Jade Forest"]="La forêt de Jade",

@@ -55,7 +55,6 @@ privateTable.L = setmetatable({
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
 	["stopitemfound"]="Gefunden: %s. Ihr müsst eine Belohnung manuell auswählen.",
 	},
-	
 	{__index = function(table, index) return index end})
 	
 privateTable.L.quests = {

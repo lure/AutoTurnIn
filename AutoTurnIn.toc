@@ -7,6 +7,7 @@
 ## Notes-enUS: Quest handling automation
 ## Notes-frFR: Accepte et rend automatiquement les quêtes
 ## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests
+## Notes-itIT: Italian translators wanted!!!
 ## OptionalDeps: Ace3
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
 ## X-Date: 2014-10-16
@@ -18,6 +19,7 @@ loc\localization_RU.lua
 loc\localization_EN.lua
 loc\localization_DE.lua
 loc\localization_FR.lua
+loc\localization_IT.lua
 
 rewards_const.lua
 AutoTurnIn.lua

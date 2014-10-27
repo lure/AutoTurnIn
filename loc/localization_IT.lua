@@ -1,23 +1,13 @@
-local addonName, privateTable = ...
--- lua throws except if no locale provided. 
-local replaceTable = {
-		["enUS"]=true,
-		["enGB"]=true,
-		["koKR"]=true,
-		["esES"]=true,
-		["esMX"]=true,
-		["zhTW"]=true,
-		["ptBR"]=true,
-		["zhCN"]=true }
-		
-if (replaceTable[GetLocale()])  then
+﻿local addonName, privateTable = ...
+-- translators wanted :(
+if (GetLocale() ~= "itIT")  then
 privateTable.L = setmetatable({
 	["reset"]="setting was resetted",
 	["usage1"]="'on'/'off' to enable or disable addon",
 	["usage2"]="'all'/'list' to handle any quest or just specified in a list",
 	["usage3"]="'loot' do not complete quests with a list of rewards or complete it and choose most expensive one of rewards",
-	["enabled"]="enabled",
-	["disabled"]="disabled",	
+	["enabled"]="abilitato",
+	["disabled"]="disabili",	
 	["all"]="ready to handle every quest",
 	["list"]="only daily quests will be handled",
 	["dontlootfalse"]="loot most expensive reward",

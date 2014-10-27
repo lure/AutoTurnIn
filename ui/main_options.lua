@@ -179,7 +179,7 @@ OptionsPanel.okay = function()
 		end
 	else
 		if  (GetNumQuestLogEntries() > 0) then
-			AddQuestWatch(2); 
+			AddQuestWatch(2);
 			RemoveQuestWatch (2);
 		end
 	end
