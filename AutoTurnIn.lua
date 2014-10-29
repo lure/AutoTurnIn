@@ -649,3 +649,4 @@ hooksecurefunc(QuestFrame, "Hide", function() AutoTurnIn.allowed = nil end)
 -- if (GetItemCount(45724, false) > 0) then 
 	-- UseItemByName(45724) 
 -- end
+-- /run local a=UnitGUID("npc"); for word in a:gmatch("Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-") do print(word) end
