@@ -27,6 +27,8 @@ AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=
 AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 AutoTurnIn.autoEquipList={}
 AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log
+AutoTurnIn.ERRORVALUE = nil
+
 
 AutoTurnIn.ldbstruct = {
 		type = "data source",
@@ -287,6 +289,12 @@ function AutoTurnIn:VarArgForAvailableQuests(...)
 	end
 end
 
+-- Extracts GUID from the NPC which dialog window is currenty displayed
+function AutoTurnIn:GetNPCGUID()
+	local a = UnitGUID("npc")
+	return a and select(3, a:find("Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-")) or nil
+end
+
 function AutoTurnIn:isDarkmoonAndAllowed(questCount)
 	return (self.DarkmoonAllowToProceed and questCount) and
 			AutoTurnInCharacterDB.darkmoonautostart and
@@ -294,18 +302,19 @@ function AutoTurnIn:isDarkmoonAndAllowed(questCount)
 end
 
 function AutoTurnIn:isYoungPandaren()
-	return (UnitName("npc")== L["Scared Pandaren Cub"]) and
-		(GetRealZoneText() == L["The Jade Forest"])
+	return (AutoTurnIn:GetNPCGUID() == "55267")
 end
 
 function AutoTurnIn:isDarkmoonFaireMysticMage()
+	local guid = AutoTurnIn:GetNPCGUID() 
+	local isMage = (guid == "54334") or (guid == "55382")
+
 	return AutoTurnInCharacterDB.todarkmoon and
-		(UnitName("npc")== L["Darkmoon Faire Mystic Mage"]) and
-		(GetRealZoneText() ~= L["Darkmoon Island"])
+		(isMage and GetRealZoneText() ~= L["Darkmoon Island"])
 end
 
 function AutoTurnIn:isDarkmoonFaireTeleportologist()
-	return AutoTurnInCharacterDB.darkmoonteleport and (L["DarkmoonFaireTeleport"]==UnitName("target"))
+	return AutoTurnInCharacterDB.darkmoonteleport and (AutoTurnIn:GetNPCGUID() == "57850")
 end
 
 function AutoTurnIn:GOSSIP_SHOW()
@@ -411,7 +420,7 @@ AutoTurnIn.delayFrame:SetScript('OnUpdate', function()
 	end
 end)
 
--- return 0 if itemlink is null, item level or math.huge if the item is heirloom
+-- return 0 if itemlink is null, item level is math.huge if the item is heirloom
 function AutoTurnIn:ItemLevel(itemLink)
 	if (not itemLink) then
 		return 0
@@ -619,11 +628,16 @@ function AutoTurnIn:QUEST_COMPLETE()
 		if GetNumQuestChoices() > 1 then
 			local function getItemId(typeStr)
 				local link = GetQuestItemLink(typeStr, 1) --first item is enough
-				return link:match("%b::"):gsub(":", "")
+				return link and link:match("%b::"):gsub(":", "") or self.ERRORVALUE
 			end
 
 			local itemID = getItemId("choice")
-			if (itemID == "46114" or itemID == "45724") then -- Tournament quest found
+			if (not itemID) then
+				self:Print("Can't read reward link from server. Close NPC dialog and open it again.");
+				return
+			end
+			-- Tournament quest found
+			if (itemID == "46114" or itemID == "45724") then 
 				self:TurnInQuest(AutoTurnInCharacterDB.tournament)
 				return
 			end
