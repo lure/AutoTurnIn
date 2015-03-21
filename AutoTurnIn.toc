@@ -1,4 +1,4 @@
-﻿## Interface: 60000
+﻿## Interface: 60100
 ## Title: AutoTurnIn
 ## Version: 4.5.N
 ## Author: Alexandr Shubert
@@ -22,6 +22,7 @@ loc\localization_FR.lua
 loc\localization_IT.lua
 
 rewards_const.lua
+IgnoredNPC.lua
 AutoTurnIn.lua
 QuestLevel.lua
 

@@ -7,6 +7,7 @@ local _G = _G 	--Rumors say that global _G is called by lookup in a super-global
 local _ 		--Sometimes blizzard exposes "_" variable as a global.
 local addonName, ptable = ...
 local L = ptable.L
+local IGNORED_NPC = ptable.IGNORED_NPC 
 local C = ptable.CONST
 local TOCVersion = GetAddOnMetadata(addonName, "Version")
 local Q_ALL, Q_DAILY, Q_EXCEPTDAILY = 1, 2, 3
@@ -197,7 +198,8 @@ function AutoTurnIn:AllowedToHandle(forcecheck)
 		-- it's a simple xor implementation (a ~= b)
 		self.allowed = (not not AutoTurnInCharacterDB.enabled) ~= (IsModifiedClick)
 	end
-	return self.allowed
+	
+	return self.allowed and (not IGNORED_NPC[GetNPCGUID()]) and (not QuestGetAutoAccept())
 end
 
 -- Old 'Quest NPC' interaction system. See http://wowprogramming.com/docs/events/QUEST_GREETING
