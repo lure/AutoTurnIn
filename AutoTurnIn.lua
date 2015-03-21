@@ -199,7 +199,7 @@ function AutoTurnIn:AllowedToHandle(forcecheck)
 		self.allowed = (not not AutoTurnInCharacterDB.enabled) ~= (IsModifiedClick)
 	end
 	
-	return self.allowed and (not IGNORED_NPC[GetNPCGUID()]) and (not QuestGetAutoAccept())
+	return self.allowed and (not IGNORED_NPC[AutoTurnIn:GetNPCGUID()]) and (not QuestGetAutoAccept())
 end
 
 -- Old 'Quest NPC' interaction system. See http://wowprogramming.com/docs/events/QUEST_GREETING
