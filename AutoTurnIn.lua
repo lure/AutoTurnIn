@@ -97,7 +97,8 @@ function AutoTurnIn:OnEnable()
 	self:SetEnabled(DB.enabled)
 	self:RegisterGossipEvents()
 
-	hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
+	-- See no way tp fix taint issues with quest special items.
+	-- hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
 	hooksecurefunc("QuestLogQuests_Update", AutoTurnIn.ShowQuestLevelInLog)
 end
 

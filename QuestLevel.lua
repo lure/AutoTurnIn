@@ -42,7 +42,6 @@ function AutoTurnIn:ShowQuestLevelInLog()
 end
 
 function AutoTurnIn:ShowQuestLevelInWatchFrame()
-	return
 	if not AutoTurnInCharacterDB.watchlevel then 
 		return
 	end
