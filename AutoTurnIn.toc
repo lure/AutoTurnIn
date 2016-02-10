@@ -1,4 +1,4 @@
-﻿## Interface: 60100
+﻿## Interface: 60200
 ## Title: AutoTurnIn
 ## Version: 4.5.N
 ## Author: Alexandr Shubert
