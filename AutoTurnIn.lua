@@ -98,7 +98,7 @@ function AutoTurnIn:OnEnable()
 	self:RegisterGossipEvents()
 
 	-- See no way tp fix taint issues with quest special items.
-	-- hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
+	hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
 	hooksecurefunc("QuestLogQuests_Update", AutoTurnIn.ShowQuestLevelInLog)
 end
 
@@ -199,8 +199,8 @@ function AutoTurnIn:AllowedToHandle(forcecheck)
 		-- it's a simple xor implementation (a ~= b)
 		self.allowed = (not not AutoTurnInCharacterDB.enabled) ~= (IsModifiedClick)
 	end
-	
-	return self.allowed and (not IGNORED_NPC[AutoTurnIn:GetNPCGUID()]) and (not QuestGetAutoAccept())
+	--return self.allowed and (not IGNORED_NPC[AutoTurnIn:GetNPCGUID()]) and (not QuestGetAutoAccept())
+	return self.allowed and (not IGNORED_NPC[AutoTurnIn:GetNPCGUID()])
 end
 
 -- Old 'Quest NPC' interaction system. See http://wowprogramming.com/docs/events/QUEST_GREETING
@@ -359,8 +359,9 @@ function AutoTurnIn:QUEST_DETAIL()
 	if (QuestIsDaily() or QuestIsWeekly()) then
 		self:CacheAsDaily(GetTitleText())
 	end
-
-	if self:AllowedToHandle() and self:isAppropriate() and (not AutoTurnInCharacterDB.completeonly)then
+	if QuestGetAutoAccept() then
+		CloseQuest()
+	elseif self:AllowedToHandle() and self:isAppropriate() and (not AutoTurnInCharacterDB.completeonly) then
 		QuestInfoDescriptionText:SetAlphaGradient(0, -1)
 		QuestInfoDescriptionText:SetAlpha(1)
 		AcceptQuest()
@@ -376,7 +377,7 @@ end
 
 function AutoTurnIn:QUEST_PROGRESS()
     if  self:AllowedToHandle() and IsQuestCompletable() and self:isAppropriate() then
-        CompleteQuest()
+		CompleteQuest()
     end
 end
 
@@ -433,12 +434,20 @@ function AutoTurnIn:ItemLevel(itemLink)
 	return (invQuality == 7) and math.huge or invLevel
 end
 
+function AutoTurnIn:swapEquip(itemLink)
+	local name = GetItemInfo(itemLink)
+	if (self.autoEquipList[name]) then
+		self.delayFrame.delay = time() + 2
+		self.delayFrame:Show()
+	end
+end
+
 -- turns quest in printing reward text if `showrewardtext` option is set.
 -- prints appropriate message if item is taken by greed
 -- equips received reward if such option selected
 function AutoTurnIn:TurnInQuest(rewardIndex)
 	if (AutoTurnInCharacterDB.showrewardtext) then
-		self:Print((UnitName("target") and  UnitName("target") or '')..'\n', GetRewardText())
+		self:Print((UnitName("target") and UnitName("target") or '')..'\n', GetRewardText())
 	end
 
 	if (self.forceGreed) then
@@ -446,34 +455,36 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 			self:Print(L["gogreedy"])
 		end
 	else
-		local name = GetQuestItemInfo("choice", (GetNumQuestChoices() == 1) and 1 or rewardIndex)
-		if (AutoTurnInCharacterDB.autoequip and (strlen(name) > 0)) then
-			local lootLevel, _, _, _, _, equipSlot = select(4, GetItemInfo(GetQuestItemLink("choice", rewardIndex)))
-
-			-- Compares reward and already equipped item levels. If reward level is greater than equipped item, auto equip reward
-			local slot = C.SLOTS[equipSlot]
-			if (slot) then
-				local firstSlot = GetInventorySlotInfo(slot[1])
-				local invLink = GetInventoryItemLink("player", firstSlot)
-				local eqLevel = self:ItemLevel(invLink)
-
-				-- If reward is a ring  trinket or one-handed weapons all slots must be checked in order to swap one with a lesser item-level
-				if (#slot > 1) then
-					local secondSlot = GetInventorySlotInfo(slot[2])
-					invLink = GetInventoryItemLink("player", secondSlot)
-					if (invLink) then
-						local eq2Level = self:ItemLevel(invLink)
-						firstSlot = (eqLevel > eq2Level) and secondSlot or firstSlot
-						eqLevel = (eqLevel > eq2Level) and eq2Level or eqLevel
+		if AutoTurnInCharacterDB.autoequip then
+			local itemLink1 = GetQuestItemLink("choice", (GetNumQuestChoices() == 1) and 1 or rewardIndex)
+			-- Unconditional quest reward
+			local itemLink2 
+			if GetNumQuestRewards() > 0 then
+				itemLink2 = GetQuestItemLink("reward", 1)
+			end
+			-- if we have 2 items for same slot check which one is better
+			if (not not itemLink1 and not not itemLink2) then
+				local lootLevel1, _, _, _, _, equipSlot1 = select(4, GetItemInfo(itemLink1))
+				local lootLevel2, _, _, _, _, equipSlot2 = select(4, GetItemInfo(itemLink2))
+				if (equipSlot1 == equipSlot2) then
+					if lootLevel1 > lootLevel2 then
+						itemLink2 = nil
+					else
+						itemLink1 = nil
 					end
 				end
-
-				-- comparing lowest equipped item level with reward's item level
-				if (lootLevel > eqLevel) then
-					self.autoEquipList[name] = firstSlot
-					self.delayFrame.delay = time() + 2
-					self.delayFrame:Show()
+			end
+			
+			if (not not itemLink1) then 
+				-- can be already checked
+				local name = GetItemInfo(itemLink1)
+				if (not self.autoEquipList[name]) then
+					self:isSuitableItem(itemLink1)
 				end
+				self:swapEquip(itemLink1)
+			end
+			if (not not itemLink2 and not not self:isSuitableItem(itemLink2)) then
+				self:swapEquip(itemLink2)
 			end
 		end
 	end
@@ -517,78 +528,19 @@ if more than one suitable item found then item list is shown in a chat window an
 
 @returns 'true' if one or more suitable reward is found, 'false' otherwise ]]--
 -- tables are declared here to optimize memory model. Said that in current implementation it's cheaper to wipe than to create.
+
 AutoTurnIn.found, AutoTurnIn.stattable = {}, {}
 function AutoTurnIn:Need()
 	wipe(self.found)
-
 	for i=1, GetNumQuestChoices() do
-		local link = GetQuestItemLink("choice", i)
-
-		if ( link == nil ) then
-			self:Print(L["rewardlag"])
+		local checkResult = AutoTurnIn:isSuitableItem(GetQuestItemLink("choice", i))
+		if checkResult == nil then
+			-- not suitable item
+		elseif checkResult == false then
+			-- Error getting item or trinket was found
 			return true
-		end
-
-		local class, subclass, _, equipSlot = select(6, GetItemInfo(link))
-		--[[trinkets are out of autoloot]]--
-		if  ( 'INVTYPE_TRINKET' == equipSlot )then
-			self:Print(L["stopitemfound"]:format(_G[equipSlot]))
-			return true
-		end
-		local itemCandidate = {index=i, points=0, type="", stat="", secondary={}} --DEBUG structure
-
-		-- TYPE: item is suitable if there are no type specified at all or item type is chosen
-		local OkByType = false
-		if class == C.WEAPONLABEL then
-			OkByType = (not next(AutoTurnInCharacterDB.weapon)) or (AutoTurnInCharacterDB.weapon[subclass] or
-						self:IsRangedAndRequired(subclass))
 		else
-			OkByType = ( not next(AutoTurnInCharacterDB.armor) ) or ( AutoTurnInCharacterDB.armor[subclass] or
-						AutoTurnInCharacterDB.armor[equipSlot] or self:IsJewelryAndRequired(equipSlot) )
-		end
-		itemCandidate.type=subclass .. ((not not OkByType) and "=>OK" or "=>FAIL")
-
-		--STAT+SECONDARY: Same here: if no stat specified or item stat is chosen then item is wanted
-		local OkByStat = not next(AutoTurnInCharacterDB.stat) 			-- true if table is empty
-		local OkBySecondary = not next(AutoTurnInCharacterDB.secondary) -- true if table is empty
-		if (not (OkByStat and OkBySecondaryStat)) then
-			wipe(self.stattable)
-			GetItemStats(link, self.stattable)
-            local count = 0
-			for stat, value in pairs(self.stattable) do
-                count = count + 1
-				if ( AutoTurnInCharacterDB.stat[stat] ) then
-					OkByStat = true
-					itemCandidate.stat = _G[stat].. "=>OK"
-				end
-				if ( AutoTurnInCharacterDB.secondary[stat] ) then
-					OkBySecondary = true
-					itemCandidate.points =  itemCandidate.points + 1
-					tinsert(itemCandidate.secondary, _G[stat])
-				end
-            end
-            if (count == 1) then -- Common quality items have only 1 attribute. This 'if' makes them suitable loot candidates.
-                OkByStat, OkBySecondary = true, true
-            end
-        else
-            itemCandidate.stat = "NO_STAT_SETTINGS"
-        end
-
-		-- User may not choose any options hence any item became 'ok'. That situation is undoubtly incorrect.
-		local SettingsExists = (class == C.WEAPONLABEL and next(AutoTurnInCharacterDB.weapon) or next(AutoTurnInCharacterDB.armor))
-								or next(AutoTurnInCharacterDB.stat)
- 		-- OK means that particular options section is empty or item meets requirements
-		if (OkByType and OkByStat and OkBySecondary and SettingsExists) then
-			tinsert(self.found, itemCandidate)
-		end
-
-		if (AutoTurnInCharacterDB.debug) then
-			local secondaryDebug = ""
-			for _, sec in pairs(itemCandidate.secondary) do
-				secondaryDebug = sec..","..secondaryDebug
-			end
-			self:Print("Debug:", GetQuestItemLink("choice", itemCandidate.index), " type:", itemCandidate.type,
-						" stat:", itemCandidate.stat, " secondary:[", secondaryDebug, "]=>", itemCandidate.points)
+			tinsert(self.found, {index=i, points=checkResult})
 		end
 	end
 
@@ -601,6 +553,8 @@ function AutoTurnIn:Need()
 		if (self.found[1].points == self.found[2].points) then
 			self:Print(L["multiplefound"])
 			for _, reward in pairs(self.found) do
+				-- show only top points items
+				if reward.points ~= self.found[1].points then break end
 				self:Print(GetQuestItemLink("choice", reward.index))
 			end
 		else
@@ -613,6 +567,159 @@ function AutoTurnIn:Need()
 	end
 
 	return ( foundCount ~= 0 )
+end
+
+function AutoTurnIn:isSuitableItem(link)
+	if ( link == nil ) then
+		self:Print(L["rewardlag"])
+		return false
+	end
+
+	local name, _, _, lootLevel, _, class, subclass, _, invType = GetItemInfo(link)
+	-- non equippable items
+	if (invType == "") then
+		return nil
+	end
+	
+	--trinkets are out of autoloot--
+	if  ( 'INVTYPE_TRINKET' == invType )then
+		self:Print(L["stopitemfound"]:format(_G[invType]))
+		return false
+	end
+	
+	local points = self:itemPoints(link)
+	-- User may not choose any options hence any item became 'ok'. That situation is undoubtedly incorrect.
+	local SettingsExists = (class == C.WEAPONLABEL and next(AutoTurnInCharacterDB.weapon) or next(AutoTurnInCharacterDB.armor))
+							or next(AutoTurnInCharacterDB.stat)
+	-- points > 0 means that particular options section is empty or item meets requirements
+	if (points > 0 and SettingsExists) then
+		-- comparing with currently equipped item
+		local slot = C.SLOTS[invType]
+		if (slot) then
+			local firstSlot = GetInventorySlotInfo(slot[1])
+			local invLink = GetInventoryItemLink("player", firstSlot)
+			-- nothing equipped
+			if invLink == nil then
+				if slot[1] == "SecondaryHandSlot" then
+					-- will not equip offhand if main hand has 2h-weapon
+					local mainHandLink = GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot"))
+					local mainHandType = select(9, GetItemInfo(mainHandLink))
+					if mainHandType == "INVTYPE_2HWEAPON" then
+						if (AutoTurnInCharacterDB.debug) then
+							self:Print(link, "can not be equipped over", mainHandLink)
+						end
+						return nil
+					end
+				end
+				-- 
+				if (AutoTurnInCharacterDB.debug) then
+					self:Print(link, "can be equipped to empty slot")
+				end
+				if AutoTurnInCharacterDB.autoequip then
+					self.autoEquipList[name] = firstSlot
+				end
+				return points
+			end
+			
+			local eqLevel = self:ItemLevel(invLink)
+			local invPoints = self:itemPoints(invLink)
+			local equipInvType = select(9, GetItemInfo(invLink))
+			-- If reward is a ring, trinket or one-handed weapon all slots must be checked in order to swap one with a lesser item-level
+			if (invType == equipInvType and #slot > 1) then
+				local secondSlot = GetInventorySlotInfo(slot[2])
+				invLink = GetInventoryItemLink("player", secondSlot)
+				if invLink == nil then
+					if (AutoTurnInCharacterDB.debug) then
+						self:Print(link, "can be equipped to empty slot")
+					end
+					if AutoTurnInCharacterDB.autoequip then
+						self.autoEquipList[name] = secondSlot
+					end
+					return points
+				else
+					local eq2Level = self:ItemLevel(invLink)
+					local inv2Points = self:itemPoints(invLink)
+					-- 2nd slot item is worse then 1st slot
+					if inv2Points < invPoints then
+						firstSlot = secondSlot
+						eqLevel = eq2Level
+						invPoints = inv2Points
+					end
+				end
+			end
+
+			-- comparing lowest equipped item level with reward's item level and points
+			if (points >= invPoints and lootLevel > eqLevel) then
+				if (AutoTurnInCharacterDB.debug) then
+					self:Print("New", link, "is more suitable than", invLink, "- can be equipped")
+				end
+				if AutoTurnInCharacterDB.autoequip then
+					self.autoEquipList[name] = firstSlot
+				end
+				return points
+			else 
+				if (AutoTurnInCharacterDB.debug) then
+					self:Print("Old", invLink, "is more suitable than", link, "- skip")
+				end
+				return nil
+			end
+		end
+
+		return points
+	end
+	return nil
+end
+
+function AutoTurnIn:itemPoints(link)
+	local points = 0
+	if (link == nil) then 
+		return points
+	end
+	
+	local name, _, _, lootLevel, _, class, subclass, _, invType = GetItemInfo(link)
+	if (invType == "") then
+		return points
+	end
+	
+	local info = {}
+	tinsert(info, "Debug: " .. link)
+	-- TYPE: item is suitable if there are no type specified at all or item type is chosen
+	local OkByType = false
+	if class == C.WEAPONLABEL then
+		OkByType = (not next(AutoTurnInCharacterDB.weapon)) or (AutoTurnInCharacterDB.weapon[subclass] or
+					self:IsRangedAndRequired(subclass))
+	else
+		OkByType = ( not next(AutoTurnInCharacterDB.armor) ) or ( AutoTurnInCharacterDB.armor[subclass] or
+					AutoTurnInCharacterDB.armor[invType] or self:IsJewelryAndRequired(invType) )
+	end
+	tinsert(info, "type: " .. subclass .. ((not not OkByType) and "=>OK" or "=>FAIL"))
+	if OkByType then
+		points = 1000
+		--STAT+SECONDARY: Same here: if no stat specified or item stat is chosen then item is wanted
+		local OkByStat = not next(AutoTurnInCharacterDB.stat) 			-- true if table is empty
+		local OkBySecondary = not next(AutoTurnInCharacterDB.secondary) -- true if table is empty
+		if (not (OkByStat and OkBySecondaryStat)) then
+			wipe(self.stattable)
+			GetItemStats(link, self.stattable)
+			for stat, value in pairs(self.stattable) do
+				if (AutoTurnInCharacterDB.stat[stat]) then
+					points = points + (5 * value)
+					tinsert(info, "stat: " .. _G[stat] .. "=>OK")
+				end
+				if (AutoTurnInCharacterDB.secondary[stat]) then
+					points = points + value
+					tinsert(info, _G[stat])
+				end
+			end
+		end
+	end
+	
+	tinsert(info, "total " .. points)
+	if (AutoTurnInCharacterDB.debug) then
+		self:Print(table.concat(info, ", "))
+	end
+	
+	return points
 end
 
 -- I was forced to make decision on offhand, cloak and shields separate from armor but I can't pick up my mind about the reason...
@@ -636,7 +743,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 
 			local itemID = getItemId("choice")
 			if (not itemID) then
-				self:Print("Can't read reward link from server. Close NPC dialog and open it again.");
+				self:Print("Can't read reward link from server. Close NPC dialogue and open it again.");
 				return
 			end
 			-- Tournament quest found
