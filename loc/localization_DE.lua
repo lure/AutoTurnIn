@@ -53,7 +53,7 @@ privateTable.L = setmetatable({
 	["nosuitablefound"]="Nichts hat sich als geeignet erwiesen. "..ERR_QUEST_MUST_CHOOSE,
 	["gogreedy"]="Nichts hat sich als geeignet erwiesen. Wertvollste Belohnung wird gewählt.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
-	["stopitemfound"]="Gefunden: %s. Ihr müsst eine Belohnung manuell auswählen.",
+	["stopitemfound"]="Gefunden: %s. Ihr müsst eine Belohnung manuell auswählen und ausrüsten.",
 	},
 	{__index = function(table, index) return index end})
 	

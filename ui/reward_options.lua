@@ -106,7 +106,7 @@ local StatPanel = CreatePanel("StatPanel", STAT_CATEGORY_ATTRIBUTES, 590, 40)
 CreateCheckbox('ITEM_MOD_STRENGTH_SHORT', StatPanel, 10, -8, SPELL_STAT1_NAME)
 CreateCheckbox('ITEM_MOD_AGILITY_SHORT', StatPanel, 152, -8, SPELL_STAT2_NAME)
 CreateCheckbox('ITEM_MOD_INTELLECT_SHORT', StatPanel, 292, -8, SPELL_STAT4_NAME)
-CreateCheckbox('ITEM_MOD_SPIRIT_SHORT', StatPanel, 436, -8, SPELL_STAT5_NAME)
+--CreateCheckbox('ITEM_MOD_SPIRIT_SHORT', StatPanel, 436, -8, SPELL_STAT5_NAME)
 
 local SecStatPanel = CreatePanel("SecStatPanel", STAT_CATEGORY_ATTRIBUTES .. "-2", 590, 102) 
 CreateCheckbox('ITEM_MOD_CRIT_RATING_SHORT', SecStatPanel, 10, -8, ITEM_MOD_CRIT_RATING_SHORT)
@@ -118,7 +118,7 @@ CreateCheckbox('ITEM_MOD_MASTERY_RATING_SHORT', SecStatPanel, 206, -40, ITEM_MOD
 CreateCheckbox('ITEM_MOD_VERSATILITY', SecStatPanel, 402, -40, ITEM_MOD_VERSATILITY)
     -- 3rd line
 CreateCheckbox('ITEM_MOD_SPELL_POWER_SHORT', SecStatPanel, 10, -72, ITEM_MOD_SPELL_POWER_SHORT)
--- CreateCheckbox('ITEM_MOD_SPELL_POWER_SHORT', SecStatPanel, 206, -72, ITEM_MOD_SPELL_POWER_SHORT)
+CreateCheckbox('ITEM_MOD_SPIRIT_SHORT', SecStatPanel, 206, -72, ITEM_MOD_SPIRIT_SHORT)
 -- CreateCheckbox('ITEM_MOD_VERSATILITY', SecStatPanel, 402, -72, ITEM_MOD_VERSATILITY)
 
 
