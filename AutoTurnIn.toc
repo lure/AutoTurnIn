@@ -1,6 +1,6 @@
-﻿## Interface: 60200
+﻿## Interface: 70000
 ## Title: AutoTurnIn
-## Version: 4.5.N
+## Version: 5.1.1
 ## Author: Alexandr Shubert
 ## Notes: Quest handling automation
 ## Notes-ruRU: Автоматическая обработка заданий
@@ -10,7 +10,7 @@
 ## Notes-itIT: Italian translators wanted!!!
 ## OptionalDeps: Ace3
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
-## X-Date: 2014-10-16
+## X-Date: 2016-07-21
 ## X-Category: Quest
 ## X-Embeds: Ace3
 

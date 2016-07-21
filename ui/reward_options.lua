@@ -47,34 +47,30 @@ end
 local description = RewardPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 description:SetText(L["rewardlootoptions"])
 
-
-local weapon = {GetAuctionItemSubClasses(1)}
-local armor = {GetAuctionItemSubClasses(2)}
-
 -- WEAPON
 local WeaponPanel = CreatePanel("WeaponPanel", C.WEAPONLABEL, 590, 170)
-CreateCheckbox(weapon[1], WeaponPanel, 10, -8)
-CreateCheckbox(weapon[2], WeaponPanel, 206, -8)
-CreateCheckbox(weapon[10], WeaponPanel, 402, -8)
+CreateCheckbox(C.weapon[1], WeaponPanel, 10, -8)
+CreateCheckbox(C.weapon[2], WeaponPanel, 206, -8)
+CreateCheckbox(C.weapon[10], WeaponPanel, 402, -8)
 	-- 2nd line 
-CreateCheckbox(weapon[5], WeaponPanel, 10, -40)
-CreateCheckbox(weapon[6], WeaponPanel, 206, -40)
-CreateCheckbox(weapon[11], WeaponPanel, 402, -40)
+CreateCheckbox(C.weapon[5], WeaponPanel, 10, -40)
+CreateCheckbox(C.weapon[6], WeaponPanel, 206, -40)
+CreateCheckbox(C.weapon[11], WeaponPanel, 402, -40)
     -- 3rd line
-CreateCheckbox(weapon[8], WeaponPanel, 10, -72)
-CreateCheckbox(weapon[9], WeaponPanel, 206, -72)
-CreateCheckbox(weapon[16], WeaponPanel, 402, -72)
+CreateCheckbox(C.weapon[8], WeaponPanel, 10, -72)
+CreateCheckbox(C.weapon[9], WeaponPanel, 206, -72)
+CreateCheckbox(C.weapon[16], WeaponPanel, 402, -72)
 	-- 4rd line
-CreateCheckbox(weapon[13], WeaponPanel, 10, -104)
-CreateCheckbox(weapon[7], WeaponPanel, 206, -104)
-CreateCheckbox(weapon[14], WeaponPanel, 402, -104)
+CreateCheckbox(C.weapon[13], WeaponPanel, 10, -104)
+CreateCheckbox(C.weapon[7], WeaponPanel, 206, -104)
+CreateCheckbox(C.weapon[14], WeaponPanel, 402, -104)
 	-- 5th line
-CreateCheckbox("Ranged", WeaponPanel, 10, -136, string.format("%s, %s, %s", weapon[3], weapon[4], weapon[15]) )
+CreateCheckbox("Ranged", WeaponPanel, 10, -136, string.format("%s, %s, %s", C.weapon[3], C.weapon[4], C.weapon[15]) )
 
 -- ARMOR 
 local ArmorPanel = CreatePanel("ArmorPanel", C.ARMORLABEL, 590, 70)
 local ArmorDropDown = CreateFrame("Frame", O.."ToggleKeyDropDown", ArmorPanel, "UIDropDownMenuTemplate")
-local ARMORCONST = {NONE_KEY, armor[2], armor[3], armor[4], armor[5]}
+local ARMORCONST = {NONE_KEY, C.armor[2], C.armor[3], C.armor[4], C.armor[5]}
 UIDropDownMenu_Initialize(ArmorDropDown, function (self, level)   
     for k, v in ipairs(ARMORCONST) do
         local info = UIDropDownMenu_CreateInfo()
@@ -95,7 +91,7 @@ end)
 UIDropDownMenu_SetWidth(ArmorDropDown, 200);
 UIDropDownMenu_JustifyText(ArmorDropDown, "LEFT")
 ArmorDropDown:SetPoint("TOPLEFT", ArmorPanel, 0, -8)
-CreateCheckbox(armor[7], ArmorPanel, 402, -8)
+CreateCheckbox(C.armor[7], ArmorPanel, 402, -8)
 	-- 2nd line 
 CreateCheckbox("Jewelry", ArmorPanel, 10, -40, L['Jewelry'] )
 CreateCheckbox('INVTYPE_HOLDABLE', ArmorPanel, 206, -40, INVTYPE_HOLDABLE)
