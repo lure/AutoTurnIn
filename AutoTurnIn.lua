@@ -308,6 +308,10 @@ function AutoTurnIn:isYoungPandaren()
 	return (AutoTurnIn:GetNPCGUID() == "55267")
 end
 
+function AutoTurnIn:isFreeSeal()
+	return (AutoTurnIn:GetNPCGUID() == "79815") or (AutoTurnIn:GetNPCGUID() == "77377")
+end
+
 function AutoTurnIn:isDarkmoonFaireMysticMage()
 	local guid = AutoTurnIn:GetNPCGUID() 
 	local isMage = (guid == "54334") or (guid == "55382")
@@ -344,6 +348,14 @@ function AutoTurnIn:GOSSIP_SHOW()
 			end
 		end
 	end
+
+	-- If free seal is available grab unconditionally it as there's no downside not to do it
+    if self:isFreeSeal() then
+		local opcount = GetNumGossipOptions()
+		if (opcount == 2) then
+			SelectGossipOption(1)
+		end
+    end
 
 	if self:isYoungPandaren() then
 		SelectGossipOption(1)
