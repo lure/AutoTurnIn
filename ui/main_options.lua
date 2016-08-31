@@ -81,6 +81,10 @@ local ShareQuests = newCheckbox("ShareQuests", L["ShareQuestsLabel"], "questshar
 local ShowQuestLevel = newCheckbox("QuestLevel", L["questlevel"], "questlevel")
 -- 'Show Watch Quest Level' CheckBox
 local ShowWatchLevel = newCheckbox("WatchLevel", L["watchlevel"], "watchlevel")
+-- 'Stop Auto Select Reward if Relic' CheckBox
+local RelicToggle = newCheckbox("RelicToggle",  L["relictoggle"], "relictoggle")
+-- 'Stop Auto Select Reward if ArtifcatPower' CheckBox
+local ArtifactPowerToggle = newCheckbox("ArtifactPowerToggle",  L["artifactpowertoggle"], "artifactpowertoggle")
 
 -- Auto toggle key
 local ToggleKeyConst = {NONE_KEY, ALT_KEY, CTRL_KEY, SHIFT_KEY}
@@ -116,6 +120,9 @@ ToggleKeyDropDown:SetPoint("TOPLEFT", DarkMoonAutoStart, "BOTTOMLEFT", -15, -22)
 ShowQuestLevel:SetPoint("TOPLEFT", ToggleKeyDropDown, "BOTTOMLEFT", 16, -10)
 ShowWatchLevel:SetPoint("TOPLEFT", ShowQuestLevel, "BOTTOMLEFT", 0, -10)
 ShareQuests:SetPoint("TOPLEFT", ShowWatchLevel, "BOTTOMLEFT", 0, -10)
+RelicToggle:SetPoint("TOPLEFT", TournamentDropDown, "BOTTOMLEFT", 17, -10)
+ArtifactPowerToggle:SetPoint("TOPLEFT", RelicToggle, "BOTTOMLEFT", 0, -10)
+
 
 OptionsPanel.refresh = function()
 	if ( MakeACopy ) then 
@@ -142,7 +149,9 @@ OptionsPanel.refresh = function()
 	ShowQuestLevel:SetChecked(ptable.TempConfig.questlevel)
 	ShowWatchLevel:SetChecked(ptable.TempConfig.watchlevel)
 	ShareQuests:SetChecked(ptable.TempConfig.questshare)
-	
+	RelicToggle:SetChecked(ptable.TempConfig.relictoggle)
+	ArtifactPowerToggle:SetChecked(ptable.TempConfig.artifactpowertoggle)	
+
 	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)
 	UIDropDownMenu_SetText(ToggleKeyDropDown, ToggleKeyConst[ptable.TempConfig.togglekey])
 	MakeACopy = true

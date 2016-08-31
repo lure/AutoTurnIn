@@ -20,8 +20,9 @@ AutoTurnIn.defaults = {enabled = true, all = 2, trivial = false, completeonly = 
 					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true,
 					   version=TOCVersion, autoequip = false, debug=false,
 					   questlevel=true, watchlevel=true, questshare=false,
-					   armor = {}, weapon = {}, stat = {}, secondary = {}}
-					   
+					   armor = {}, weapon = {}, stat = {}, secondary = {},
+					   relictoggle=true, artifactpowertoggle=true}
+
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
@@ -88,6 +89,8 @@ function AutoTurnIn:OnEnable()
 	DB.questlevel = DB.questlevel == nil and true or DB.questlevel
 	DB.watchlevel = DB.watchlevel == nil and true or DB.watchlevel
 	DB.questshare = DB.questshare == nil and false or DB.questshare
+    DB.relictoggle = DB.relictoggle == nil and true or DB.relictoggle
+	DB.artifactpowertoggle = DB.artifactpowertoggle == nil and true or DB.artifactpowertoggle
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 	if LDB then
@@ -383,7 +386,7 @@ end
 function AutoTurnIn:QUEST_ACCEPTED(event, index)
 	if AutoTurnInCharacterDB.questshare and GetQuestLogPushable() and GetNumGroupMembers() >= 1 then
 		SelectQuestLogEntry(index);
-		QuestLogPushQuest();
+		QuestLogPushQuest(index);
 	end
 end
 
@@ -746,8 +749,9 @@ function AutoTurnIn:QUEST_COMPLETE()
     if self:isAppropriate() then
 		local questname = GetTitleText()
 		local quest = L.quests[questname]
+		local numOptions = GetNumQuestChoices() 
 
-		if GetNumQuestChoices() > 1 then
+		if numOptions > 1 then
 			local function getItemId(typeStr)
 				local link = GetQuestItemLink(typeStr, 1) --first item is enough
 				return link and link:match("%b::"):gsub(":", "") or self.ERRORVALUE
@@ -764,6 +768,63 @@ function AutoTurnIn:QUEST_COMPLETE()
 				return
 			end
 
+-- Code for ignoring Relics if turned on.
+			if (AutoTurnInCharacterDB.relictoggle) then
+				local relicFound = false
+				local numQuestRewards = GetNumQuestRewards()
+				if (AutoTurnInCharacterDB.debug) then
+					self:Print("Debug: numQuestRewards:",numQuestRewards,".")
+					self:Print("Debug: numOptions:",numOptions,".")
+				end
+				for i=1, numOptions do
+					local itemLinks = GetQuestItemLink("choice", i)
+					if (AutoTurnInCharacterDB.debug) then
+						self:Print("Debug: Listing choice found:",itemLinks,".")
+					end
+					local itemReward = GetQuestItemLink("reward", i)
+					if (itemReward) then
+						if (AutoTurnInCharacterDB.debug) then
+							self:Print("Debug: Listing reward found:",itemReward,".")
+						end
+					end
+					local _, _, Color, Ltype, itemID, Enchant, Gem1, Gem2, Gem3, Gem4, Suffix, Unique, LinkLvl, Name = string.find(itemLinks,   "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
+					if itemID then
+						local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemID)
+						if ((itemType == "Gem") and (itemSubType =="Artifact Relic")) then
+							relicFound = true
+							if (AutoTurnInCharacterDB.debug) then
+								self:Print("Debug: Gem: Artificat found:",itemLinks,".")
+							end
+							return
+						end
+					end
+				end
+			end
+			if (relicFounnd) then
+				if (AutoTurnInCharacterDB.debug) then
+					self:Print("Debug: Atleaast 1 relic found.. aborting.")
+				end
+				return
+			end
+
+			if (AutoTurnInCharacterDB.artifactpowertoggle) then
+				local ArtifactPowerFound = false
+--				local numOptions = GetNumQuestChoices()
+--				local numQuestRewards = GetNumQuestRewards()
+--				for i=1, numQuestRewards do
+--					local itemLinks = GetQuestItemLink("reward", i)
+--                    if (AutoTurnInCharacterDB.debug) then
+--						self:Print("Debug: Listing rewards found:",itemLinks,".")
+--					end
+--				end
+				if (ArtifactPowerFound) then
+					if (AutoTurnInCharacterDB.debug) then
+						self:Print("Debug: Pre-emptive debug.. aborting.")
+					end
+					return
+				end
+			end
+	
 			if (AutoTurnInCharacterDB.lootreward > 1) then -- Auto Loot enabled!
 				self.forceGreed = false
 				if (AutoTurnInCharacterDB.lootreward == 3) then -- 3 == Need

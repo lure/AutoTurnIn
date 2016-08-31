@@ -3,9 +3,6 @@ ptable.CONST = {}
 local C = ptable.CONST
 
 -- Updated for 7.0.3
--- local weapon = {GetAuctionItemSubClasses(1)}
--- local armor = {GetAuctionItemSubClasses(2)}
--- C.WEAPONLABEL, C.ARMORLABEL = GetAuctionItemClasses()
 C.armor, C.weapon = {}, {}
 for k = 0, 20 do
 	C.weapon[k+1] = GetItemSubClassInfo(LE_ITEM_CLASS_WEAPON,k)
