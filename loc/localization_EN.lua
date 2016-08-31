@@ -65,6 +65,8 @@ privateTable.L = setmetatable({
 	["gogreedy"]="No suitable reward found, choosing the highest value one.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
 	["stopitemfound"]="There is %s in rewards. Choose and equip an item yourself.",
+	["relictoggle"]="Disable relic reward autoloot.",
+	["artifactpowertoggle"]="Disable artifact power reward autoloot.",
 	},
 	{__index = function(table, index) return index end})
 	

@@ -809,14 +809,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 
 			if (AutoTurnInCharacterDB.artifactpowertoggle) then
 				local ArtifactPowerFound = false
---				local numOptions = GetNumQuestChoices()
---				local numQuestRewards = GetNumQuestRewards()
---				for i=1, numQuestRewards do
---					local itemLinks = GetQuestItemLink("reward", i)
---                    if (AutoTurnInCharacterDB.debug) then
---						self:Print("Debug: Listing rewards found:",itemLinks,".")
---					end
---				end
+--				code not ready
 				if (ArtifactPowerFound) then
 					if (AutoTurnInCharacterDB.debug) then
 						self:Print("Debug: Pre-emptive debug.. aborting.")
@@ -824,7 +817,14 @@ function AutoTurnIn:QUEST_COMPLETE()
 					return
 				end
 			end
-	
+			local makeBreak = false
+			if (makeBreak) then
+				if (AutoTurnInCharacterDB.debug) then
+					self:Print("Debug: ievil's debug code - making sure not to do anything...")
+					self:Print("Debug: Pre-emptive debug.. aborting.")
+				end
+				return
+			end
 			if (AutoTurnInCharacterDB.lootreward > 1) then -- Auto Loot enabled!
 				self.forceGreed = false
 				if (AutoTurnInCharacterDB.lootreward == 3) then -- 3 == Need
