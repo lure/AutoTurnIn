@@ -54,6 +54,8 @@ privateTable.L = setmetatable({
 	["gogreedy"]="Подходящих предметов не найдено. Берем самую дорогую.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
 	["stopitemfound"]="Среди наград есть %s. Выберите и наденьте предмет самостоятельно.",
+	["relictoggle"]="Отключить автолут Релика.",
+	["artifactpowertoggle"]="Отключить автолут Силы Артефакта.",	
 	},
 	{__index = function(table, index) return index end})
 
