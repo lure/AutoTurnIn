@@ -24,7 +24,6 @@ AutoTurnIn.defaults = {enabled = true, all = 2, trivial = false, completeonly = 
 					   relictoggle=true, artifactpowertoggle=true}
 
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
-AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
 AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 AutoTurnIn.autoEquipList={}
@@ -32,23 +31,37 @@ AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's 
 AutoTurnIn.ERRORVALUE = nil
 
 
-AutoTurnIn.ldbstruct = {
+function AutoTurnIn:LibDataStructure()
+	AutoTurnIn.ldbstruct = {
 		type = "data source",
 		icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
 		label = addonName,
-		text = addonName,
 		OnClick = function(clickedframe, button)
-			if InterfaceOptionsFrame:IsVisible() then
-				if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"
-					InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.RewardPanel)
-				elseif (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.RewardPanel:GetName() ) then --"AutoTurnInRewardPanel"
-					InterfaceOptionsFrameCancel:Click()
+			if (button == "LeftButton") then
+				if (InterfaceOptionsFrame:IsVisible() and InterfaceOptionsFrameAddOns.selection) then
+					if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"
+						InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.RewardPanel)
+					elseif (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.RewardPanel:GetName() ) then --"AutoTurnInRewardPanel"
+						InterfaceOptionsFrameCancel:Click()
+					end
+				else
+					InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
 				end
-			else
-				InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
-			end
+			else 
+				self:SetEnabled(not AutoTurnInCharacterDB.enabled)
+			end			
 		end,
 	}
+	
+	function AutoTurnIn.ldbstruct:OnTooltipShow()
+		self:AddLine(addonName)
+		self:AddLine("Left mouse button shows options.")
+		self:AddLine("Right mouse button toggle addon on/off.")
+	end
+
+	return AutoTurnIn.ldbstruct
+end 	
+
 
 function AutoTurnIn:OnInitialize()
 	self:RegisterChatCommand("au", "ConsoleComand")
@@ -57,8 +70,7 @@ end
 function AutoTurnIn:SetEnabled(enabled)
 	AutoTurnInCharacterDB.enabled = not not enabled
 	if self.ldb then
-		self.ldb.text = self.caption:format((AutoTurnInCharacterDB.enabled) and 'on' or 'off' )
-		self.ldb.label = self.ldb.text
+		self.ldb.text = (AutoTurnInCharacterDB.enabled) and '|cff00ff00on|r' or '|cffff0000off|r'
 	end
 end
 
@@ -94,7 +106,7 @@ function AutoTurnIn:OnEnable()
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 	if LDB then
-		self.ldb = LDB:NewDataObject("AutoTurnIn", self.ldbstruct)
+		self.ldb = LDB:NewDataObject("AutoTurnIn", self:LibDataStructure())
 	end
 
 	self:SetEnabled(DB.enabled)

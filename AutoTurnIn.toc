@@ -1,6 +1,6 @@
 ﻿## Interface: 70000
 ## Title: AutoTurnIn
-## Version: 5.1.1
+## Version: 7.0.9
 ## Author: Alexandr Shubert
 ## Notes: Quest handling automation
 ## Notes-ruRU: Автоматическая обработка заданий
