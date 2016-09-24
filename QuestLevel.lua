@@ -53,20 +53,22 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 
 	for i = 1, #tracker.MODULES do
 		for id,block in pairs( tracker.MODULES[i].Header.module.usedBlocks) do
-
 			if block.id and block.HeaderText and block.HeaderText:GetText() and (not string.find(block.HeaderText:GetText(), "^%[.*%].*")) then
 				local questLogIndex = GetQuestLogIndexByID(block.id)
 				local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID,
 					  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(questLogIndex)
-				local questTypeIndex = GetQuestLogQuestType(questLogIndex)
-				local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex] or ""
-				local dailyMod = (frequency == LE_QUEST_FREQUENCY_DAILY or frequency == LE_QUEST_FREQUENCY_WEEKLY) and "\*" or ""
+				-- update calls are async and data could not be (yet or already) exist in log
+				if ( questLogIndex ~= 0 and title and title ~= "" ) then 	  
+					local questTypeIndex = GetQuestLogQuestType(questLogIndex)
+					local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex] or ""
+					local dailyMod = (frequency == LE_QUEST_FREQUENCY_DAILY or frequency == LE_QUEST_FREQUENCY_WEEKLY) and "\*" or ""
 
-				--resizing the block if new line requires more spaces.
-				local h = block.height - block.HeaderText:GetHeight()
-				block.HeaderText:SetText(AutoTurnIn.WatchFrameLevelFormat:format(level, tagString, dailyMod, title))
-				block.height = h + block.HeaderText:GetHeight()
-				block:SetHeight(block.height)
+					--resizing the block if new line requires more spaces.
+					local h = block.height - block.HeaderText:GetHeight()
+					block.HeaderText:SetText(AutoTurnIn.WatchFrameLevelFormat:format(level, tagString, dailyMod, title))
+					block.height = h + block.HeaderText:GetHeight()
+					block:SetHeight(block.height)
+				end
 			end
 		end
 	end
