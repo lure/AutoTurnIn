@@ -53,7 +53,8 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 
 	for i = 1, #tracker.MODULES do
 		for id,block in pairs( tracker.MODULES[i].Header.module.usedBlocks) do
-			if block.id and block.HeaderText:GetText() and (not string.find(block.HeaderText:GetText(), "^%[.*%].*")) then
+
+			if block.id and block.HeaderText and block.HeaderText:GetText() and (not string.find(block.HeaderText:GetText(), "^%[.*%].*")) then
 				local questLogIndex = GetQuestLogIndexByID(block.id)
 				local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID,
 					  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(questLogIndex)
