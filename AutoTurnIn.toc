@@ -15,6 +15,10 @@
 ## X-Embeds: Ace3
 
 embeds.xml
+libs\DropDownMenu\UIDropDownMenuTemplates.xml
+libs\DropDownMenu\UIDropDownMenu.lua
+libs\DropDownMenu\EasyMenu.lua
+
 loc\localization_RU.lua
 loc\localization_EN.lua
 loc\localization_DE.lua

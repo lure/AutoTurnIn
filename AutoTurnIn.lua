@@ -32,27 +32,21 @@ AutoTurnIn.ERRORVALUE = nil
 
 
 function AutoTurnIn:LibDataStructure()
+-- see https://github.com/tekkub/libdatabroker-1-1/wiki/api
 	AutoTurnIn.ldbstruct = {
 		type = "data source",
 		icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
 		label = addonName,
 		OnClick = function(clickedframe, button)
+			-- if InCombatLockdown() then return end
 			if (button == "LeftButton") then
-				if (InterfaceOptionsFrame:IsVisible() and InterfaceOptionsFrameAddOns.selection) then
-					if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"
-						InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.RewardPanel)
-					elseif (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.RewardPanel:GetName() ) then --"AutoTurnInRewardPanel"
-						InterfaceOptionsFrameCancel:Click()
-					end
-				else
-					InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
-				end
+				self:ShowOptions()
 			else 
 				self:SetEnabled(not AutoTurnInCharacterDB.enabled)
 			end			
 		end,
 	}
-	
+
 	function AutoTurnIn.ldbstruct:OnTooltipShow()
 		self:AddLine(addonName)
 		self:AddLine("Left mouse button shows options.")
@@ -62,6 +56,22 @@ function AutoTurnIn:LibDataStructure()
 	return AutoTurnIn.ldbstruct
 end 	
 
+function AutoTurnIn:ShowOptions()
+	-- too much things became tainted if called in combat.
+	if InCombatLockdown() then return end
+	if (InterfaceOptionsFrame:IsVisible() and InterfaceOptionsFrameAddOns.selection) then
+		if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"
+			InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.RewardPanel)
+		elseif (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.RewardPanel:GetName() ) then --"AutoTurnInRewardPanel"
+		-- it used to be a cancel. But BlizzardUI contains weird bug which taints all the interface if InterfaceOptionsFrameCancel:Click() called 
+			InterfaceOptionsFrameOkay:Click()
+		end
+	else
+		-- http://wowpedia.org/Patch_5.3.0/API_changes double call is a workaround
+		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
+		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
+	end
+end
 
 function AutoTurnIn:OnInitialize()
 	self:RegisterChatCommand("au", "ConsoleComand")
@@ -186,9 +196,7 @@ end
 function AutoTurnIn:ConsoleComand(arg)
 	arg = strlower(arg)
 	if (#arg == 0) then
-		-- http://wowpedia.org/Patch_5.3.0/API_changes double call is a workaround
-		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
-		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
+		self:ShowOptions()
 	elseif arg == "on" then
 		self:SetEnabled(true)
 		self:Print(L["enabled"])

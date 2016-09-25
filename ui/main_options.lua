@@ -39,20 +39,20 @@ local function newDropDown(caption, name, values, config)
     local label = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
     label:SetText(caption)
 
-    local dropDown = CreateFrame("Frame", O..name, OptionsPanel, "UIDropDownMenuTemplate")
-    UIDropDownMenu_Initialize(dropDown, function (self, level)
+    local dropDown = CreateFrame("Frame", O..name, OptionsPanel, "Lib_UIDropDownMenuTemplate")
+    Lib_UIDropDownMenu_Initialize(dropDown, function (self, level)
         for k, v in ipairs(values) do
-            local info = UIDropDownMenu_CreateInfo()
+            local info = Lib_UIDropDownMenu_CreateInfo()
             info.text, info.value = v, k
             info.func = function(self)
-                UIDropDownMenu_SetSelectedID(dropDown, self:GetID())
+                Lib_UIDropDownMenu_SetSelectedID(dropDown, self:GetID())
                 ptable.TempConfig[config] = self:GetID()
             end
-            UIDropDownMenu_AddButton(info, level)
+            Lib_UIDropDownMenu_AddButton(info, level)
         end
     end)
-    UIDropDownMenu_SetWidth(dropDown, 200);
-    UIDropDownMenu_JustifyText(dropDown, "LEFT")
+    Lib_UIDropDownMenu_SetWidth(dropDown, 200);
+    Lib_UIDropDownMenu_JustifyText(dropDown, "LEFT")
     label:SetPoint("BOTTOMLEFT", dropDown, "TOPLEFT", 18, 0)
     return dropDown
 end
@@ -100,6 +100,7 @@ local LootConst = {L["lootTypeFalse"], L["lootTypeGreed"], L["lootTypeNeed"]}
 local LootDropDown = newDropDown(L["lootTypeLabel"], "LootDropDown", LootConst, "lootreward")
 
 
+
 -- Control placement
 title:SetPoint("TOPLEFT", 16, -16)
 subText:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
@@ -130,14 +131,14 @@ OptionsPanel.refresh = function()
 	end
 	Enable:SetChecked(ptable.TempConfig.enabled)
 
-	UIDropDownMenu_SetSelectedID(QuestDropDown, ptable.TempConfig.all)
-	UIDropDownMenu_SetText(QuestDropDown, QuestConst[ptable.TempConfig.all])
+	Lib_UIDropDownMenu_SetSelectedID(QuestDropDown, ptable.TempConfig.all)
+	Lib_UIDropDownMenu_SetText(QuestDropDown, QuestConst[ptable.TempConfig.all])
 
-	UIDropDownMenu_SetSelectedID(LootDropDown, ptable.TempConfig.lootreward)
-	UIDropDownMenu_SetText(LootDropDown, LootConst[ptable.TempConfig.lootreward])
+	Lib_UIDropDownMenu_SetSelectedID(LootDropDown, ptable.TempConfig.lootreward)
+	Lib_UIDropDownMenu_SetText(LootDropDown, LootConst[ptable.TempConfig.lootreward])
 	
-	UIDropDownMenu_SetSelectedID(TournamentDropDown, ptable.TempConfig.tournament)
-	UIDropDownMenu_SetText(TournamentDropDown, TournamentConst[ptable.TempConfig.tournament])
+	Lib_UIDropDownMenu_SetSelectedID(TournamentDropDown, ptable.TempConfig.tournament)
+	Lib_UIDropDownMenu_SetText(TournamentDropDown, TournamentConst[ptable.TempConfig.tournament])
 	ToDarkMoon:SetChecked(ptable.TempConfig.todarkmoon)
 	DarkMoonCannon:SetChecked(ptable.TempConfig.darkmoonteleport)
 	DarkMoonAutoStart:SetChecked(ptable.TempConfig.darkmoonautostart)
@@ -152,8 +153,8 @@ OptionsPanel.refresh = function()
 	RelicToggle:SetChecked(ptable.TempConfig.relictoggle)
 	ArtifactPowerToggle:SetChecked(ptable.TempConfig.artifactpowertoggle)	
 
-	UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)
-	UIDropDownMenu_SetText(ToggleKeyDropDown, ToggleKeyConst[ptable.TempConfig.togglekey])
+	Lib_UIDropDownMenu_SetSelectedID(ToggleKeyDropDown, ptable.TempConfig.togglekey)
+	Lib_UIDropDownMenu_SetText(ToggleKeyDropDown, ToggleKeyConst[ptable.TempConfig.togglekey])
 	MakeACopy = true
 end
 
@@ -170,7 +171,7 @@ OptionsPanel.okay = function()
 	securecall(ObjectiveTracker_Update, OBJECTIVE_TRACKER_UPDATE_ALL)
 	QuestMapFrame_UpdateAll()
 	
-	-- this one happens too fast and "onUpdate' event does not occur. The custome frame with delay and 'OnUpdate' event can help.
+	-- this one happens too fast and "onUpdate' event does not occur. The custom frame with delay and 'OnUpdate' event can help.
 	if (ObjectiveTrackerFrame.collapsed == nil) then
 		ObjectiveTracker_Collapse();
 		ObjectiveTracker_Expand();
