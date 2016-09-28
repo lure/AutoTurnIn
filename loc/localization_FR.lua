@@ -56,7 +56,8 @@ privateTable.L = setmetatable({
     ["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
     ["stopitemfound"]="Il y a %s en récompense. Choisissez et équiper un objet.",
 	["relictoggle"]="Désactiver relique récompense butin.",
-	["artifactpowertoggle"]="Désactiver puissance de l'artefact butin.",	
+	["artifactpowertoggle"]="Désactiver puissance de l'artefact butin.",
+	["ivechosen"]="I have chosen first option for you.",
 	},
 	{__index = function(table, index) return index end})
 	

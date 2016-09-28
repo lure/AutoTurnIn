@@ -56,6 +56,7 @@ privateTable.L = setmetatable({
 	["stopitemfound"]="Gefunden: %s. Ihr müsst eine Belohnung manuell auswählen und ausrüsten.",
 	["relictoggle"]="Deaktivieren Relikt Belohnung plündern.",
 	["artifactpowertoggle"]="Deaktivieren Artefaktmacht plündern.",	
+	["ivechosen"]="I have chosen first option for you.",	
 	},
 	{__index = function(table, index) return index end})
 	

@@ -56,8 +56,8 @@ privateTable.L = setmetatable({
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
 	["stopitemfound"]="There is %s in rewards. Choose and equip an item yourself.",
 	["relictoggle"]="Disabilitare selezione direliquia ricompensa.",
-	["artifactpowertoggle"]="Disabilitare selezione di Potere Artefatto ricompensa.",	
-	
+	["artifactpowertoggle"]="Disabilitare selezione di Potere Artefatto ricompensa.",
+	["ivechosen"]="I have chosen first option for you.",
 	},
 	{__index = function(table, index) return index end})
 	

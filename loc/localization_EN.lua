@@ -12,7 +12,7 @@ local replaceTable = {
 		
 if (replaceTable[GetLocale()])  then
 privateTable.L = setmetatable({
-	["reset"]="setting was resetted",
+	["reset"]="Settings were reset.",
 	["usage1"]="'on'/'off' to enable or disable addon",
 	["usage2"]="'all'/'list' to handle any quest or just specified in a list",
 	["usage3"]="'loot' do not complete quests with a list of rewards or complete it and choose most expensive one of rewards",
@@ -67,6 +67,7 @@ privateTable.L = setmetatable({
 	["stopitemfound"]="There is %s in rewards. Choose and equip an item yourself.",
 	["relictoggle"]="Disable relic reward autoloot.",
 	["artifactpowertoggle"]="Disable artifact power reward autoloot.",
+	["ivechosen"]="I have chosen first option for you.",
 	},
 	{__index = function(table, index) return index end})
 	
