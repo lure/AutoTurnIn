@@ -189,5 +189,7 @@ privateTable.L.ignoreList = {
 ["A Jade Cat for"]="",
 ["A Blue Feather for"]="",
 ["A Ruby Shard for"]="",
+["Supplies Needed: Starlight Roses"]="",
+["City of Light"]="",
 }
 end

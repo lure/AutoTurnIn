@@ -185,5 +185,7 @@ privateTable.L.ignoreList = {
 ["Нефритовый кот для"]="",
 ["Синее перо для"]="",
 ["Рубиновый осколок для"]="",
+["Supplies Needed: Starlight Roses"]="",
+["Город Света"]="",
 }
 end
