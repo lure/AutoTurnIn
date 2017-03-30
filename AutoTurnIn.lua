@@ -381,7 +381,7 @@ function AutoTurnIn:QUEST_DETAIL()
 	end
 	if QuestGetAutoAccept() then
 		CloseQuest()
-	elseif (not IsQuestIgnored()) and self:AllowedToHandle() and self:isAppropriate() and (not AutoTurnInCharacterDB.completeonly) then
+	elseif self:AllowedToHandle() and self:isAppropriate() and (not AutoTurnInCharacterDB.completeonly) then
 		QuestInfoDescriptionText:SetAlphaGradient(0, -1)
 		QuestInfoDescriptionText:SetAlpha(1)
 		AcceptQuest()

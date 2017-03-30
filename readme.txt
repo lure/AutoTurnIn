@@ -16,3 +16,6 @@ May turn in quests with rewards and choose most expensive one for future selling
 # /console scriptErrors 1 
 #/run local fr=ObjectiveTrackerFrame;for i=1, #fr.MODULES do for id,b in pairs(fr.MODULES[i].Header.module.usedBlocks) do for y,z in pairs(b) do print(y,z) end end end
 #/run local fr=ObjectiveTrackerFrame;for i=1, #fr.MODULES do for id,b in pairs(fr.MODULES[i].Header.module.usedBlocks) do for y,z in pairs(b.lines.QuestComplete) do print(y,z) end end end
+
+https://www.curseforge.com/docs/repomigration
+https://www.curseforge.com/docs/packaging
