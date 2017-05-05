@@ -32,6 +32,7 @@ Library is standard code from Blizzard's files EasyMenu.lua, UIDropDownMenu.lua 
 * Lib_UIDropDownMenu_CreateInfo
 * Lib_UIDropDownMenu_CreateFrames
 * Lib_UIDropDownMenu_AddButton
+* Lib_UIDropDownMenu_AddSeparator
 * Lib_UIDropDownMenu_Refresh
 * Lib_UIDropDownMenu_RefreshAll
 * Lib_UIDropDownMenu_SetIconImage
