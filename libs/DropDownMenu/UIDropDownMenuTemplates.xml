@@ -1,3 +1,4 @@
+<!-- $Id: UIDropDownMenuTemplates.xml 22 2017-05-25 07:11:15Z arith-179865 $ -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Button name="Lib_UIDropDownMenuButtonTemplate" virtual="true">
@@ -367,7 +368,7 @@
 					</OnLeave>
 					<OnClick>
 						Lib_ToggleDropDownMenu(nil, nil, self:GetParent());
-						PlaySound("igMainMenuOptionCheckBoxOn");
+						PlaySound(856);
 					</OnClick>
 				</Scripts>
 				<NormalTexture name="$parentNormalTexture" file="Interface\ChatFrame\UI-ChatIcon-ScrollDown-Up">

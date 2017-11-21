@@ -1,4 +1,4 @@
-
+--$Id: EasyMenu.lua 20 2017-05-19 15:59:28Z arith-179865 $
 -- Simplified Menu Display System
 --	This is a basic system for displaying a menu from a structure table.
 --
@@ -14,6 +14,19 @@
 --		autoHideDelay - how long until the menu disappears
 --
 --
+-- ----------------------------------------------------------------------------
+-- Localized Lua globals.
+-- ----------------------------------------------------------------------------
+local _G = getfenv(0)
+-- ----------------------------------------------------------------------------
+local MAJOR_VERSION = "NoTaint_EasyMenu-7.2.0"
+local MINOR_VERSION = 90000 + tonumber(("$Rev: 20 $"):match("%d+"))
+
+local LibStub = _G.LibStub
+if not LibStub then error(MAJOR_VERSION .. " requires LibStub.") end
+local Lib = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
+if not Lib then return end
+
 function Lib_EasyMenu(menuList, menuFrame, anchor, x, y, displayMode, autoHideDelay )
 	if ( displayMode == "MENU" ) then
 		menuFrame.displayMode = displayMode;
