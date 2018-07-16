@@ -23,8 +23,7 @@ function AutoTurnIn:ShowQuestLevelInLog()
 		return
 	end	
 
-	for i = 1, #QuestMapFrame.QuestsFrame.Contents.Titles do
-		local button = QuestMapFrame.QuestsFrame.Contents.Titles[i]
+	for button in QuestMapFrame.QuestsFrame.titleFramePool:EnumerateActive() do
 		if (button and button.questLogIndex) then
 			local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID,
 				  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(button.questLogIndex)
