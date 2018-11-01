@@ -6,5 +6,6 @@ privateTable.IGNORED_NPC = {
 	["111243"] = "Archmage Lan'dalock",
 	["15077"] = "Riggle Bassbait",
 	["119388"] = "Chieftain Hatuun",
-	["127037"] = "nabiru"
+	["127037"] = "Nabiru",
+	["142063"] = "Tezran"
 }
