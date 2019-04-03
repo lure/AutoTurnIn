@@ -38,6 +38,10 @@ privateTable.L = setmetatable({
 	["Darkmoon Island"]="Île de Sombrelune",
 	["Darkmoon Faire Mystic Mage"]="Mage mystique de la foire de Sombrelune",
 
+	["ReviveBattlePetLabel"]="Soigner les mascottes de combat",
+	["ReviveBattlePetQ"]="I'd like to heal and revive my battle pets.",
+	["ReviveBattlePetA"]="A small fee for supplies is required.",
+	
     ["The Jade Forest"]="La forêt de Jade",
     ["Scared Pandaren Cub"]="Bébé pandaren apeuré",
 

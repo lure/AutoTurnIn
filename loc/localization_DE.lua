@@ -37,6 +37,10 @@ privateTable.L = setmetatable({
 	["Darkmoon Island"]="Dunkelmond-Insel",
 	["Darkmoon Faire Mystic Mage"]="Mystischer Magier des Dunkelmond-Jahrmarkts",	
 
+	["ReviveBattlePetLabel"]="Kampfhaustier heilen",
+	["ReviveBattlePetQ"]="Ich würde gern meine Kampfhaustiere heilen und wiederbeleben.",
+	["ReviveBattlePetA"]="Es wird eine kleine Gebühr für die medizinische Hilfe erhoben.",
+	
 	["The Jade Forest"]="Der Jadewald",
 	["Scared Pandaren Cub"]="verängstigte Pandarenkinder",
 

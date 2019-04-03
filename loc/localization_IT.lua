@@ -38,6 +38,10 @@ privateTable.L = setmetatable({
 	["Darkmoon Island"]="Isola di Lunacupa",
 	["Darkmoon Faire Mystic Mage"]="Maga Mistica di Lunacupa",
 	
+	["ReviveBattlePetLabel"]="Guarigione Mascotte da Combattimento",
+	["ReviveBattlePetQ"]="I'd like to heal and revive my battle pets.",
+	["ReviveBattlePetA"]="A small fee for supplies is required.",
+	
 	["The Jade Forest"]="Foresta di Giada",
 	["Scared Pandaren Cub"]="Cucciolo Pandaren Spaventato",
 	
