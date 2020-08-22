@@ -161,8 +161,8 @@ function AutoTurnIn:RegisterGossipEvents()
 end
 
 function AutoTurnIn:QUEST_LOG_UPDATE()
-	if ( GetNumQuestLogEntries() > 0 ) then
-		for index=1, GetNumQuestLogEntries() do
+	if ( C_QuestLog.GetNumQuestLogEntries() > 0 ) then
+		for index=1, C_QuestLog.GetNumQuestLogEntries() do
 			local title, _, _, _, isHeader , _, _, isDaily = GetQuestLogTitle(index)
 			if not isHeader and isDaily then
 				self.questCache[title] = true

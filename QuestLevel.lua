@@ -26,7 +26,7 @@ function AutoTurnIn:ShowQuestLevelInLog()
 	for button in QuestMapFrame.QuestsFrame.titleFramePool:EnumerateActive() do
 		if (button and button.questLogIndex) then
 			local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID,
-				  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(button.questLogIndex)
+				  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = C_QuestLog.GetTitleForLogIndex(button.questLogIndex)
 			local text = button.Text:GetText()
 			if title and text and (not string.find(text, "^%[.*%].*")) then
 				local prevHeight = button:GetHeight() - button.Text:GetHeight()
@@ -53,9 +53,9 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 	for i = 1, #tracker.MODULES do
 		for id,block in pairs( tracker.MODULES[i].Header.module.usedBlocks) do
 			if block.id and block.HeaderText and block.HeaderText:GetText() and (not string.find(block.HeaderText:GetText(), "^%[.*%].*")) then
-				local questLogIndex = GetQuestLogIndexByID(block.id)
+				local questLogIndex = C_QuestLog.GetLogIndexForQuestID(block.id)
 				local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID,
-					  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(questLogIndex)
+					  startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = C_QuestLog.GetTitleForLogIndex(questLogIndex)
 				-- update calls are async and data could not be (yet or already) exist in log
 				if ( questLogIndex ~= 0 and title and title ~= "" ) then 	  
 					local questTypeIndex = GetQuestLogQuestType(questLogIndex)

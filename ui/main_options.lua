@@ -181,19 +181,19 @@ OptionsPanel.okay = function()
 	end
 	]]--
 	-- and here goes the dirty hack!!! No direct update calls, hence, no global variable taints!!!
-	if GetNumQuestWatches() > 0 then
+	if C_QuestLog.GetNumQuestWatches() > 0 then
 		local inLog = GetQuestIndexForWatch(1);
 		if IsQuestWatched(inLog) then
-			RemoveQuestWatch (inLog);
-			AddQuestWatch(inLog);
+			C_QuestLog.RemoveQuestWatch(inLog);
+			C_QuestLog.AddQuestWatch(inLog);
 		else
-			AddQuestWatch(inLog);
-			RemoveQuestWatch (inLog);
+			C_QuestLog.AddQuestWatch(inLog);
+			C_QuestLog.RemoveQuestWatch(inLog);
 		end
 	else
-		if  (GetNumQuestLogEntries() > 0) then
-			AddQuestWatch(2);
-			RemoveQuestWatch (2);
+		if  (C_QuestLog.GetNumQuestLogEntries() > 0) then
+			C_QuestLog.AddQuestWatch(2);
+			C_QuestLog.RemoveQuestWatch(2);
 		end
 	end
 end
