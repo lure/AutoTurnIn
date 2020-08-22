@@ -227,7 +227,7 @@ end
 
 -- returns specified item count on player character. It may be some sort of currency or present in inventory as real items.
 function AutoTurnIn:GetItemAmount(isCurrency, item)
-	local amount = isCurrency and select(2, GetCurrencyInfo(item)) or GetItemCount(item, nil, true)
+	local amount = isCurrency and C_CurrencyInfo.GetCurrencyInfo(item).quantity or GetItemCount(item, nil, true)
 	return amount and amount or 0
 end
 
