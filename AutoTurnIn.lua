@@ -163,7 +163,7 @@ end
 function AutoTurnIn:QUEST_LOG_UPDATE()
 	if ( C_QuestLog.GetNumQuestLogEntries() > 0 ) then
 		for index=1, C_QuestLog.GetNumQuestLogEntries() do
-			local title, _, _, _, isHeader , _, _, isDaily = GetQuestLogTitle(index)
+			local title, _, _, _, isHeader , _, _, isDaily = C_QuestLog.GetTitleForLogIndex(index)
 			if not isHeader and isDaily then
 				self.questCache[title] = true
 			end
@@ -398,6 +398,7 @@ function AutoTurnIn:QUEST_DETAIL()
 	end
 end
 
+-- TODO: needs updating
 function AutoTurnIn:QUEST_ACCEPTED(event, index)
 	if AutoTurnInCharacterDB.questshare and GetQuestLogPushable() and GetNumGroupMembers() >= 1 then
 		SelectQuestLogEntry(index);

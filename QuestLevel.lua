@@ -60,7 +60,7 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 				if ( questLogIndex ~= 0 and title and title ~= "" ) then 	  
 					local questTypeIndex = GetQuestLogQuestType(questLogIndex)
 					local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex] or ""
-					local dailyMod = (frequency == LE_QUEST_FREQUENCY_DAILY or frequency == LE_QUEST_FREQUENCY_WEEKLY) and "\*" or ""
+					local dailyMod = (frequency == Enum.QuestFrequency.Daily or frequency == Enum.QuestFrequency.Weekly) and "\*" or ""
 
 					--resizing the block if new line requires more spaces.
 					local h = block.height - block.HeaderText:GetHeight()
