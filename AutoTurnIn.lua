@@ -385,11 +385,11 @@ function AutoTurnIn:QUEST_DETAIL()
 	end
 end
 
--- TODO: needs updating
+-- TODO: needs testing with another player
 function AutoTurnIn:QUEST_ACCEPTED(event, index)
-	if AutoTurnInCharacterDB.questshare and GetQuestLogPushable() and GetNumGroupMembers() >= 1 then
-		SelectQuestLogEntry(index);
-		QuestLogPushQuest(index);
+	if AutoTurnInCharacterDB.questshare and C_QuestLog.IsPushableQuest(index) and GetNumGroupMembers() >= 1 then
+		C_QuestLog.SetSelectedQuest(index);
+		QuestLogPushQuest();
 	end
 end
 
