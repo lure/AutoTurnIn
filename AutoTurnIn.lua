@@ -310,7 +310,7 @@ function AutoTurnIn:VarArgForAvailableQuests(gossipInfos)
 		local triviaAndAllowedOrNotTrivial = (not gossipInfo.isTrivial) or AutoTurnInCharacterDB.trivial
 		local quest = L.quests[gossipInfo.title] -- this quest exists in addons quest DB. There are mostly daily quests
 		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(gossipInfo.title)))
-		local isDaily = gossipInfo.frequency and (questInfo.frequency == Enum.QuestFrequency.Daily or questInfo.frequency == Enum.QuestFrequency.Weekly
+		local isDaily = gossipInfo.frequency and (questInfo.frequency == Enum.QuestFrequency.Daily or questInfo.frequency == Enum.QuestFrequency.Weekly)
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
 		if (triviaAndAllowedOrNotTrivial and notBlackListed and self:_isAppropriate(isDaily)) then
 			if quest and quest.amount then
