@@ -1,6 +1,6 @@
-﻿## Interface: 60200
+﻿## Interface: 80100
 ## Title: AutoTurnIn
-## Version: 4.5.N
+## Version: 7.0.9
 ## Author: Alexandr Shubert
 ## Notes: Quest handling automation
 ## Notes-ruRU: Автоматическая обработка заданий
@@ -10,11 +10,14 @@
 ## Notes-itIT: Italian translators wanted!!!
 ## OptionalDeps: Ace3
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
-## X-Date: 2014-10-16
+## X-Date: 2016-07-21
 ## X-Category: Quest
 ## X-Embeds: Ace3
 
 embeds.xml
+libs\DropDownMenu\UIDropDownMenu.xml
+
+
 loc\localization_RU.lua
 loc\localization_EN.lua
 loc\localization_DE.lua

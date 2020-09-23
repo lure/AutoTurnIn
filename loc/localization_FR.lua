@@ -38,6 +38,10 @@ privateTable.L = setmetatable({
 	["Darkmoon Island"]="Île de Sombrelune",
 	["Darkmoon Faire Mystic Mage"]="Mage mystique de la foire de Sombrelune",
 
+	["ReviveBattlePetLabel"]="Soigner les mascottes de combat",
+	["ReviveBattlePetQ"]="I'd like to heal and revive my battle pets.",
+	["ReviveBattlePetA"]="A small fee for supplies is required.",
+	
     ["The Jade Forest"]="La forêt de Jade",
     ["Scared Pandaren Cub"]="Bébé pandaren apeuré",
 
@@ -55,6 +59,9 @@ privateTable.L = setmetatable({
     ["gogreedy"]="Aucunes récompenses appropriées trouvées, objet le plus cher choisit.",
     ["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
     ["stopitemfound"]="Il y a %s en récompense. Choisissez et équiper un objet.",
+	["relictoggle"]="Désactiver relique récompense butin.",
+	["artifactpowertoggle"]="Désactiver puissance de l'artefact butin.",
+	["ivechosen"]="I have chosen first option for you.",
 	},
 	{__index = function(table, index) return index end})
 	
@@ -186,5 +193,7 @@ privateTable.L.ignoreList = {
 ["Un chat de jade pour"]="",
 ["Une plume bleue pour"]="",
 ["Un éclat de rubis pour"]="",
+["Supplies Needed: Starlight Roses"]="",
+["Ville de Lumière"]="",
 }
 end

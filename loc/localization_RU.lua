@@ -7,26 +7,26 @@ privateTable.L = setmetatable({
 	["usage3"]="'loot' не завершать задания, где есть список наград либо завершать и выбирать самую дорогую",
 	["enabled"]="включен",
 	["disabled"]="отключен",
-	["all"]="принимать и сдавать любое задание",
-	["list"]="принимать и сдавать только внесенные в список задания",
+	["all"]="Принимать и сдавать любое задание",
+	["list"]="Принимать и сдавать только дейлики",
 	["dontlootfalse"]="завершать задания с выбором наград, брать самый дорогой предмет",
 	["dontloottrue"]="не завершать задания, где есть выбор наград",
 	["resetbutton"]="Сброс",
 	
-	["questTypeLabel"] = "задания", 
+	["questTypeLabel"] = "Задания", 
 	["questTypeAll"] = "все",
     ["questTypeList"] = "ежедневные",
     ["questTypeExceptDaily"] = "кроме ежедневных",
-    ["TrivialQuests"]="брать 'серые' квесты",
+    ["TrivialQuests"]="Брать 'серые' квесты",
 	["ShareQuestsLabel"] = "Предлагать задание группе",
-    ["CompleteOnly"] = "только завершать",
+    ["CompleteOnly"] = "Только завершать",
 
 	["lootTypeLabel"]="задания с наградами",
 	["lootTypeFalse"]="не сдавать",
 	["lootTypeGreed"]="взять самую дорогую",
 	["lootTypeNeed"]="взять самую нужную",
 	
-	["tournamentLabel"]="серебряный турнир", 
+	["tournamentLabel"]="Серебряный Турнир", 
 	["tournamentWrit"]="Удостоверение чемпиона", -- 46114
 	["tournamentPurse"]="Кошелек чемпиона",  -- 45724
 	
@@ -36,6 +36,10 @@ privateTable.L = setmetatable({
 	["DarkmoonAutoLabel"]="Ярмарка Новолуния: начинать игру",	
 	["Darkmoon Island"]="Остров Новолуния",
 	["Darkmoon Faire Mystic Mage"]="Гадалка ярмарки Новолуния",
+	
+	["ReviveBattlePetLabel"]="Лечение боевых питомцев",
+	["ReviveBattlePetQ"]="Мне бы хотелось воскресить и исцелить моих боевых питомцев.",
+	["ReviveBattlePetA"]="За это надо бы и заплатить немножко.",
 	
 	["The Jade Forest"]="Нефритовый лес",
 	["Scared Pandaren Cub"]="Испуганный юный пандарен",
@@ -54,6 +58,9 @@ privateTable.L = setmetatable({
 	["gogreedy"]="Подходящих предметов не найдено. Берем самую дорогую.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
 	["stopitemfound"]="Среди наград есть %s. Выберите и наденьте предмет самостоятельно.",
+	["relictoggle"]="Отключить автолут Релика.",
+	["artifactpowertoggle"]="Отключить автолут Силы Артефакта.",
+	["ivechosen"]="выбрал первую опцию за тебя",
 	},
 	{__index = function(table, index) return index end})
 
@@ -182,5 +189,7 @@ privateTable.L.ignoreList = {
 ["Нефритовый кот для"]="",
 ["Синее перо для"]="",
 ["Рубиновый осколок для"]="",
+["Supplies Needed: Starlight Roses"]="",
+["Город Света"]="",
 }
 end

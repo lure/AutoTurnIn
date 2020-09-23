@@ -37,6 +37,10 @@ privateTable.L = setmetatable({
 	["Darkmoon Island"]="Dunkelmond-Insel",
 	["Darkmoon Faire Mystic Mage"]="Mystischer Magier des Dunkelmond-Jahrmarkts",	
 
+	["ReviveBattlePetLabel"]="Kampfhaustier heilen",
+	["ReviveBattlePetQ"]="Ich würde gern meine Kampfhaustiere heilen und wiederbeleben.",
+	["ReviveBattlePetA"]="Es wird eine kleine Gebühr für die medizinische Hilfe erhoben.",
+	
 	["The Jade Forest"]="Der Jadewald",
 	["Scared Pandaren Cub"]="verängstigte Pandarenkinder",
 
@@ -54,6 +58,9 @@ privateTable.L = setmetatable({
 	["gogreedy"]="Nichts hat sich als geeignet erwiesen. Wertvollste Belohnung wird gewählt.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
 	["stopitemfound"]="Gefunden: %s. Ihr müsst eine Belohnung manuell auswählen und ausrüsten.",
+	["relictoggle"]="Deaktivieren Relikt Belohnung plündern.",
+	["artifactpowertoggle"]="Deaktivieren Artefaktmacht plündern.",	
+	["ivechosen"]="I have chosen first option for you.",	
 	},
 	{__index = function(table, index) return index end})
 	
@@ -186,5 +193,7 @@ privateTable.L.ignoreList = {
 ["Eine Jadekatze für"]="",
 ["Eine blaue Feder für"]="",
 ["Ein Rubinsplitter für"]="",
+["Supplies Needed: Starlight Roses"]="",
+["Stadt des Lichts"]="",
 }
 end

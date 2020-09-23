@@ -20,34 +20,59 @@ AutoTurnIn.defaults = {enabled = true, all = 2, trivial = false, completeonly = 
 					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true,
 					   version=TOCVersion, autoequip = false, debug=false,
 					   questlevel=true, watchlevel=true, questshare=false,
-					   armor = {}, weapon = {}, stat = {}, secondary = {}}
-					   
+					   armor = {}, weapon = {}, stat = {}, secondary = {},
+					   relictoggle=true, artifactpowertoggle=true, reviveBattlePet=false}
+
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
-AutoTurnIn.caption = addonName ..' [%s]'
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
 AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 AutoTurnIn.autoEquipList={}
 AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log
+AutoTurnIn.knownGossips={}
 AutoTurnIn.ERRORVALUE = nil
 
 
-AutoTurnIn.ldbstruct = {
+function AutoTurnIn:LibDataStructure()
+-- see https://github.com/tekkub/libdatabroker-1-1/wiki/api
+	AutoTurnIn.ldbstruct = {
 		type = "data source",
 		icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
 		label = addonName,
-		text = addonName,
 		OnClick = function(clickedframe, button)
-			if InterfaceOptionsFrame:IsVisible() then
-				if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"
-					InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.RewardPanel)
-				elseif (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.RewardPanel:GetName() ) then --"AutoTurnInRewardPanel"
-					InterfaceOptionsFrameCancel:Click()
-				end
-			else
-				InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
-			end
+			-- if InCombatLockdown() then return end
+			if (button == "LeftButton") then
+				self:ShowOptions()
+			else 
+				self:SetEnabled(not AutoTurnInCharacterDB.enabled)
+			end			
 		end,
 	}
+
+	function AutoTurnIn.ldbstruct:OnTooltipShow()
+		self:AddLine(addonName)
+		self:AddLine("Left mouse button shows options.")
+		self:AddLine("Right mouse button toggle addon on/off.")
+	end
+
+	return AutoTurnIn.ldbstruct
+end 	
+
+function AutoTurnIn:ShowOptions()
+	-- too much things became tainted if called in combat.
+	if InCombatLockdown() then return end
+	if (InterfaceOptionsFrame:IsVisible() and InterfaceOptionsFrameAddOns.selection) then
+		if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"
+			InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.RewardPanel)
+		elseif (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.RewardPanel:GetName() ) then --"AutoTurnInRewardPanel"
+		-- it used to be a cancel. But BlizzardUI contains weird bug which taints all the interface if InterfaceOptionsFrameCancel:Click() called 
+			InterfaceOptionsFrameOkay:Click()
+		end
+	else
+		-- http://wowpedia.org/Patch_5.3.0/API_changes double call is a workaround
+		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
+		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
+	end
+end
 
 function AutoTurnIn:OnInitialize()
 	self:RegisterChatCommand("au", "ConsoleComand")
@@ -56,8 +81,7 @@ end
 function AutoTurnIn:SetEnabled(enabled)
 	AutoTurnInCharacterDB.enabled = not not enabled
 	if self.ldb then
-		self.ldb.text = self.caption:format((AutoTurnInCharacterDB.enabled) and 'on' or 'off' )
-		self.ldb.label = self.ldb.text
+		self.ldb.text = (AutoTurnInCharacterDB.enabled) and '|cff00ff00on|r' or '|cffff0000off|r'
 	end
 end
 
@@ -88,10 +112,12 @@ function AutoTurnIn:OnEnable()
 	DB.questlevel = DB.questlevel == nil and true or DB.questlevel
 	DB.watchlevel = DB.watchlevel == nil and true or DB.watchlevel
 	DB.questshare = DB.questshare == nil and false or DB.questshare
+    DB.relictoggle = DB.relictoggle == nil and true or DB.relictoggle
+	DB.artifactpowertoggle = DB.artifactpowertoggle == nil and true or DB.artifactpowertoggle
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
 	if LDB then
-		self.ldb = LDB:NewDataObject("AutoTurnIn", self.ldbstruct)
+		self.ldb = LDB:NewDataObject("AutoTurnIn", self:LibDataStructure())
 	end
 
 	self:SetEnabled(DB.enabled)
@@ -114,6 +140,24 @@ function AutoTurnIn:RegisterGossipEvents()
 	self:RegisterEvent("QUEST_COMPLETE")
 	self:RegisterEvent("QUEST_LOG_UPDATE")
 	self:RegisterEvent("QUEST_ACCEPTED")
+	if AutoTurnInCharacterDB.reviveBattlePet and select(2, UnitClass("player")) == "HUNTER" then self:RegisterEvent("GOSSIP_CONFIRM") end
+	
+	local gossipFunc1 = function() AutoTurnIn:Print(L["ivechosen"]); SelectGossipOption(1) end
+	local gossipFunc2 = function() if (GetNumGossipOptions() == 2) then SelectGossipOption(1) end end
+	local gossipFunc3 = function() if AutoTurnInCharacterDB.todarkmoon and GetRealZoneText() ~= L["Darkmoon Island"] then SelectGossipOption(1); StaticPopup1Button1:Click() end end
+	local gossipFunc4 = function() if AutoTurnInCharacterDB.darkmoonteleport then SelectGossipOption(1); StaticPopup1Button1:Click() end end
+	
+	AutoTurnIn.knownGossips = {
+		["93188"]=gossipFunc1, -- Mongar
+		["96782"]=gossipFunc1, -- Lucian Trias
+		["97004"]=gossipFunc1, -- "Red" Jack Findle
+		["55267"]=gossipFunc1, -- YoungPandaren
+		["79815"]=gossipFunc2, -- Grunlek, free seals Alliance
+		["77377"]=gossipFunc2, -- Kristen Stoneforge, free seals Horde
+		["54334"]=gossipFunc3, -- travel to Darkmoon
+		["55382"]=gossipFunc3, -- travel to Darkmoon
+		["57850"]=gossipFunc4, -- DarkmoonFaireTeleportologist
+	}
 end
 
 function AutoTurnIn:QUEST_LOG_UPDATE()
@@ -171,9 +215,7 @@ end
 function AutoTurnIn:ConsoleComand(arg)
 	arg = strlower(arg)
 	if (#arg == 0) then
-		-- http://wowpedia.org/Patch_5.3.0/API_changes double call is a workaround
-		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
-		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
+		self:ShowOptions()
 	elseif arg == "on" then
 		self:SetEnabled(true)
 		self:Print(L["enabled"])
@@ -218,7 +260,9 @@ function AutoTurnIn:QUEST_GREETING()
 
     if not AutoTurnInCharacterDB.completeonly then
         for index=1, GetNumAvailableQuests() do
-            local isTrivial, isDaily, isRepeatable = GetAvailableQuestInfo(index)
+            local isTrivial, isDaily, isRepeatable, isIgnored = GetAvailableQuestInfo(index)
+			if (isIgnored) then return end -- Legion functionality
+			
             local triviaAndAllowedOrNotTrivia = (not isTrivial) or AutoTurnInCharacterDB.trivial
             local title = GetAvailableTitle(index)
             local quest = L.quests[title]
@@ -304,27 +348,20 @@ function AutoTurnIn:isDarkmoonAndAllowed(questCount)
 			(GetZoneText() == L["Darkmoon Island"])
 end
 
-function AutoTurnIn:isYoungPandaren()
-	return (AutoTurnIn:GetNPCGUID() == "55267")
-end
-
-function AutoTurnIn:isDarkmoonFaireMysticMage()
-	local guid = AutoTurnIn:GetNPCGUID() 
-	local isMage = (guid == "54334") or (guid == "55382")
-
-	return AutoTurnInCharacterDB.todarkmoon and
-		(isMage and GetRealZoneText() ~= L["Darkmoon Island"])
-end
-
-function AutoTurnIn:isDarkmoonFaireTeleportologist()
-	return AutoTurnInCharacterDB.darkmoonteleport and (AutoTurnIn:GetNPCGUID() == "57850")
+function AutoTurnIn:GOSSIP_CONFIRM(event, _, message, cost)
+	if message == L["ReviveBattlePetA"] and cost == 1000 then
+		local dialog = StaticPopup_FindVisible("GOSSIP_CONFIRM")
+		if dialog then
+			StaticPopup_OnClick(dialog, 1)
+		end
+	end
 end
 
 function AutoTurnIn:GOSSIP_SHOW()
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
-	
+
 	-- darkmoon fairy gossip sometime turns in quest too fast so I can't relay only on quest number count. It often lie.
 	-- this flag is set in VarArgForActiveQuests if any quest may be turned in
 	self.DarkmoonAllowToProceed = true	
@@ -340,19 +377,12 @@ function AutoTurnIn:GOSSIP_SHOW()
 		for k, v in pairs(options) do
 			if ((v ~= "gossip") and strfind(v, "|cFF0008E8%(")) then
 				local opcount = GetNumGossipOptions()
-				SelectGossipOption((opcount == 1) and 1 or  math.floor(k / GetNumGossipOptions()) + 1)
+				return SelectGossipOption((opcount == 1) and 1 or  math.floor(k / GetNumGossipOptions()) + 1)
 			end
 		end
 	end
 
-	if self:isYoungPandaren() then
-		SelectGossipOption(1)
-	end
-	
-	if self:isDarkmoonFaireMysticMage() or self:isDarkmoonFaireTeleportologist() then
-		SelectGossipOption(1)
-		StaticPopup1Button1:Click()
-	end
+	self:HandleGossip()
 end
 
 function AutoTurnIn:QUEST_DETAIL()
@@ -371,7 +401,7 @@ end
 function AutoTurnIn:QUEST_ACCEPTED(event, index)
 	if AutoTurnInCharacterDB.questshare and GetQuestLogPushable() and GetNumGroupMembers() >= 1 then
 		SelectQuestLogEntry(index);
-		QuestLogPushQuest();
+		QuestLogPushQuest(index);
 	end
 end
 
@@ -380,6 +410,24 @@ function AutoTurnIn:QUEST_PROGRESS()
 		CompleteQuest()
     end
 end
+
+function AutoTurnIn:HandleGossip()
+	local guid = AutoTurnIn:GetNPCGUID()
+	local func = AutoTurnIn.knownGossips[guid]
+	if func then 
+		func() 
+	else
+		-- https://www.wowinterface.com/forums/showthread.php?t=49210 adaptation
+		if AutoTurnInCharacterDB.reviveBattlePet then
+			for i = 1, GetNumGossipOptions() do
+				local gossipText, gossipType = select(i * 2 - 1, GetGossipOptions())
+				if gossipText == L["ReviveBattlePetQ"] then
+					return SelectGossipOption(i, "", true)
+				end
+			end
+		end 
+	end
+end 
 
 -- return true if an item is of `ranged` type and is suitable with current options
 function AutoTurnIn:IsRangedAndRequired(subclass)
@@ -734,8 +782,9 @@ function AutoTurnIn:QUEST_COMPLETE()
     if self:isAppropriate() then
 		local questname = GetTitleText()
 		local quest = L.quests[questname]
+		local numOptions = GetNumQuestChoices() 
 
-		if GetNumQuestChoices() > 1 then
+		if numOptions > 1 then
 			local function getItemId(typeStr)
 				local link = GetQuestItemLink(typeStr, 1) --first item is enough
 				return link and link:match("%b::"):gsub(":", "") or self.ERRORVALUE
@@ -752,6 +801,55 @@ function AutoTurnIn:QUEST_COMPLETE()
 				return
 			end
 
+-- Code for ignoring Relics if turned on.
+			if (AutoTurnInCharacterDB.relictoggle) then
+				local relicFound = false
+				local numQuestRewards = GetNumQuestRewards()
+				if (AutoTurnInCharacterDB.debug) then
+					self:Print("Debug: numQuestRewards:",numQuestRewards,".")
+					self:Print("Debug: numOptions:",numOptions,".")
+				end
+				for i=1, numOptions do
+					local itemLinks = GetQuestItemLink("choice", i)
+					if (AutoTurnInCharacterDB.debug) then
+						self:Print("Debug: Listing choice found:",itemLinks,".")
+					end
+					local itemReward = GetQuestItemLink("reward", i)
+					if (itemReward) then
+						if (AutoTurnInCharacterDB.debug) then
+							self:Print("Debug: Listing reward found:",itemReward,".")
+						end
+					end
+					local _, _, Color, Ltype, itemID, Enchant, Gem1, Gem2, Gem3, Gem4, Suffix, Unique, LinkLvl, Name = string.find(itemLinks,   "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
+					if itemID then
+						local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemID)
+						if ((itemType == "Gem") and (itemSubType =="Artifact Relic")) then
+							relicFound = true
+							if (AutoTurnInCharacterDB.debug) then
+								self:Print("Debug: Gem: Artificat found:",itemLinks,".")
+							end
+							return
+						end
+					end
+				end
+			end
+			if (relicFounnd) then
+				if (AutoTurnInCharacterDB.debug) then
+					self:Print("Debug: Atleaast 1 relic found.. aborting.")
+				end
+				return
+			end
+
+			if (AutoTurnInCharacterDB.artifactpowertoggle) then
+				local ArtifactPowerFound = false
+--				code not ready
+				if (ArtifactPowerFound) then
+					if (AutoTurnInCharacterDB.debug) then
+						self:Print("Debug: Pre-emptive debug.. aborting.")
+					end
+					return
+				end
+			end
 			if (AutoTurnInCharacterDB.lootreward > 1) then -- Auto Loot enabled!
 				self.forceGreed = false
 				if (AutoTurnInCharacterDB.lootreward == 3) then -- 3 == Need
@@ -770,7 +868,6 @@ end
 -- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
 -- sometimes some parts of this chain is skipped. For example, priest in Honor Hold show quest window directly. This is a trick to handle 'toggle key'
 hooksecurefunc(QuestFrame, "Hide", function() AutoTurnIn.allowed = nil end)
--- if (GetItemCount(45724, false) > 0) then 
-	-- UseItemByName(45724) 
--- end
+
 -- /run local a=UnitGUID("npc"); for word in a:gmatch("Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-") do print(word) end
+-- https://www.townlong-yak.com/

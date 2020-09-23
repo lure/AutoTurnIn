@@ -38,6 +38,10 @@ privateTable.L = setmetatable({
 	["Darkmoon Island"]="Isola di Lunacupa",
 	["Darkmoon Faire Mystic Mage"]="Maga Mistica di Lunacupa",
 	
+	["ReviveBattlePetLabel"]="Guarigione Mascotte da Combattimento",
+	["ReviveBattlePetQ"]="I'd like to heal and revive my battle pets.",
+	["ReviveBattlePetA"]="A small fee for supplies is required.",
+	
 	["The Jade Forest"]="Foresta di Giada",
 	["Scared Pandaren Cub"]="Cucciolo Pandaren Spaventato",
 	
@@ -55,6 +59,9 @@ privateTable.L = setmetatable({
 	["gogreedy"]="No suitable reward found, choosing the highest value one.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
 	["stopitemfound"]="There is %s in rewards. Choose and equip an item yourself.",
+	["relictoggle"]="Disabilitare selezione direliquia ricompensa.",
+	["artifactpowertoggle"]="Disabilitare selezione di Potere Artefatto ricompensa.",
+	["ivechosen"]="I have chosen first option for you.",
 	},
 	{__index = function(table, index) return index end})
 	
@@ -176,5 +183,7 @@ privateTable.L.ignoreList = {
 ["A Jade Cat for"]="",
 ["A Blue Feather for"]="",
 ["A Ruby Shard for"]="",
+["Supplies Needed: Starlight Roses"]="",
+["Città della luce"]="",
 }
 end
