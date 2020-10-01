@@ -15,8 +15,6 @@
 ## X-Embeds: Ace3
 
 embeds.xml
-libs\DropDownMenu\UIDropDownMenu.xml
-
 
 loc\localization_RU.lua
 loc\localization_EN.lua
