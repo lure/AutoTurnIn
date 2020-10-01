@@ -62,6 +62,7 @@ privateTable.L = setmetatable({
 	["relictoggle"]="Désactiver relique récompense butin.",
 	["artifactpowertoggle"]="Désactiver puissance de l'artefact butin.",
 	["ivechosen"]="I have chosen first option for you.",
+	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
 	},
 	{__index = function(table, index) return index end})
 	

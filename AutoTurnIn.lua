@@ -623,12 +623,17 @@ function AutoTurnIn:isSuitableItem(link)
 		return false
 	end
 	
-	local points = self:itemPoints(link)
 	-- User may not choose any options hence any item became 'ok'. That situation is undoubtedly incorrect.
 	local SettingsExists = (class == C.WEAPONLABEL and next(AutoTurnInCharacterDB.weapon) or next(AutoTurnInCharacterDB.armor))
 							or next(AutoTurnInCharacterDB.stat)
+	if (not SettingsExists) then
+		self:Print(L["norewardsettings"])
+		return nil
+	end
+	
+	local points = self:itemPoints(link)
 	-- points > 0 means that particular options section is empty or item meets requirements
-	if (points > 0 and SettingsExists) then
+	if (points > 0) then
 		-- comparing with currently equipped item
 		local slot = C.SLOTS[invType]
 		if (slot) then
@@ -685,7 +690,7 @@ function AutoTurnIn:isSuitableItem(link)
 			end
 
 			-- comparing lowest equipped item level with reward's item level and points
-			if (points >= invPoints and lootLevel > eqLevel) then
+			if (points >= invPoints and lootLevel >= eqLevel) then
 				if (AutoTurnInCharacterDB.debug) then
 					self:Print("New", link, "is more suitable than", invLink, "- can be equipped")
 				end

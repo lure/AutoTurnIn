@@ -72,6 +72,7 @@ privateTable.L = setmetatable({
 	["relictoggle"]="Disable relic reward autoloot.",
 	["artifactpowertoggle"]="Disable artifact power reward autoloot.",
 	["ivechosen"]="I have chosen first option for you.",
+	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
 	},
 	{__index = function(table, index) return index end})
 	
