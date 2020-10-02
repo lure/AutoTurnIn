@@ -61,6 +61,7 @@ privateTable.L = setmetatable({
 	["relictoggle"]="Отключить автолут Релика.",
 	["artifactpowertoggle"]="Отключить автолут Силы Артефакта.",
 	["ivechosen"]="выбрал первую опцию за тебя",
+	["norewardsettings"]="Не выбраны желаемые награды. Автоодевание отключено.",
 	},
 	{__index = function(table, index) return index end})
 
