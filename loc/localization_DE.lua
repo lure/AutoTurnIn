@@ -58,10 +58,12 @@ privateTable.L = setmetatable({
 	["gogreedy"]="Nichts hat sich als geeignet erwiesen. Wertvollste Belohnung wird gewählt.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
 	["stopitemfound"]="Gefunden: %s. Ihr müsst eine Belohnung manuell auswählen und ausrüsten.",
-	["relictoggle"]="Deaktivieren Relikt Belohnung plündern.",
-	["artifactpowertoggle"]="Deaktivieren Artefaktmacht plündern.",	
+	["relictoggle"]="Deaktivieren Relikt Belohnung plündern",
+	["artifactpowertoggle"]="Deaktivieren Artefaktmacht plündern",	
 	["ivechosen"]="I have chosen first option for you.",	
 	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
+	["ignorenpc"]="Ignorieren",
+	["cantstopignore"]="Ich kann nicht aufhören, diese Person zu ignorieren",
 	},
 	{__index = function(table, index) return index end})
 	

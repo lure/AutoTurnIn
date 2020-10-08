@@ -1,6 +1,6 @@
 ﻿## Interface: 90001
 ## Title: AutoTurnIn
-## Version: 7.0.9
+## Version: 8.0.1
 ## Author: Alexandr Shubert
 ## Notes: Quest handling automation
 ## Notes-ruRU: Автоматическая обработка заданий
@@ -23,7 +23,7 @@ loc\localization_FR.lua
 loc\localization_IT.lua
 
 rewards_const.lua
-IgnoredNPC.lua
+defaults.lua
 AutoTurnIn.lua
 QuestLevel.lua
 

@@ -7,21 +7,15 @@ local _G = _G 	--Rumors say that global _G is called by lookup in a super-global
 local _ 		--Sometimes blizzard exposes "_" variable as a global.
 local addonName, ptable = ...
 local L = ptable.L
-local IGNORED_NPC = ptable.IGNORED_NPC 
 local C = ptable.CONST
 local TOCVersion = GetAddOnMetadata(addonName, "Version")
 local Q_ALL, Q_DAILY, Q_EXCEPTDAILY = 1, 2, 3
+local questNPCName = nil
 
 
 AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "AceConsole-3.0")
 AutoTurnIn.TOC = select(4, GetBuildInfo())
-AutoTurnIn.defaults = {enabled = true, all = 2, trivial = false, completeonly = false,
-                       lootreward = 1, tournament = 2,
-					   darkmoonteleport=true, todarkmoon=true, togglekey=4, darkmoonautostart=true, showrewardtext=true,
-					   version=TOCVersion, autoequip = false, debug=false,
-					   questlevel=true, watchlevel=true, questshare=false,
-					   armor = {}, weapon = {}, stat = {}, secondary = {},
-					   relictoggle=true, artifactpowertoggle=true, reviveBattlePet=false}
+AutoTurnIn.defaults = ptable.defaults
 
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
@@ -30,6 +24,7 @@ AutoTurnIn.autoEquipList={}
 AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log
 AutoTurnIn.knownGossips={}
 AutoTurnIn.ERRORVALUE = nil
+AutoTurnIn.IgnoreButton = {["quest"] = nil, ["gossip"] = nil}
 
 
 function AutoTurnIn:LibDataStructure()
@@ -87,7 +82,7 @@ end
 
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
-	if (not AutoTurnInCharacterDB) or (not AutoTurnInCharacterDB.version or (AutoTurnInCharacterDB.version < TOCVersion)) then
+	if (not AutoTurnInCharacterDB) or (not AutoTurnInCharacterDB.IGNORED_NPC) or (not AutoTurnInCharacterDB.version or (AutoTurnInCharacterDB.version < TOCVersion)) then
         AutoTurnInCharacterDB = nil
 		self:Print(L["reset"])
 	end
@@ -144,8 +139,22 @@ function AutoTurnIn:RegisterGossipEvents()
 	
 	local gossipFunc1 = function() AutoTurnIn:Print(L["ivechosen"]); C_GossipInfo.SelectOption(1) end
 	local gossipFunc2 = function() if (C_GossipInfo.GetNumOptions() == 2) then C_GossipInfo.SelectOption(1) end end
-	local gossipFunc3 = function() if AutoTurnInCharacterDB.todarkmoon and GetRealZoneText() ~= L["Darkmoon Island"] then C_GossipInfo.SelectOption(1); StaticPopup1Button1:Click() end end
-	local gossipFunc4 = function() if AutoTurnInCharacterDB.darkmoonteleport then C_GossipInfo.SelectOption(1); StaticPopup1Button1:Click() end end
+	local gossipFunc3 = function() 
+		if (AutoTurnInCharacterDB.todarkmoon and GetRealZoneText() ~= L["Darkmoon Island"]
+			and C_GossipInfo.GetNumAvailableQuests() == 0) then
+			--accept available quest first, then teleport
+			AutoTurnIn:Print("Teleporting to " .. L["Darkmoon Island"])
+			C_GossipInfo.SelectOption(1)
+			StaticPopup1Button1:Click()
+		end 
+	end
+	local gossipFunc4 = function() 
+		if AutoTurnInCharacterDB.darkmoonteleport then
+			AutoTurnIn:Print("Teleporting to cannon")
+			C_GossipInfo.SelectOption(1)
+			StaticPopup1Button1:Click() 
+		end 
+	end
 	
 	AutoTurnIn.knownGossips = {
 		["93188"]=gossipFunc1, -- Mongar
@@ -241,8 +250,7 @@ function AutoTurnIn:AllowedToHandle(forcecheck)
 		-- it's a simple xor implementation (a ~= b)
 		self.allowed = (not not AutoTurnInCharacterDB.enabled) ~= (IsModifiedClick)
 	end
-	--return self.allowed and (not IGNORED_NPC[AutoTurnIn:GetNPCGUID()]) and (not QuestGetAutoAccept())
-	return self.allowed and (not IGNORED_NPC[AutoTurnIn:GetNPCGUID()])
+	return self.allowed and (not AutoTurnIn:IsIgnoredNPC())
 end
 
 -- Old 'Quest NPC' interaction system. See http://wowprogramming.com/docs/events/QUEST_GREETING
@@ -858,9 +866,59 @@ function AutoTurnIn:QUEST_COMPLETE()
     end
 end
 
+
+function AutoTurnIn:IsIgnoredNPC()
+	local guid = AutoTurnIn:GetNPCGUID()
+	return (AutoTurnInCharacterDB.IGNORED_NPC and AutoTurnInCharacterDB.IGNORED_NPC[guid]) 
+		or ptable.defaults.IGNORED_NPC[guid]
+end
+function AutoTurnIn:IsDefaultIgnoredNPC()
+	return ptable.defaults.IGNORED_NPC[AutoTurnIn:GetNPCGUID()]
+end
+
+function AutoTurnIn:ShowIgnoreButton(frame)
+	local GlobalFrame = nil
+	if (frame == "quest") then GlobalFrame = QuestFrame elseif (frame == "gossip") then GlobalFrame = GossipFrame end
+	if GlobalFrame == nil then return end
+	
+	--reusing existing button
+	if (not self.IgnoreButton[frame]) then self.IgnoreButton[frame] = CreateFrame("CheckButton", "NPCIgnoreButton" .. frame, GlobalFrame, "OptionsCheckButtonTemplate") end
+	
+	local IgnoreButton = self.IgnoreButton[frame]
+	IgnoreButton:SetPoint("TOPLEFT", 60, -30)
+	IgnoreButton:SetChecked(not not AutoTurnIn:IsIgnoredNPC())
+	IgnoreButton:SetScript("OnClick", function(self)
+		local guid = AutoTurnIn:GetNPCGUID()
+		AutoTurnInCharacterDB.IGNORED_NPC[guid] = self:GetChecked() and questNPCName or nil
+	end)
+	
+	if (AutoTurnIn:IsDefaultIgnoredNPC()) then
+		IgnoreButton:Disable()
+		GameTooltip:SetOwner(IgnoreButton, "ANCHOR_RIGHT");
+		GameTooltip:SetText(L["cantstopignore"]);
+		GameTooltip:Show()
+	else 
+		IgnoreButton:Enable()
+	end
+	--button text on global form
+	questNPCName = UnitName("target")
+	_G[IgnoreButton:GetName().."Text"]:SetText(L["ignorenpc"] .. " " .. questNPCName)
+end
+
 -- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
 -- sometimes some parts of this chain is skipped. For example, priest in Honor Hold show quest window directly. This is a trick to handle 'toggle key'
-hooksecurefunc(QuestFrame, "Hide", function() AutoTurnIn.allowed = nil end)
+hooksecurefunc(QuestFrame, "Hide", function()
+	AutoTurnIn.allowed = nil 
+	GameTooltip:Hide()
+end)
+--GossipFrame sets allowed to true, after that 'toggle key' doesn't work
+hooksecurefunc(GossipFrame, "Hide", function()
+	AutoTurnIn.allowed = nil 
+	GameTooltip:Hide()
+end)
+--GossipFrame should show ignore button too
+hooksecurefunc(QuestFrame, "Show", function() AutoTurnIn:ShowIgnoreButton("quest") end)
+hooksecurefunc(GossipFrame, "Show", function() AutoTurnIn:ShowIgnoreButton("gossip") end)
 
 -- /run local a=UnitGUID("npc"); for word in a:gmatch("Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-") do print(word) end
 -- https://www.townlong-yak.com/
