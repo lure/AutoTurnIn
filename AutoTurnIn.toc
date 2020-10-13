@@ -1,6 +1,6 @@
 ﻿## Interface: 90001
 ## Title: AutoTurnIn
-## Version: 8.0.1
+## Version: 7.0.10
 ## Author: Alexandr Shubert
 ## Notes: Quest handling automation
 ## Notes-ruRU: Автоматическая обработка заданий

@@ -71,6 +71,8 @@ end
 
 function AutoTurnIn:OnInitialize()
 	self:RegisterChatCommand("au", "ConsoleComand")
+	if not AutoTurnInCharacterDB.IGNORED_NPC then AutoTurnInCharacterDB.IGNORED_NPC = {} end
+
 end	
 
 function AutoTurnIn:SetEnabled(enabled)
