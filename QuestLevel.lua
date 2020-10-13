@@ -55,18 +55,20 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 			for id, block in pairs(blockTable) do
 				if block.id and block.HeaderText and block.HeaderText:GetText() and (not string.find(block.HeaderText:GetText(), "^%[.*%].*")) then
 					local questLogIndex = C_QuestLog.GetLogIndexForQuestID(block.id)
-					local questInfo = C_QuestLog.GetInfo(questLogIndex)
-					-- update calls are async and data could not be (yet or already) exist in log
-					if ( questLogIndex ~= 0 and questInfo.title and questInfo.title ~= "" ) then 	  
-						local questTypeIndex = GetQuestLogQuestType(questLogIndex)
-						local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex] or ""
-						local dailyMod = (questInfo.frequency == Enum.QuestFrequency.Daily or questInfo.frequency == Enum.QuestFrequency.Weekly) and "\*" or ""
+					if (questLogIndex) then
+						local questInfo = C_QuestLog.GetInfo(questLogIndex)
+						-- update calls are async and data could not be (yet or already) exist in log
+						if (questInfo.title and questInfo.title ~= "") then 	  
+							local questTypeIndex = GetQuestLogQuestType(questLogIndex)
+							local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex] or ""
+							local dailyMod = (questInfo.frequency == Enum.QuestFrequency.Daily or questInfo.frequency == Enum.QuestFrequency.Weekly) and "\*" or ""
 
-						--resizing the block if new line requires more spaces.
-						local h = block.height - block.HeaderText:GetHeight()
-						block.HeaderText:SetText(AutoTurnIn.WatchFrameLevelFormat:format(questInfo.level, tagString, dailyMod, questInfo.title))
-						block.height = h + block.HeaderText:GetHeight()
-						block:SetHeight(block.height)
+							--resizing the block if new line requires more spaces.
+							local h = block.height - block.HeaderText:GetHeight()
+							block.HeaderText:SetText(AutoTurnIn.WatchFrameLevelFormat:format(questInfo.level, tagString, dailyMod, questInfo.title))
+							block.height = h + block.HeaderText:GetHeight()
+							block:SetHeight(block.height)
+						end
 					end
 				end
 			end
