@@ -63,8 +63,8 @@ privateTable.L = setmetatable({
 	["artifactpowertoggle"]="Désactiver puissance de l'artefact butin",
 	["ivechosen"]="I have chosen first option for you.",
 	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
-	["ignorenpc"]="Ignorer",
-	["cantstopignore"]="Je ne peux pas arrêter d'ignorer cette personne",
+	["ignorenpc"]="Ignorer ce personnage",
+	["cantstopignore"]="Je ne peux pas arrêter d'ignorer ce personnage",
 	},
 	{__index = function(table, index) return index end})
 	

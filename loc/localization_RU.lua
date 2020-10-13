@@ -62,8 +62,8 @@ privateTable.L = setmetatable({
 	["artifactpowertoggle"]="Отключить автолут Силы Артефакта",
 	["ivechosen"]="выбрал первую опцию за тебя",
 	["norewardsettings"]="Не выбраны желаемые награды. Автоодевание отключено.",
-	["ignorenpc"]="Игнорировать",
-	["cantstopignore"]="Нельзя перестать игнорировать этого персонажа",
+	["ignorenpc"]="Игнорировать персонажа",
+	["cantstopignore"]="Этого персонажа нельзя перестать игнорировать",
 	},
 	{__index = function(table, index) return index end})
 

@@ -62,8 +62,8 @@ privateTable.L = setmetatable({
 	["artifactpowertoggle"]="Deaktivieren Artefaktmacht plündern",	
 	["ivechosen"]="I have chosen first option for you.",	
 	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
-	["ignorenpc"]="Ignorieren",
-	["cantstopignore"]="Ich kann nicht aufhören, diese Person zu ignorieren",
+	["ignorenpc"]="Ignoriere diesen Charakter",
+	["cantstopignore"]="Ich kann nicht aufhören, diesen Charakter zu ignorieren",
 	},
 	{__index = function(table, index) return index end})
 	
