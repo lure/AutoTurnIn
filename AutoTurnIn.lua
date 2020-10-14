@@ -71,7 +71,7 @@ end
 
 function AutoTurnIn:OnInitialize()
 	self:RegisterChatCommand("au", "ConsoleComand")
-	if not AutoTurnInCharacterDB.IGNORED_NPC then AutoTurnInCharacterDB.IGNORED_NPC = {} end
+	if (AutoTurnInCharacterDB and not AutoTurnInCharacterDB.IGNORED_NPC) then AutoTurnInCharacterDB.IGNORED_NPC = {} end
 
 end	
 
@@ -174,13 +174,18 @@ end
 function AutoTurnIn:QUEST_LOG_UPDATE()
 	if ( C_QuestLog.GetNumQuestLogEntries() > 0 ) then
 		for index=1, C_QuestLog.GetNumQuestLogEntries() do
-			local title, _, _, _, isHeader , _, _, isDaily = C_QuestLog.GetTitleForLogIndex(index)
-			if not isHeader and isDaily then
-				self.questCache[title] = true
+			local questInfo = C_QuestLog.GetInfo(index)
+			if (questInfo and not questInfo.isHeader and self:_isDaily(questInfo.frequency)) then
+				self.questCache[questInfo.title] = true
+				AutoTurnIn:Print(questInfo.title)
 			end
 		end
 		self:UnregisterEvent("QUEST_LOG_UPDATE")
 	end
+end
+
+function AutoTurnIn:_isDaily(frequency) 
+	return frequency and (frequency == Enum.QuestFrequency.Daily or frequency == Enum.QuestFrequency.Weekly)
 end
 
 -- Available check requires cache
@@ -320,7 +325,7 @@ function AutoTurnIn:VarArgForAvailableQuests(gossipInfos)
 		local triviaAndAllowedOrNotTrivial = (not gossipInfo.isTrivial) or AutoTurnInCharacterDB.trivial
 		local quest = L.quests[gossipInfo.title] -- this quest exists in addons quest DB. There are mostly daily quests
 		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(gossipInfo.title)))
-		local isDaily = gossipInfo.frequency and (gossipInfo.frequency == Enum.QuestFrequency.Daily or gossipInfo.frequency == Enum.QuestFrequency.Weekly)
+		local isDaily = self:_isDaily(gossipInfo.frequency)
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
 		if (triviaAndAllowedOrNotTrivial and notBlackListed and self:_isAppropriate(isDaily)) then
 			if quest and quest.amount then
@@ -621,7 +626,9 @@ function AutoTurnIn:isSuitableItem(link)
 		return false
 	end
 
-	local name, _, _, lootLevel, _, class, subclass, _, invType = GetItemInfo(link)
+	local name, _, _, _, _, class, subclass, _, invType = GetItemInfo(link)
+	--effective loot level
+	local lootLevel = GetDetailedItemLevelInfo(link)
 	-- non equippable items
 	if (invType == "") then
 		return nil
