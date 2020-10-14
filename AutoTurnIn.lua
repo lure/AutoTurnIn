@@ -177,7 +177,6 @@ function AutoTurnIn:QUEST_LOG_UPDATE()
 			local questInfo = C_QuestLog.GetInfo(index)
 			if (questInfo and not questInfo.isHeader and self:_isDaily(questInfo.frequency)) then
 				self.questCache[questInfo.title] = true
-				AutoTurnIn:Print(questInfo.title)
 			end
 		end
 		self:UnregisterEvent("QUEST_LOG_UPDATE")
