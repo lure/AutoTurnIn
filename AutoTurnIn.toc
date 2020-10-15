@@ -1,19 +1,22 @@
-## Interface: 90001
+﻿## Interface: 80300
 ## Title: AutoTurnIn
 ## Version: 7.4.3
-## Author: Aleksandr Shubert
+## Author: Alexandr Shubert
 ## Notes: Quest handling automation
 ## Notes-ruRU: Автоматическая обработка заданий
 ## Notes-enUS: Quest handling automation
 ## Notes-frFR: Accepte et rend automatiquement les quêtes
 ## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests
-## Notes-itIT: Elaborazione automatica del lavoro
+## Notes-itIT: Italian translators wanted!!!
+## OptionalDeps: Ace3
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
 ## X-Date: 2016-07-21
 ## X-Category: Quest
 ## X-Embeds: Ace3
 
 embeds.xml
+libs\DropDownMenu\UIDropDownMenu.xml
+
 
 loc\localization_RU.lua
 loc\localization_EN.lua
