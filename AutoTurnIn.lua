@@ -282,6 +282,9 @@ function AutoTurnIn:QUEST_GREETING()
             local quest = L.quests[title]
             local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
 
+			-- isDaily was a boolean, but is a number now. but maybe it's still a boolean somewhere
+			if (type(isDaily) == "number" and isDaily ~= 0) then isDaily = true else isDaily = false end
+			
             if isDaily then
                 self:CacheAsDaily(GetAvailableTitle(index))
             end
