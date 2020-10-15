@@ -59,9 +59,12 @@ privateTable.L = setmetatable({
     ["gogreedy"]="Aucunes récompenses appropriées trouvées, objet le plus cher choisit.",
     ["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
     ["stopitemfound"]="Il y a %s en récompense. Choisissez et équiper un objet.",
-	["relictoggle"]="Désactiver relique récompense butin.",
-	["artifactpowertoggle"]="Désactiver puissance de l'artefact butin.",
+	["relictoggle"]="Désactiver relique récompense butin",
+	["artifactpowertoggle"]="Désactiver puissance de l'artefact butin",
 	["ivechosen"]="I have chosen first option for you.",
+	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
+	["ignorenpc"]="Ignorer ce personnage",
+	["cantstopignore"]="Je ne peux pas arrêter d'ignorer ce personnage",
 	},
 	{__index = function(table, index) return index end})
 	
