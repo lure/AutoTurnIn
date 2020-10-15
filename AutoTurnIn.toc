@@ -1,14 +1,13 @@
-﻿## Interface: 90001
+## Interface: 90001
 ## Title: AutoTurnIn
-## Version: 7.0.9
-## Author: Alexandr Shubert
+## Version: 7.4.3
+## Author: Aleksandr Shubert
 ## Notes: Quest handling automation
 ## Notes-ruRU: Автоматическая обработка заданий
 ## Notes-enUS: Quest handling automation
 ## Notes-frFR: Accepte et rend automatiquement les quêtes
 ## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests
-## Notes-itIT: Italian translators wanted!!!
-## OptionalDeps: Ace3
+## Notes-itIT: Elaborazione automatica del lavoro
 ## SavedVariablesPerCharacter: AutoTurnInCharacterDB
 ## X-Date: 2016-07-21
 ## X-Category: Quest
