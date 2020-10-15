@@ -61,6 +61,7 @@ privateTable.L = setmetatable({
 	["relictoggle"]="Deaktivieren Relikt Belohnung plündern.",
 	["artifactpowertoggle"]="Deaktivieren Artefaktmacht plündern.",	
 	["ivechosen"]="I have chosen first option for you.",	
+	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
 	},
 	{__index = function(table, index) return index end})
 	
