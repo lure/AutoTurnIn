@@ -58,9 +58,12 @@ privateTable.L = setmetatable({
 	["gogreedy"]="Подходящих предметов не найдено. Берем самую дорогую.",
 	["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
 	["stopitemfound"]="Среди наград есть %s. Выберите и наденьте предмет самостоятельно.",
-	["relictoggle"]="Отключить автолут Релика.",
-	["artifactpowertoggle"]="Отключить автолут Силы Артефакта.",
+	["relictoggle"]="Отключить автолут Релика",
+	["artifactpowertoggle"]="Отключить автолут Силы Артефакта",
 	["ivechosen"]="выбрал первую опцию за тебя",
+	["norewardsettings"]="Не выбраны желаемые награды. Автоодевание отключено.",
+	["ignorenpc"]="Игнорировать персонажа",
+	["cantstopignore"]="Этого персонажа нельзя перестать игнорировать",
 	},
 	{__index = function(table, index) return index end})
 

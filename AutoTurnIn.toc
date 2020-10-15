@@ -1,6 +1,6 @@
-﻿## Interface: 80100
+## Interface: 90001
 ## Title: AutoTurnIn
-## Version: 7.0.9
+## Version: 7.5.1
 ## Author: Alexandr Shubert
 ## Notes: Quest handling automation
 ## Notes-ruRU: Автоматическая обработка заданий
@@ -15,8 +15,6 @@
 ## X-Embeds: Ace3
 
 embeds.xml
-libs\DropDownMenu\UIDropDownMenu.xml
-
 
 loc\localization_RU.lua
 loc\localization_EN.lua
@@ -25,7 +23,7 @@ loc\localization_FR.lua
 loc\localization_IT.lua
 
 rewards_const.lua
-IgnoredNPC.lua
+defaults.lua
 AutoTurnIn.lua
 QuestLevel.lua
 
