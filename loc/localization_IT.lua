@@ -62,7 +62,6 @@ privateTable.L = setmetatable({
 	["relictoggle"]="Disabilitare selezione direliquia ricompensa.",
 	["artifactpowertoggle"]="Disabilitare selezione di Potere Artefatto ricompensa.",
 	["ivechosen"]="I have chosen first option for you.",
-	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
 	},
 	{__index = function(table, index) return index end})
 	
