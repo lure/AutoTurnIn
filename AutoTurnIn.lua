@@ -395,10 +395,24 @@ function AutoTurnIn:QUEST_DETAIL()
 	end
 	if QuestGetAutoAccept() then
 		CloseQuest()
-	elseif self:AllowedToHandle() and self:isAppropriate() and (not AutoTurnInCharacterDB.completeonly) then
-		QuestInfoDescriptionText:SetAlphaGradient(0, -1)
-		QuestInfoDescriptionText:SetAlpha(1)
-		AcceptQuest()
+	
+	else
+		if self:AllowedToHandle() and self:isAppropriate() and (not AutoTurnInCharacterDB.completeonly) then
+			--ignore trivial quests 
+			if (not C_QuestLog.IsQuestTrivial(GetQuestID()) or AutoTurnInCharacterDB.trivial) then
+				QuestInfoDescriptionText:SetAlphaGradient(0, -1)
+				QuestInfoDescriptionText:SetAlpha(1)
+				AcceptQuest()
+			end
+		end
+		--quest level on detail frame
+		if AutoTurnInCharacterDB.questlevel then 
+			local levelFormat = "[%d] %s"
+			local text = QuestInfoTitleHeader:GetText()
+			--trivial display
+			if C_QuestLog.IsQuestTrivial(GetQuestID()) then text = TRIVIAL_QUEST_DISPLAY:format(text) end
+			QuestInfoTitleHeader:SetText(levelFormat:format(C_QuestLog.GetQuestDifficultyLevel(GetQuestID()), text))
+		end		
 	end
 end
 
