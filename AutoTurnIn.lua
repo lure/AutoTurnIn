@@ -403,16 +403,21 @@ function AutoTurnIn:QUEST_DETAIL()
 				QuestInfoDescriptionText:SetAlphaGradient(0, -1)
 				QuestInfoDescriptionText:SetAlpha(1)
 				AcceptQuest()
+				return
 			end
 		end
 		--quest level on detail frame
 		if AutoTurnInCharacterDB.questlevel then 
-			local levelFormat = "[%d] %s"
-			local text = QuestInfoTitleHeader:GetText()
-			--trivial display
-			if C_QuestLog.IsQuestTrivial(GetQuestID()) then text = TRIVIAL_QUEST_DISPLAY:format(text) end
-			QuestInfoTitleHeader:SetText(levelFormat:format(C_QuestLog.GetQuestDifficultyLevel(GetQuestID()), text))
-		end		
+			local level = C_QuestLog.GetQuestDifficultyLevel(GetQuestID())
+			--sometimes it returns 0, but that's wrong
+			if level and level > 0 then 
+				local levelFormat = "[%d] %s"
+				local text = QuestInfoTitleHeader:GetText()
+				--trivial display
+				if C_QuestLog.IsQuestTrivial(GetQuestID()) then text = TRIVIAL_QUEST_DISPLAY:format(text) end
+				QuestInfoTitleHeader:SetText(levelFormat:format(level, text))
+			end
+		end
 	end
 end
 
