@@ -200,7 +200,7 @@ function AutoTurnIn:isAppropriate(questname, byCache)
         daily = (not not self.questCache[questname])
     else
     	-- for some reason questInfo in gossip table return data different from one from QuestCache
-    	local questID = GetQuestID()    	
+    	local questID = GetQuestID()
     	local qn = questname or (questID and QuestCache:Get(questID).title or "");
         daily = QuestIsDaily() or QuestIsWeekly() or (not not self.questCache[qn])
     end
@@ -966,5 +966,25 @@ end)
 hooksecurefunc(QuestFrame, "Show", function() AutoTurnIn:ShowIgnoreButton("quest") end)
 hooksecurefunc(GossipFrame, "Show", function() AutoTurnIn:ShowIgnoreButton("gossip") end)
 
+
+
+-- HELPERS
+function AutoTurnIn:dump(o)
+	DevTools_Dump(o, "value");
+	-- self:Print(self:_dump(o))
+end
+
+function AutoTurnIn:_dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. self:_dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
 -- /run local a=UnitGUID("npc"); for word in a:gmatch("Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-") do print(word) end
 -- https://www.townlong-yak.com/
