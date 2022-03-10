@@ -931,7 +931,7 @@ function AutoTurnIn:ShowIgnoreButton(frame)
 	if (not self.IgnoreButton[frame]) then self.IgnoreButton[frame] = CreateFrame("CheckButton", "NPCIgnoreButton" .. frame, GlobalFrame, "OptionsCheckButtonTemplate") end
 	
 	local IgnoreButton = self.IgnoreButton[frame]
-	IgnoreButton:SetPoint("TOPLEFT", 60, -30)
+	IgnoreButton:SetPoint("TOPLEFT", 90, -18)
 	IgnoreButton:SetChecked(not not AutoTurnIn:IsIgnoredNPC())
 	IgnoreButton:SetScript("OnClick", function(self)
 		local guid = AutoTurnIn:GetNPCGUID()
