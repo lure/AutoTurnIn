@@ -40,7 +40,9 @@ privateTable.L = setmetatable({
 
 	["ReviveBattlePetLabel"]="Soigner les mascottes de combat",
 	["ReviveBattlePetQ"]="I'd like to heal and revive my battle pets.",
-	["ReviveBattlePetA"]="A small fee for supplies is required.",
+	["ReviveBattlePetA"]="A small fee for supplies is required.",,
+	
+	["DismissKyrianStewardLabel"]="Renvoyer Kyrian Steward.",
 	
     ["The Jade Forest"]="La forêt de Jade",
     ["Scared Pandaren Cub"]="Bébé pandaren apeuré",
@@ -61,7 +63,8 @@ privateTable.L = setmetatable({
     ["stopitemfound"]="Il y a %s en récompense. Choisissez et équiper un objet.",
 	["relictoggle"]="Désactiver relique récompense butin",
 	["artifactpowertoggle"]="Désactiver puissance de l'artefact butin",
-	["ivechosen"]="I have chosen first option for you.",
+	["ivechosen"]="J'ai choisi la première option pour vous.",
+    ["ivechosenfive"]="J'ai choisi la cinquième option pour vous.",
 	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
 	["ignorenpc"]="Ignorer ce personnage",
 	["cantstopignore"]="Je ne peux pas arrêter d'ignorer ce personnage",

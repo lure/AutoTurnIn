@@ -40,7 +40,9 @@ privateTable.L = setmetatable({
 	
 	["ReviveBattlePetLabel"]="Guarigione Mascotte da Combattimento",
 	["ReviveBattlePetQ"]="I'd like to heal and revive my battle pets.",
-	["ReviveBattlePetA"]="A small fee for supplies is required.",
+	["ReviveBattlePetA"]="A small fee for supplies is required.",,
+	
+	["DismissKyrianStewardLabel"]="Уволить Кириана Стюарда.",
 	
 	["The Jade Forest"]="Foresta di Giada",
 	["Scared Pandaren Cub"]="Cucciolo Pandaren Spaventato",
@@ -61,7 +63,8 @@ privateTable.L = setmetatable({
 	["stopitemfound"]="There is %s in rewards. Choose and equip an item yourself.",
 	["relictoggle"]="Disabilitare selezione direliquia ricompensa",
 	["artifactpowertoggle"]="Disabilitare selezione di Potere Artefatto ricompensa",
-	["ivechosen"]="I have chosen first option for you.",
+	["ivechosen"]="Ho scelto per te la prima opzione",
+	["ivechosenfive"]="Ho scelto per te la quinta opzione",
 	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
 	["ignorenpc"]="Ignora questo personaggio",
 	["cantstopignore"]="Non riesco a smettere di ignorare questo personaggio",

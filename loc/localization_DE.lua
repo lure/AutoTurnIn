@@ -39,7 +39,9 @@ privateTable.L = setmetatable({
 
 	["ReviveBattlePetLabel"]="Kampfhaustier heilen",
 	["ReviveBattlePetQ"]="Ich würde gern meine Kampfhaustiere heilen und wiederbeleben.",
-	["ReviveBattlePetA"]="Es wird eine kleine Gebühr für die medizinische Hilfe erhoben.",
+	["ReviveBattlePetA"]="Es wird eine kleine Gebühr für die medizinische Hilfe erhoben.",,
+	
+	["DismissKyrianStewardLabel"]="Entlässt Kyrian Steward.",
 	
 	["The Jade Forest"]="Der Jadewald",
 	["Scared Pandaren Cub"]="verängstigte Pandarenkinder",
@@ -60,7 +62,8 @@ privateTable.L = setmetatable({
 	["stopitemfound"]="Gefunden: %s. Ihr müsst eine Belohnung manuell auswählen und ausrüsten.",
 	["relictoggle"]="Deaktivieren Relikt Belohnung plündern",
 	["artifactpowertoggle"]="Deaktivieren Artefaktmacht plündern",	
-	["ivechosen"]="I have chosen first option for you.",	
+	["ivechosen"]="Ich habe die erste Option für Sie ausgewählt.",
+	["ivechosenfive"]="Ich habe die fünfte Option für Sie ausgewählt.",	
 	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
 	["ignorenpc"]="Ignoriere diesen Charakter",
 	["cantstopignore"]="Ich kann nicht aufhören, diesen Charakter zu ignorieren",
