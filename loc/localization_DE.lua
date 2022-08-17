@@ -39,7 +39,7 @@ privateTable.L = setmetatable({
 
 	["ReviveBattlePetLabel"]="Kampfhaustier heilen",
 	["ReviveBattlePetQ"]="Ich würde gern meine Kampfhaustiere heilen und wiederbeleben.",
-	["ReviveBattlePetA"]="Es wird eine kleine Gebühr für die medizinische Hilfe erhoben.",,
+	["ReviveBattlePetA"]="Es wird eine kleine Gebühr für die medizinische Hilfe erhoben.",
 	
 	["DismissKyrianStewardLabel"]="Entlässt Kyrian Steward.",
 	
