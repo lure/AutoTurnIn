@@ -2,12 +2,12 @@
 -- translated by http://www.curse.com/users/whitelightelgringo
 if (GetLocale() == "frFR")  then
 privateTable.L = setmetatable({
-	["reset"]="setting was resetted",
-	["usage1"]="'on'/'off' pour activer/désactiver l'addon",
+    ["reset"]="setting was resetted",
+    ["usage1"]="'on'/'off' pour activer/désactiver l'addon",
     ["usage2"]="'all'/'list' pour prendre en compte toutes les quêtes ou juste une liste spécifique",
     ["usage3"]="'loot' Ne pas rendre les quêtes à objets de récompense ou rendre les quêtes en choisissant l'objet de récompense le plus cher",
-	["enabled"]="enabled",
-	["disabled"]="disabled",	
+    ["enabled"]="enabled",
+    ["disabled"]="disabled",	
     ["all"]="Ready to handle every quest",
     ["list"]="only daily quests will be handled",
     ["dontlootfalse"]="Choisir la récompense la plus chère",
@@ -19,7 +19,7 @@ privateTable.L = setmetatable({
     ["questTypeList"] = "journalières",
     ["questTypeExceptDaily"] = "excepté journalières",
     ["TrivialQuests"]= "Accepter les quêtes 'grise'",
-	["ShareQuestsLabel"] = "partager la quête",
+    ["ShareQuestsLabel"] = "partager la quête",
     ["CompleteOnly"] = "turn in only",
 
     ["lootTypeLabel"]="Quêtes à récompense d'objet",
@@ -32,17 +32,17 @@ privateTable.L = setmetatable({
     ["tournamentPurse"]="Bourse de champion",  -- 45724
     
     ["DarkmoonTeleLabel"]="Sombrelune : téléporter au canon",
-	["ToDarkmoonLabel"]="Sombrelune : téléporter au île", -- darkmoon	
+    ["ToDarkmoonLabel"]="Sombrelune : téléporter au île", -- darkmoon	
     ["DarkmoonFaireTeleport"]="Téléportologue Mélébou",
     ["DarkmoonAutoLabel"]="Sombrelune : Lancer le jeu!",
-	["Darkmoon Island"]="Île de Sombrelune",
-	["Darkmoon Faire Mystic Mage"]="Mage mystique de la foire de Sombrelune",
+    ["Darkmoon Island"]="Île de Sombrelune",
+    ["Darkmoon Faire Mystic Mage"]="Mage mystique de la foire de Sombrelune",
 
-	["ReviveBattlePetLabel"]="Soigner les mascottes de combat",
-	["ReviveBattlePetQ"]="I'd like to heal and revive my battle pets.",
-	["ReviveBattlePetA"]="A small fee for supplies is required.",,
-	
-	["DismissKyrianStewardLabel"]="Renvoyer Kyrian Steward.",
+    ["ReviveBattlePetLabel"]="Soigner les mascottes de combat",
+    ["ReviveBattlePetQ"]="I'd like to heal and revive my battle pets.",
+    ["ReviveBattlePetA"]="A small fee for supplies is required.",			
+
+    ["DismissKyrianStewardLabel"]="Renvoyer Kyrian Steward.",
 	
     ["The Jade Forest"]="La forêt de Jade",
     ["Scared Pandaren Cub"]="Bébé pandaren apeuré",
@@ -53,7 +53,7 @@ privateTable.L = setmetatable({
     ["autoequip"]="Équiper les objets de récompense",
     ["togglekey"]="Touche activer/désactiver",
 
-	['Jewelry']="Joaillerie",
+    ['Jewelry']="Joaillerie",
     ["rewardlootoptions"]="Règles d'objets de récompense",
     ['greedifnothing']="Cupidité si rien n'est trouvé",
     ["multiplefound"]="Récompense multiple trouvée. "..ERR_QUEST_MUST_CHOOSE,
@@ -61,15 +61,15 @@ privateTable.L = setmetatable({
     ["gogreedy"]="Aucunes récompenses appropriées trouvées, objet le plus cher choisit.",
     ["rewardlag"]=BUTTON_LAG_LOOT_TOOLTIP.. '. '..ERR_QUEST_MUST_CHOOSE,
     ["stopitemfound"]="Il y a %s en récompense. Choisissez et équiper un objet.",
-	["relictoggle"]="Désactiver relique récompense butin",
-	["artifactpowertoggle"]="Désactiver puissance de l'artefact butin",
-	["ivechosen"]="J'ai choisi la première option pour vous.",
+    ["relictoggle"]="Désactiver relique récompense butin",
+    ["artifactpowertoggle"]="Désactiver puissance de l'artefact butin",
+    ["ivechosen"]="J'ai choisi la première option pour vous.",
     ["ivechosenfive"]="J'ai choisi la cinquième option pour vous.",
-	["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
-	["ignorenpc"]="Ignorer ce personnage",
-	["cantstopignore"]="Je ne peux pas arrêter d'ignorer ce personnage",
-	},
-	{__index = function(table, index) return index end})
+    ["norewardsettings"]="No reward preferences found. Auto equipping disabled.",
+    ["ignorenpc"]="Ignorer ce personnage",
+    ["cantstopignore"]="Je ne peux pas arrêter d'ignorer ce personnage",
+   },
+   {__index = function(table, index) return index end})
 	
 privateTable.L.quests = {
 -- Steamwheedle Cartel
