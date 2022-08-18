@@ -15,11 +15,11 @@ privateTable.L = setmetatable({
 	
 	["questTypeLabel"] = "Задания", 
 	["questTypeAll"] = "все",
-    ["questTypeList"] = "ежедневные",
-    ["questTypeExceptDaily"] = "кроме ежедневных",
-    ["TrivialQuests"]="Брать 'серые' квесты",
+        ["questTypeList"] = "ежедневные",
+        ["questTypeExceptDaily"] = "кроме ежедневных",
+        ["TrivialQuests"]="Брать 'серые' квесты",
 	["ShareQuestsLabel"] = "Предлагать задание группе",
-    ["CompleteOnly"] = "Только завершать",
+        ["CompleteOnly"] = "Только завершать",
 
 	["lootTypeLabel"]="задания с наградами",
 	["lootTypeFalse"]="не сдавать",
@@ -39,7 +39,7 @@ privateTable.L = setmetatable({
 	
 	["ReviveBattlePetLabel"]="Лечение боевых питомцев",
 	["ReviveBattlePetQ"]="Мне бы хотелось воскресить и исцелить моих боевых питомцев.",
-	["ReviveBattlePetA"]="За это надо бы и заплатить немножко.",,
+	["ReviveBattlePetA"]="За это надо бы и заплатить немножко.",
 	
 	["DismissKyrianStewardLabel"]="Dismiss Kyrian Steward.",
 	
