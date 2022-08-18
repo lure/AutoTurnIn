@@ -40,7 +40,7 @@ privateTable.L = setmetatable({
 	
 	["ReviveBattlePetLabel"]="Guarigione Mascotte da Combattimento",
 	["ReviveBattlePetQ"]="I'd like to heal and revive my battle pets.",
-	["ReviveBattlePetA"]="A small fee for supplies is required.",,
+	["ReviveBattlePetA"]="A small fee for supplies is required.",
 	
 	["DismissKyrianStewardLabel"]="Уволить Кириана Стюарда.",
 	
