@@ -165,8 +165,18 @@ function AutoTurnIn:RegisterGossipEvents()
 			C_GossipInfo.SelectOption(5)
 		end
 	end
-
+	local gossipFunc6 = function()
+		if AutoTurnInCharacterDB.covenantswapgossipcompletion then
+			C_GossipInfo.SelectOption(1)
+			C_GossipInfo.SelectOption(1)
+			StaticPopup1Button1:Click()
+		end
+	end
 	AutoTurnIn.knownGossips = {
+		["171787"]=gossipFunc6, -- Polemarch Adrestes (Kyrian)
+		["171795"]=gossipFunc6, -- Lady Moonberry (Night Fae)
+		["171589"]=gossipFunc6, -- General Draven (Venthyr)
+		["171821"]=gossipFunc6, -- Secutor Mevix (Necrolord)
 		["93188"]=gossipFunc1, -- Mongar
 		["96782"]=gossipFunc1, -- Lucian Trias
 		["97004"]=gossipFunc1, -- "Red" Jack Findle
