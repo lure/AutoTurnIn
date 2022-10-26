@@ -36,6 +36,16 @@ privateTable.defaults = {
 		["142063"] = "Tezran",
 		["141584"] = "Zurvan", --seals of fate 
 		["111243"] = "Archmage Lan'dalock", --seals of fate
+	},
+	WANTED_NPC = {
+		["167881"] = "Ta'lan the Antiquary",
+		["167880"] = "Finder Ta'sul",
+		["158653"] = "Prince Renethal",
+        },
+	WANTED_QUESTS = {
+		["6942"] = "Frostwolf Soldier's Medal",
+		["6943"] = "Frostwolf Commander's Medal",
+		["6941"] = "Frostwolf Lieutenant's Medal",
 	}
 }
 
