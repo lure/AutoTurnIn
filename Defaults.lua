@@ -5,7 +5,7 @@ privateTable.defaults = {
 	all = 2, 
 	trivial = false, 
 	completeonly = false,
-    lootreward = 1, 
+	lootreward = 1,
 	tournament = 2,
 	darkmoonteleport = true, 
 	todarkmoon = true, 
@@ -41,7 +41,7 @@ privateTable.defaults = {
 		["167881"] = "Ta'lan the Antiquary",
 		["167880"] = "Finder Ta'sul",
 		["158653"] = "Prince Renethal",
-        },
+	},
 	WANTED_QUESTS = {
 		["6942"] = "Frostwolf Soldier's Medal",
 		["6943"] = "Frostwolf Commander's Medal",
