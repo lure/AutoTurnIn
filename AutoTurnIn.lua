@@ -471,7 +471,7 @@ function AutoTurnIn:QUEST_ACCEPTED(event, index)
 end
 
 function AutoTurnIn:QUEST_PROGRESS()
-    if  self:AllowedToHandle() and IsQuestCompletable() and self:isAppropriate() then
+    if  (self:AllowedToHandle() and IsQuestCompletable() and (self:isAppropriate() or self:IsWantedQuest(GetQuestID()))) then
 		CompleteQuest()
     end
 end
@@ -974,6 +974,10 @@ function AutoTurnIn:ShowIgnoreButton(frame)
 	--button text on global form
 	questNPCName = UnitName("target")
 	_G[IgnoreButton:GetName().."Text"]:SetText("AutoTurnIn: " .. L["ignorenpc"])
+end
+
+function AutoTurnIn:IsWantedQuest(questId)
+       return not not ptable.defaults.WANTED_QUESTS[questId]
 end
 
 -- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
