@@ -5,7 +5,7 @@ privateTable.defaults = {
 	all = 2, 
 	trivial = false, 
 	completeonly = false,
-	lootreward = 1, 
+	lootreward = 1,
 	tournament = 2,
 	darkmoonteleport = true, 
 	todarkmoon = true, 
@@ -46,6 +46,6 @@ privateTable.defaults = {
 		["6942"] = "Frostwolf Soldier's Medal",
 		["6943"] = "Frostwolf Commander's Medal",
 		["6941"] = "Frostwolf Lieutenant's Medal",
-        }
+	}
 }
 
