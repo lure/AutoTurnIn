@@ -1,6 +1,7 @@
 local addonName, privateTable = ...
 
 privateTable.defaults = {
+	interface10 = select(4, GetBuildInfo()) >= 100000,
 	enabled = true, 
 	all = 2, 
 	trivial = false, 
