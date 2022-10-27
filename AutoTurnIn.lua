@@ -27,6 +27,31 @@ AutoTurnIn.knownGossips={}
 AutoTurnIn.ERRORVALUE = nil
 AutoTurnIn.IgnoreButton = {["quest"] = nil, ["gossip"] = nil}
 
+function AutoTurnIn:LibDataStructure()
+-- see https://github.com/tekkub/libdatabroker-1-1/wiki/api
+	AutoTurnIn.ldbstruct = {
+		type = "data source",
+		icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
+		label = addonName,
+		OnClick = function(clickedframe, button)
+			-- if InCombatLockdown() then return end
+			if (button == "LeftButton") then
+				self:ShowOptions()
+			else 
+				self:SetEnabled(not AutoTurnInCharacterDB.enabled)
+			end			
+		end,
+	}
+
+	function AutoTurnIn.ldbstruct:OnTooltipShow()
+		self:AddLine(addonName)
+		self:AddLine("Left mouse button shows options.")
+		self:AddLine("Right mouse button toggle addon on/off.")
+	end
+
+	return AutoTurnIn.ldbstruct
+end 	
+
 function AutoTurnIn:ShowOptions()
 	-- too much things became tainted if called in combat.
 	if InCombatLockdown() then return end
@@ -86,7 +111,7 @@ function AutoTurnIn:OnEnable()
 	DB.questlevel = DB.questlevel == nil and true or DB.questlevel
 	DB.watchlevel = DB.watchlevel == nil and true or DB.watchlevel
 	DB.questshare = DB.questshare == nil and false or DB.questshare
-    DB.relictoggle = DB.relictoggle == nil and true or DB.relictoggle
+	DB.relictoggle = DB.relictoggle == nil and true or DB.relictoggle
 	DB.artifactpowertoggle = DB.artifactpowertoggle == nil and true or DB.artifactpowertoggle
 
 	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
