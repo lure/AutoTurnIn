@@ -8,8 +8,7 @@ local _ 		--Sometimes blizzard exposes "_" variable as a global.
 local addonName, ptable = ...
 local L = ptable.L
 local C = ptable.CONST
-local TOCVersion = GetAddOnMetadata(addonName, "Version")
-local Q_ALL, Q_DAILY, Q_EXCEPTDAILY = 1, 2, 3
+local Q_DAILY, Q_EXCEPTDAILY = 2, 3
 local questNPCName = nil
 local dragonflight = ptable.defaults.interface10
 
@@ -27,30 +26,32 @@ AutoTurnIn.knownGossips={}
 AutoTurnIn.ERRORVALUE = nil
 AutoTurnIn.IgnoreButton = {["quest"] = nil, ["gossip"] = nil}
 
-function AutoTurnIn:LibDataStructure()
 -- see https://github.com/tekkub/libdatabroker-1-1/wiki/api
-	AutoTurnIn.ldbstruct = {
-		type = "data source",
-		icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
-		label = addonName,
-		OnClick = function(clickedframe, button)
-			-- if InCombatLockdown() then return end
-			if (button == "LeftButton") then
-				self:ShowOptions()
-			else 
-				self:SetEnabled(not AutoTurnInCharacterDB.enabled)
-			end			
-		end,
-	}
-
-	function AutoTurnIn.ldbstruct:OnTooltipShow()
-		self:AddLine(addonName)
-		self:AddLine("Left mouse button shows options.")
-		self:AddLine("Right mouse button toggle addon on/off.")
+function AutoTurnIn:LibDataStructure()
+	if not AutoTurnIn.ldb then
+		local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
+		if LDB then
+			AutoTurnIn.ldb = LDB:NewDataObject("AutoTurnIn", {
+				type = "data source",
+				icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
+				label = addonName,
+				OnClick = function(clickedframe, button)
+					-- if InCombatLockdown() then return end
+					if (button == "LeftButton") then
+						self:ShowOptions()
+					else
+						self:SetEnabled(not AutoTurnInCharacterDB.enabled)
+					end
+				end,
+				OnTooltipShow = function()
+					self:AddLine(addonName)
+					self:AddLine("Left mouse button shows options.")
+					self:AddLine("Right mouse button toggle addon on/off.")
+				end
+			})
+		end
 	end
-
-	return AutoTurnIn.ldbstruct
-end 	
+end
 
 function AutoTurnIn:ShowOptions()
 	-- too much things became tainted if called in combat.
@@ -75,6 +76,7 @@ function AutoTurnIn:OnInitialize()
 	self:RegisterChatCommand("au", "ConsoleComand")
 	if (AutoTurnInCharacterDB and not AutoTurnInCharacterDB.IGNORED_NPC) then AutoTurnInCharacterDB.IGNORED_NPC = {} end
 
+	--self.db = LibStub("AceDB-3.0"):New("HandyNotesDB", defaults)
 end	
 
 function AutoTurnIn:SetEnabled(enabled)
@@ -86,6 +88,7 @@ end
 
 -- quest autocomplete handlers and functions
 function AutoTurnIn:OnEnable()
+	local TOCVersion = GetAddOnMetadata(addonName, "Version")
 	if (not AutoTurnInCharacterDB) or (not AutoTurnInCharacterDB.IGNORED_NPC) or (not AutoTurnInCharacterDB.version or (AutoTurnInCharacterDB.version < TOCVersion)) then
         AutoTurnInCharacterDB = nil
 		self:Print(L["reset"])
@@ -94,6 +97,7 @@ function AutoTurnIn:OnEnable()
 	if not AutoTurnInCharacterDB then
 		_G.AutoTurnInCharacterDB = CopyTable(self.defaults)
 	end
+
 	local DB = AutoTurnInCharacterDB
 
 	if (tonumber(DB.lootreward) == nil) then
@@ -114,13 +118,9 @@ function AutoTurnIn:OnEnable()
 	DB.relictoggle = DB.relictoggle == nil and true or DB.relictoggle
 	DB.artifactpowertoggle = DB.artifactpowertoggle == nil and true or DB.artifactpowertoggle
 
-	local LDB = LibStub:GetLibrary("LibDataBroker-1.1", true)
-	if LDB then
-		self.ldb = LDB:NewDataObject("AutoTurnIn", self:LibDataStructure())
-	end
-
 	self:SetEnabled(DB.enabled)
 	self:RegisterGossipEvents()
+	self:LibDataStructure()
 
 	-- See no way tp fix taint issues with quest special items.
 	hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
@@ -224,7 +224,6 @@ function AutoTurnIn:isAppropriate(questname, byCache)
         daily = QuestIsDaily() or QuestIsWeekly() or (not not self.questCache[qn])
     end
 
-
     return self:_isAppropriate(daily)
 end
 
@@ -317,7 +316,7 @@ function AutoTurnIn:QUEST_GREETING()
             if isDaily then
                 self:CacheAsDaily(GetAvailableTitle(index))
             end
-
+			
             if (triviaAndAllowedOrNotTrivia and notBlackListed and self:_isAppropriate(isDaily)) then
                 if quest and quest.amount then
                     if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
@@ -362,7 +361,7 @@ function AutoTurnIn:VarArgForAvailableQuests(gossipInfos)
 		if isDaily then
 			self:CacheAsDaily(questInfo.title)
 		end 
-
+		
 		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
 		if (triviaAndAllowedOrNotTrivial and notBlackListed and self:_isAppropriate(isDaily)) then
 			if quest and quest.amount then
@@ -430,7 +429,7 @@ function AutoTurnIn:QUEST_DETAIL()
 		self:CacheAsDaily(GetTitleText())
 	end
 	if QuestGetAutoAccept() then
-		CloseQuest()	
+		CloseQuest()
 	else
 		if self:AllowedToHandle() and self:isAppropriate() and (not AutoTurnInCharacterDB.completeonly) then
 			--ignore trivial quests 
