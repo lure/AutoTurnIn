@@ -119,7 +119,7 @@ function AutoTurnIn:OnEnable()
 	DB.artifactpowertoggle = DB.artifactpowertoggle == nil and true or DB.artifactpowertoggle
 
 	self:SetEnabled(DB.enabled)
-	self:RegisterGossipEvents()
+	self:RegisterForEvents()
 	self:LibDataStructure()
 
 	-- See no way tp fix taint issues with quest special items.
@@ -131,7 +131,10 @@ function AutoTurnIn:OnDisable()
   self:UnregisterAllEvents()
 end
 
-function AutoTurnIn:RegisterGossipEvents()
+--[[ 
+	GOSSIP SHOW 
+--]]
+function AutoTurnIn:RegisterForEvents()
 	self:RegisterEvent("QUEST_GREETING")
 	self:RegisterEvent("GOSSIP_SHOW")
 	self:RegisterEvent("QUEST_DETAIL")
@@ -145,7 +148,7 @@ function AutoTurnIn:RegisterGossipEvents()
 	
 	local gossipFunc1 = function() AutoTurnIn:Print(L["ivechosen"]); C_GossipInfo.SelectOption(1) end
 	local gossipFunc2 = function() if (C_GossipInfo.GetNumOptions() == 2) then C_GossipInfo.SelectOption(1) end end
-	local gossipFunc3 = function() 
+	local gossipFunc3 = function()
 		if (AutoTurnInCharacterDB.todarkmoon and GetRealZoneText() ~= L["Darkmoon Island"]
 			and C_GossipInfo.GetNumAvailableQuests() == 0) then
 			--accept available quest first, then teleport
