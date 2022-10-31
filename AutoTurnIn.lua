@@ -147,7 +147,7 @@ function AutoTurnIn:RegisterForEvents()
 	end
 	
 	local gossipFunc1 = function() AutoTurnIn:Print(L["ivechosen"]); C_GossipInfo.SelectOption(1) end
-	local gossipFunc2 = function() if (C_GossipInfo.GetNumOptions() == 2) then C_GossipInfo.SelectOption(1) end end
+	local gossipFunc2 = function() if (C_GossipInfo.GetNumOptions and C_GossipInfo.GetNumOptions() == 2) then C_GossipInfo.SelectOption(1) end end
 	local gossipFunc3 = function()
 		if (AutoTurnInCharacterDB.todarkmoon and GetRealZoneText() ~= L["Darkmoon Island"]
 			and C_GossipInfo.GetNumAvailableQuests() == 0) then
