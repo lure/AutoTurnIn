@@ -38,7 +38,7 @@ local function CreatePanel(name, text, w, h)
 		elseif name == "WeaponPanel" then 
 			return ptable.TempConfig.weapon
 		elseif name == "SecStatPanel" then
-			return ptable.TempConfig.secondary		
+			return ptable.TempConfig.secondary
 		end
 	end	
 	-- _G[panel:GetName().."Title"]:SetText(text)

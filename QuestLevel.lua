@@ -1,8 +1,5 @@
-local _G = _G 	--Rumors say that global _G is called by lookup in a super-global table. Have no idea whether it is true. 
-local _ 		--Sometimes blizzard exposes "_" variable as a global. 
-local addonName, ptable = ...
-local L = ptable.L
-local C = ptable.CONST
+
+local _ 		--Sometimes blizzard exposes "_" variable as a global.
 
 AutoTurnIn.QuestLevelFormat = " [%d] %s"
 AutoTurnIn.WatchFrameLevelFormat = "[%d%s%s] %s"
@@ -13,15 +10,15 @@ AutoTurnIn.QuestTypesIndex = {
 	[62] = "r",			--Raid
 	[81] = "d",			--Dungeon
 	[83] = "L", 		--Legendary
-	[85] = "h",			--Heroic 
+	[85] = "h",			--Heroic
 	[98] = "s", 		--Scenario QUEST_TYPE_SCENARIO
 	[102] = "a", 		-- Account
 }
 
 function AutoTurnIn:ShowQuestLevelInLog()
-	if not AutoTurnInCharacterDB.questlevel then 
+	if not AutoTurnIn.db.profile.questlevel then
 		return
-	end	
+	end
 
 	for button in QuestMapFrame.QuestsFrame.titleFramePool:EnumerateActive() do
 		if (button and button.questLogIndex) then
@@ -39,8 +36,13 @@ function AutoTurnIn:ShowQuestLevelInLog()
 
 end
 
+--[[
+	FIXME: This thing taint the global frames. 
+	To check: ESC ->"Edit mode" and close the layout window. 
+
+--]]
 function AutoTurnIn:ShowQuestLevelInWatchFrame()
-	if not AutoTurnInCharacterDB.watchlevel then 
+	if not AutoTurnIn.db.profile.watchlevel then
 		return
 	end
 	
@@ -58,7 +60,7 @@ function AutoTurnIn:ShowQuestLevelInWatchFrame()
 					if (questLogIndex) then
 						local questInfo = C_QuestLog.GetInfo(questLogIndex)
 						-- update calls are async and data could not be (yet or already) exist in log
-						if (questInfo and questInfo.title and questInfo.title ~= "") then 	  
+						if (questInfo and questInfo.title and questInfo.title ~= "") then
 							local questTypeIndex = GetQuestLogQuestType(questLogIndex)
 							local tagString = AutoTurnIn.QuestTypesIndex[questTypeIndex] or ""
 							local dailyMod = (questInfo.frequency == Enum.QuestFrequency.Daily or questInfo.frequency == Enum.QuestFrequency.Weekly) and "\*" or ""

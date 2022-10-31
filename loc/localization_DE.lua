@@ -7,6 +7,7 @@ privateTable.L = setmetatable({
 	["usage3"]="'loot' Quests mit mehreren wahlmöglichkeiten zur Belohnung nicht abgeben oder die teuerste Belohnung wählen",
 	["enabled"]="Eingeschaltet",
 	["disabled"]="Ausgeschaltet",
+	["debug"]="Erläutern Sie die Wahl des Belohnung",
 	["all"]="alle Quests",
 	["list"]="nur tägliche Quests",
 	["dontlootfalse"]="Wähle die teuerste Belohnung",

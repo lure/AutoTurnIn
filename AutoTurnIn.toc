@@ -9,12 +9,26 @@
 ## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests
 ## Notes-itIT: Italian translators wanted!!!
 ## OptionalDeps: Ace3
-## SavedVariablesPerCharacter: AutoTurnInCharacterDB
+## SavedVariables: AutoTurnInDB
 ## X-Date: 2016-07-21
 ## X-Category: Quest
 ## X-Embeds: Ace3
 
-embeds.xml
+# Library files
+#@no-lib-strip@
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+libs\AceAddon-3.0\AceAddon-3.0.xml
+libs\AceConsole-3.0\AceConsole-3.0.xml
+libs\AceEvent-3.0\AceEvent-3.0.xml
+# new options
+libs\AceDB-3.0\AceDB-3.0.xml
+libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+libs\AceGUI-3.0\AceGUI-3.0.xml
+libs\AceConfig-3.0\AceConfig-3.0.xml
+#@end-no-lib-strip@
+
 
 loc\localization_RU.lua
 loc\localization_EN.lua
@@ -27,5 +41,5 @@ Defaults.lua
 AutoTurnIn.lua
 QuestLevel.lua
 
-ui\main_options.lua
-ui\reward_options.lua
+# ui\main_options.lua
+# ui\reward_options.lua
