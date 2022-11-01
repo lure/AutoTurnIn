@@ -27,6 +27,14 @@ AutoTurnIn.IgnoreButton = {["quest"] = nil, ["gossip"] = nil}
 --]]
 local db
 local defaults = CopyTable(ptable.defaults)
+local function makeWeaponToggle(index, _order)
+	return {
+		type = "toggle",
+		name = C.weapon[index],
+		arg = ("weapon;".. C.weapon[index]),
+		order = _order,
+	}
+end
 local options = {
 	type = "group",
 	name = "AutoTurnIn",
@@ -34,7 +42,7 @@ local options = {
 	args = {
 		enabled = {
 			type = "toggle",
-			name = L["enabled"],
+			name = L["enabled"].." (version "..GetAddOnMetadata(addonName, "Version") .. ")",
 			desc = L["usage1"],
 			order = 1,
 			get = function(info) return db.enabled end,
@@ -254,13 +262,71 @@ local options = {
 					desc = L["rewardlootoptions"],
 					order = 2000,
 					hidden  = function() return db.lootreward~=3 end,
+					get = function(info) local t,st = strsplit(";", info.arg) local v = db[t][st] return v == nil and false or v end,
+					set = function(info, v) local t,st = strsplit(";", info.arg) db[t][st] = (v or nil) end,
 					args = {
-						covenantswapgossipcompletion = {
+						greedifnothing = {
 							type = "toggle",
 							name = L["greedifnothing"],
 							get = function(info) return db.greedifnothingfound end,
 							set = function(info,val) db.greedifnothingfound = val end,
-							order = 170,
+							order = 10,
+						},
+						weapon_title = {
+							type = "header",
+							name = C.WEAPONLABEL,
+							order = 20
+						},
+						wp1 = makeWeaponToggle(1, 30),
+						wp2 = makeWeaponToggle(2, 31),
+						wp3 = makeWeaponToggle(10, 32),
+						wp4 = makeWeaponToggle(5, 33),
+						wp5 = makeWeaponToggle(6, 34),
+						wp6 = makeWeaponToggle(11, 35),
+						wp7 = makeWeaponToggle(8, 36),
+						wp8 = makeWeaponToggle(9, 37),
+						wp9 = makeWeaponToggle(16, 38),
+						wp10 = makeWeaponToggle(13, 39),
+						wp11 = makeWeaponToggle(7, 40),
+						wp12 = makeWeaponToggle(14, 41),
+						armor_title = {
+							type = "header",
+							name = C.ARMORLABEL,
+							order = 50
+						},
+						armor_reward = {
+							type = "select",
+							style  = "dropdown",
+							name = "",
+							values =  {[1] = NONE_KEY, [2]=C.armor[2], [3]=C.armor[3], [4]=C.armor[4], [5]=C.armor[5]},
+							get = function() return db["armor"]["type"] end,
+							set = function(info, v) db["armor"]["type"] = v end,
+							width  = "double",
+							order = 60,
+						},
+						armor7 = {
+							type = "toggle",
+							name = C.armor[7],
+							arg = "armor;BACK",
+							order = 61,
+						},
+						armor8 = {
+							type = "toggle",
+							name = L['Jewelry'],
+							arg = "armor;Jewelry",
+							order = 62,
+						},
+						armor9 = {
+							type = "toggle",
+							name = INVTYPE_HOLDABLE,
+							arg = "armor;HOLDABLE",
+							order = 63,
+						},
+						armor10 = {
+							type = "toggle",
+							name = INVTYPE_CLOAK,
+							arg = "armor;CLOAK",
+							order = 64,
 						},
 					},
 				},
@@ -268,6 +334,7 @@ local options = {
 		},
 	},
 }
+
 function AutoTurnIn:OnInitialize()
 	-- set up options db
 	self.db = LibStub("AceDB-3.0"):New("AutoTurnInDB", defaults)
@@ -300,36 +367,6 @@ end
 	INIT: ENABLE quest autocomplete handlers and functions
 --]]
 function AutoTurnIn:OnEnable()
-	-- local TOCVersion = GetAddOnMetadata(addonName, "Version")
-	-- if (not AutoTurnInCharacterDB) or (not AutoTurnInCharacterDB.IGNORED_NPC) or (not AutoTurnInCharacterDB.version or (AutoTurnInCharacterDB.version < TOCVersion)) then
-    --     AutoTurnInCharacterDB = nil
-	-- 	self:Print(L["reset"])
-	-- end
-
-	-- if not AutoTurnInCharacterDB then
-	-- 	_G.AutoTurnInCharacterDB = CopyTable(self.defaults)
-	-- end
-
-	-- local DB = AutoTurnInCharacterDB
-
-	-- if (tonumber(DB.lootreward) == nil) then
-	-- 	DB.lootreward = 1
-	-- end
-	-- if (tonumber(DB.togglekey) == nil) then
-	-- 	DB.togglekey = 1
-	-- end
-	-- DB.armor = DB.armor and DB.armor or {}
-	-- DB.weapon = DB.weapon and DB.weapon or {}
-	-- DB.stat = DB.stat and DB.stat or {}
-	-- DB.secondary = DB.secondary and DB.secondary or {}
-	-- DB.trivial = DB.trivial ~= nil and DB.trivial or false
-
-	-- DB.questlevel = DB.questlevel == nil and true or DB.questlevel
-	-- DB.watchlevel = DB.watchlevel == nil and true or DB.watchlevel
-	-- DB.questshare = DB.questshare == nil and false or DB.questshare
-	-- DB.relictoggle = DB.relictoggle == nil and true or DB.relictoggle
-	-- DB.artifactpowertoggle = DB.artifactpowertoggle == nil and true or DB.artifactpowertoggle
-
 	self:SetEnabled(db.enabled)
 	self:RegisterForEvents()
 	self:LibDataStructure()
@@ -491,6 +528,7 @@ end
 
 -- Old 'Quest NPC' interaction system. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
+	self:Print("QUEST_GREETING")
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
@@ -533,18 +571,19 @@ function AutoTurnIn:QUEST_GREETING()
 end
 
 function AutoTurnIn:VarArgForActiveQuests(gossipInfos)
-	for index, gossipInfo in ipairs(gossipInfos) do
-		if (gossipInfo.isComplete) then
-			local questname = gossipInfo.title
+	for _, questInfo in ipairs(gossipInfos) do
+		if (questInfo.isComplete) then
+			local questname = questInfo.title
+			self:Print("gossipInfo.questID", questInfo.questID)
 			if self:isAppropriate(questname, true) then
 				local quest = L.quests[questname]
 				if quest and quest.amount then
 					if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
-						C_GossipInfo.SelectActiveQuest(index)
+						C_GossipInfo.SelectActiveQuest(questInfo.questID)
 						self.DarkmoonAllowToProceed = false
 					end
 				else
-					C_GossipInfo.SelectActiveQuest(index)
+					C_GossipInfo.SelectActiveQuest(questInfo.questID)
 					self.DarkmoonAllowToProceed = false
 				end
 			end
@@ -552,26 +591,24 @@ function AutoTurnIn:VarArgForActiveQuests(gossipInfos)
 	end
 end
 
-function AutoTurnIn:VarArgForAvailableQuests(gossipInfos)
-	for index, questInfo in ipairs(gossipInfos) do
+function AutoTurnIn:VarArgForAvailableQuests(gossipInfos)	
+	for _,questInfo in ipairs(gossipInfos) do
 		local triviaAndAllowedOrNotTrivial = (not questInfo.isTrivial) or db.trivial
 		local quest = L.quests[questInfo.title] -- this quest exists in addons quest DB. There are mostly daily quests
 		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(questInfo.title)))
-		local isDaily = self:_isDaily(questInfo)
-		
+		local isDaily = self:_isDaily(questInfo)		
 		-- for unknown reason the questInfo is different from what is seen in QuestCache:Get(questID);
 		if isDaily then
 			self:CacheAsDaily(questInfo.title)
 		end
-		
-		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))
-		if (triviaAndAllowedOrNotTrivial and notBlackListed and self:_isAppropriate(isDaily)) then
+		-- Quest is appropriate if: (it is trivial and trivial are accepted) and (any quest accepted or (it is daily quest that is not in ignore list))		
+		if (triviaAndAllowedOrNotTrivial and notBlackListed and self:_isAppropriate(isDaily)) then			
 			if quest and quest.amount then
 				if self:GetItemAmount(quest.currency, quest.item) >= quest.amount then
-					C_GossipInfo.SelectAvailableQuest(index)
+					C_GossipInfo.SelectAvailableQuest(questInfo.questID)
 				end
 			else
-				C_GossipInfo.SelectAvailableQuest(index)
+				C_GossipInfo.SelectAvailableQuest(questInfo.questID)
 			end
 		end
 	end
@@ -601,18 +638,18 @@ end
 function AutoTurnIn:GOSSIP_SHOW()
 	if (not self:AllowedToHandle(true)) then
 		return
-	end
+	end	
 
 	-- darkmoon fairy gossip sometime turns in quest too fast so I can't relay only on quest number count. It often lie.
 	-- this flag is set in VarArgForActiveQuests if any quest may be turned in
 	self.DarkmoonAllowToProceed = true	
 	local questCount = C_GossipInfo.GetNumActiveQuests() > 0
-	
+
 	self:VarArgForActiveQuests(C_GossipInfo.GetActiveQuests())
     if not db.completeonly then
 	    self:VarArgForAvailableQuests(C_GossipInfo.GetAvailableQuests())
 	end
-	
+
 	if self:isDarkmoonAndAllowed(questCount) then
 		local options = C_GossipInfo.GetOptions()
 		for index, gossipInfo in ipairs(options) do
@@ -1279,4 +1316,4 @@ function AutoTurnIn:ShowOptions()
 	-- 	InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
 	-- end
 end
-
+-- DevTools_DumpCommand("C_GossipInfo.GetAvailableQuests()")

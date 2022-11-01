@@ -86,7 +86,7 @@ UIDropDownMenu_Initialize(ArmorDropDown, function (self, level)
 						if self:GetID() > 1 then
 							ArmorDropDown.value = self:GetID()
 							ptable.TempConfig.armor[self:GetText()] = true
-						end															
+						end
 					end
         UIDropDownMenu_AddButton(info, level)
     end
@@ -167,7 +167,7 @@ RewardPanel.refresh = function()
 	
 	for index, armorName in ipairs(ARMORCONST) do
 		if ptable.TempConfig.armor[armorName] then
-			ArmorDropDown.value=index			
+			ArmorDropDown.value=index
 		end
 	end
 	
