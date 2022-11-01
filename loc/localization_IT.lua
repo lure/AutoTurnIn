@@ -8,6 +8,7 @@ privateTable.L = setmetatable({
 	["usage3"]="'loot' non completare le missioni con una lista di ricompense o completarle scegliendo la più costosa tra le ricompense",
 	["enabled"]="abilitato",
 	["disabled"]="disabilitato",
+	["debug"]="Explain the choice of reward",
 	["all"]="pronto a gestire ogni missione",
 	["list"]="solo le missioni giornaliere verranno gestite",
 	["dontlootfalse"]="scegli la ricompensa più costosa",
