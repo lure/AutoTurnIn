@@ -15,7 +15,6 @@ AutoTurnIn = LibStub("AceAddon-3.0"):NewAddon("AutoTurnIn", "AceEvent-3.0", "Ace
 -- TODO: REFACTOR INTO A SINGLE 'OPTION' OBJECT
 AutoTurnIn.ldb, AutoTurnIn.allowed = nil, nil
 AutoTurnIn.funcList = {[1] = function() return false end, [2]=IsAltKeyDown, [3]=IsControlKeyDown, [4]=IsShiftKeyDown}
-AutoTurnIn.OptionsPanel, AutoTurnIn.RewardPanel = nil, nil
 AutoTurnIn.autoEquipList={}
 AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's quest log
 AutoTurnIn.knownGossips={}
@@ -45,8 +44,8 @@ local options = {
 			name = L["enabled"].." (version "..GetAddOnMetadata(addonName, "Version") .. ")",
 			desc = L["usage1"],
 			order = 1,
-			get = function(info) return db.enabled end,
-			set = function(info, v)
+			get = function(_) return db.enabled end,
+			set = function(_, v)
 				db.enabled = v
 				AutoTurnIn:SetEnabled(v)
 			end,
@@ -216,23 +215,50 @@ local options = {
 							name = L["questlevel"],
 							arg = "questlevel",
 							width  = "full",
-							order = 110,
+							order = 10,
 						},
-						watchlevel = {
-							type = "toggle",
-							name = L["watchlevel"],
-							arg = "watchlevel",
-							width  = "full",
-							order = 120,
-							confirm = function() return "This thing taints the UI. Use on your own risk" end,
-						},
+						-- watchlevel = {
+						-- 	type = "toggle",
+						-- 	name = L["watchlevel"],
+						-- 	arg = "watchlevel",
+						-- 	width  = "full",
+						-- 	order = 20,
+						-- 	confirm = function() return "This thing taints the UI. Use on your own risk" end,
+						-- },
 						questshare = {
 							type = "toggle",
 							name = L["ShareQuestsLabel"],
 							arg = "questshare",
 							width  = "full",
-							order = 100,
+							order = 30,
 						},
+						sell_junk = {
+							type = "select",
+							name = "Sell junk functionality",
+							values = {[1]=L["Don't do anything"], [2]=L["Autosell junk"], [3]=L["Add sell button"]},
+							width  = "full",
+							get = function(info) return db[info.arg] end,
+							set = function(info, v) AutoTurnIn:SwitchSellJunk(v); db[info.arg] = v end,
+							arg = "sell_junk",
+							order = 40,
+						},
+						map_coords = {
+							type = "toggle",
+							name = "Display player coordinates on world map",
+							arg = "map_coords",
+							width  = "full",
+							get = function(info) return db[info.arg] end,
+							set = function(info, v) AutoTurnIn:SwitchMapCoords(v); db[info.arg] = v end,
+							order = 40,
+						},
+						-- unsafe_item_wipe = {
+						-- 	type = "toggle",
+						-- 	name = "Wipe item in the bag by ALT + Click",
+						-- 	arg = "unsafe_item_wipe",
+						-- 	confirm = function() return "Wiping ANY item in your bag if clicked with ALT key pressed" end,
+						-- 	width  = "full",
+						-- 	order = 200,
+						-- },
 					}
 				},
 				relic_opts = {
@@ -335,6 +361,8 @@ local options = {
 	},
 }
 
+-- Option DB https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial
+-- Option GUI https://www.wowace.com/projects/ace3/pages/ace-config-3-0-options-tables
 function AutoTurnIn:OnInitialize()
 	-- set up options db
 	self.db = LibStub("AceDB-3.0"):New("AutoTurnInDB", defaults)
@@ -361,18 +389,21 @@ function AutoTurnIn:SetEnabled(enabled)
 	if self.ldb then
 		self.ldb.text = (db.enabled) and '|cff00ff00on|r' or '|cffff0000off|r'
 	end
+
+	self:SwitchMapCoords(db.enabled and db.map_coords)
+	self:SwitchSellJunk(db.enabled and db.sell_junk)
 end
 
 --[[
 	INIT: ENABLE quest autocomplete handlers and functions
 --]]
-function AutoTurnIn:OnEnable()
+function AutoTurnIn:OnEnable()	
 	self:SetEnabled(db.enabled)
 	self:RegisterForEvents()
 	self:LibDataStructure()
 
 	-- See no way tp fix taint issues with quest special items.
-	hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
+	--hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
 	hooksecurefunc("QuestLogQuests_Update", AutoTurnIn.ShowQuestLevelInLog)
 end
 

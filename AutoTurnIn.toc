@@ -36,10 +36,13 @@ loc\localization_DE.lua
 loc\localization_FR.lua
 loc\localization_IT.lua
 
-rewards_const.lua
+RewardsConst.lua
 Defaults.lua
 AutoTurnIn.lua
 QuestLevel.lua
+SellJunk.lua
+Utils.lua
+MapCoords.lua
 
 # ui\main_options.lua
 # ui\reward_options.lua

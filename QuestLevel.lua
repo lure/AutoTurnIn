@@ -1,4 +1,3 @@
-
 local _ 		--Sometimes blizzard exposes "_" variable as a global.
 
 AutoTurnIn.QuestLevelFormat = " [%d] %s"
@@ -42,7 +41,7 @@ end
 
 --]]
 function AutoTurnIn:ShowQuestLevelInWatchFrame()
-	if not AutoTurnIn.db.profile.watchlevel then
+	if InCombatLockdown() or not AutoTurnIn.db.profile.watchlevel then
 		return
 	end
 	
