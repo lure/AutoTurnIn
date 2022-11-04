@@ -41,18 +41,13 @@ end
 
 --]]
 function AutoTurnIn:ShowQuestLevelInWatchFrame()
-	if InCombatLockdown() or not AutoTurnIn.db.profile.watchlevel then
+	if InCombatLockdown() or not (AutoTurnIn.db.profile.watchlevel and ObjectiveTrackerFrame.initialized) then
 		return
 	end
-	
-	local tracker = ObjectiveTrackerFrame
-	if ( not tracker.initialized )then
-		return
-	end
-	
-	for i = 1, #tracker.MODULES do
+
+	for i = 1, #ObjectiveTrackerFrame.MODULES do
 		--for id,block in pairs( tracker.MODULES[i].Header.module.usedBlocks) do
-		for blockTemplate, blockTable in pairs( tracker.MODULES[i].Header.module.usedBlocks) do
+		for blockTemplate, blockTable in pairs( ObjectiveTrackerFrame.MODULES[i].Header.module.usedBlocks) do
 			for id, block in pairs(blockTable) do
 				if block.id and block.HeaderText and block.HeaderText:GetText() and (not string.find(block.HeaderText:GetText(), "^%[.*%].*")) then
 					local questLogIndex = C_QuestLog.GetLogIndexForQuestID(block.id)

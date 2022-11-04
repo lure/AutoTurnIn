@@ -217,14 +217,14 @@ local options = {
 							width  = "full",
 							order = 10,
 						},
-						-- watchlevel = {
-						-- 	type = "toggle",
-						-- 	name = L["watchlevel"],
-						-- 	arg = "watchlevel",
-						-- 	width  = "full",
-						-- 	order = 20,
-						-- 	confirm = function() return "This thing taints the UI. Use on your own risk" end,
-						-- },
+						watchlevel = {
+							type = "toggle",
+							name = L["watchlevel"],
+							arg = "watchlevel",
+							width  = "full",
+							order = 20,
+							confirm = function() return "This thing taints the UI. Use on your own risk" end,
+						},
 						questshare = {
 							type = "toggle",
 							name = L["ShareQuestsLabel"],
@@ -403,7 +403,7 @@ function AutoTurnIn:OnEnable()
 	self:LibDataStructure()
 
 	-- See no way tp fix taint issues with quest special items.
-	--hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
+	hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
 	hooksecurefunc("QuestLogQuests_Update", AutoTurnIn.ShowQuestLevelInLog)
 end
 
@@ -426,34 +426,36 @@ function AutoTurnIn:RegisterForEvents()
 		self:RegisterEvent("GOSSIP_CONFIRM")
 	end
 
-	local gossipFunc1 = function() AutoTurnIn:Print(L["ivechosen"]); C_GossipInfo.SelectOption(1) end
-	local gossipFunc2 = function() if (C_GossipInfo.GetNumOptions and C_GossipInfo.GetNumOptions() == 2) then C_GossipInfo.SelectOption(1) end end
+	local function __getGossipId(index) return C_GossipInfo.GetOptions()[index].gossipOptionID end
+	local gossipFunc1 = function() AutoTurnIn:Print(L["ivechosen"]); C_GossipInfo.SelectOption( __getGossipId(1) ) end
+	local gossipFunc2 = function()
+		if (C_GossipInfo.GetNumOptions and C_GossipInfo.GetNumOptions() == 2) then C_GossipInfo.SelectOption(__getGossipId(1)) end
+	end
 	local gossipFunc3 = function()
-		if (db.todarkmoon and GetRealZoneText() ~= L["Darkmoon Island"]
-			and C_GossipInfo.GetNumAvailableQuests() == 0) then
+		if (db.todarkmoon and GetRealZoneText() ~= L["Darkmoon Island"] and C_GossipInfo.GetNumAvailableQuests() == 0) then
 			--accept available quest first, then teleport
 			AutoTurnIn:Print("Teleporting to " .. L["Darkmoon Island"])
-			C_GossipInfo.SelectOption(1)
+			C_GossipInfo.SelectOption(__getGossipId(1))
 			StaticPopup1Button1:Click()
 		end
 	end
 	local gossipFunc4 = function()
 		if db.darkmoonteleport then
 			AutoTurnIn:Print("Teleporting to cannon")
-			C_GossipInfo.SelectOption(1)
+			C_GossipInfo.SelectOption(__getGossipId(1))
 			StaticPopup1Button1:Click()
 		end
 	end
 	local gossipFunc5 = function()
 		if db.dismisskyriansteward then
 			AutoTurnIn:Print(L["ivechosenfive"])
-			C_GossipInfo.SelectOption(5)
+			C_GossipInfo.SelectOption(__getGossipId(5))
 		end
 	end
 	local gossipFunc6 = function()
 		if db.covenantswapgossipcompletion then
-			C_GossipInfo.SelectOption(1)
-			C_GossipInfo.SelectOption(1)
+			C_GossipInfo.SelectOption(__getGossipId(1))
+			C_GossipInfo.SelectOption(__getGossipId(1))
 			StaticPopup1Button1:Click()
 		end
 	end
@@ -669,7 +671,7 @@ end
 function AutoTurnIn:GOSSIP_SHOW()
 	if (not self:AllowedToHandle(true)) then
 		return
-	end	
+	end
 
 	-- darkmoon fairy gossip sometime turns in quest too fast so I can't relay only on quest number count. It often lie.
 	-- this flag is set in VarArgForActiveQuests if any quest may be turned in
@@ -683,9 +685,9 @@ function AutoTurnIn:GOSSIP_SHOW()
 
 	if self:isDarkmoonAndAllowed(questCount) then
 		local options = C_GossipInfo.GetOptions()
-		for index, gossipInfo in ipairs(options) do
+		for _, gossipInfo in ipairs(options) do
 			if ((gossipInfo.type == "gossip") and strfind(gossipInfo.name, "|cFF0008E8%(")) then
-				return C_GossipInfo.SelectOption(index)
+				return C_GossipInfo.SelectOption(gossipInfo.gossipOptionID)
 			end
 		end
 	end
@@ -756,9 +758,9 @@ function AutoTurnIn:HandleGossip()
 		-- https://www.wowinterface.com/forums/showthread.php?t=49210 adaptation
 		if db.reviveBattlePet then
 			local options = C_GossipInfo.GetOptions()
-			for index, gossipInfo in ipairs(options) do
+			for _, gossipInfo in ipairs(options) do
 				if gossipInfo.name == L["ReviveBattlePetQ"] then
-					return C_GossipInfo.SelectOption(index)
+					return C_GossipInfo.SelectOption(gossipInfo.gossipOptionID)
 				end
 			end
 		end
