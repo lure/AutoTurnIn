@@ -323,12 +323,7 @@ local options = {
 						wp10 = makeWeaponToggle(13, 39),
 						wp11 = makeWeaponToggle(7, 40),
 						wp12 = makeWeaponToggle(14, 41),
-						wp13 = {
-							type = "toggle",
-							name = string.format("%s, %s, %s", C.weapon[3], C.weapon[4], C.weapon[15]),
-							arg = ("weapon;Ranged"),
-							order = 42,
-						},
+						wp13 = createToggle(string.format("%s, %s, %s", C.weapon[3], C.weapon[4], C.weapon[15]), "weapon;Ranged", 42),
 						armor_title = {
 							type = "header",
 							name = C.ARMORLABEL,
@@ -344,24 +339,9 @@ local options = {
 							width  = "double",
 							order = 60,
 						},
-						armor7 = {
-							type = "toggle",
-							name = C.armor[7],
-							arg = "armor;BACK",
-							order = 61,
-						},
-						armor8 = {
-							type = "toggle",
-							name = L['Jewelry'],
-							arg = "armor;Jewelry",
-							order = 62,
-						},
-						armor9 = {
-							type = "toggle",
-							name = INVTYPE_HOLDABLE,
-							arg = "armor;HOLDABLE",
-							order = 63,
-						},
+						armor7 = createToggle(C.armor[7], "armor;BACK", 61),
+						armor8 = createToggle(L['Jewelry'], "armor;Jewelry", 62),
+						armor9 = createToggle(INVTYPE_HOLDABLE, "armor;HOLDABLE", 63),
 						armor10 = createToggle(INVTYPE_CLOAK, "armor;CLOAK", 64),
 						-- STATS 
 						stat_title = {
