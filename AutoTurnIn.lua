@@ -34,6 +34,14 @@ local function makeWeaponToggle(index, _order)
 		order = _order,
 	}
 end
+local function createToggle(_name, _arg, _order)
+	return {
+		type = "toggle",
+		name = _name,
+		arg = _arg,
+		order = _order,
+	}
+end
 local options = {
 	type = "group",
 	name = "AutoTurnIn",
@@ -315,6 +323,12 @@ local options = {
 						wp10 = makeWeaponToggle(13, 39),
 						wp11 = makeWeaponToggle(7, 40),
 						wp12 = makeWeaponToggle(14, 41),
+						wp13 = {
+							type = "toggle",
+							name = string.format("%s, %s, %s", C.weapon[3], C.weapon[4], C.weapon[15]),
+							arg = ("weapon;Ranged"),
+							order = 42,
+						},
 						armor_title = {
 							type = "header",
 							name = C.ARMORLABEL,
@@ -348,18 +362,36 @@ local options = {
 							arg = "armor;HOLDABLE",
 							order = 63,
 						},
-						armor10 = {
-							type = "toggle",
-							name = INVTYPE_CLOAK,
-							arg = "armor;CLOAK",
-							order = 64,
+						armor10 = createToggle(INVTYPE_CLOAK, "armor;CLOAK", 64),
+						-- STATS 
+						stat_title = {
+							type = "header",
+							name = STAT_CATEGORY_ATTRIBUTES,
+							order = 70
 						},
+						stat1 = createToggle(SPELL_STAT1_NAME, "stat;ITEM_MOD_STRENGTH_SHORT", 71),
+						stat2 = createToggle(SPELL_STAT2_NAME, "stat;ITEM_MOD_AGILITY_SHORT", 72),
+						stat3 = createToggle(SPELL_STAT4_NAME, "stat;ITEM_MOD_INTELLECT_SHORT", 73),
+						sec_stat_title = {
+							type = "header",
+							name = STAT_CATEGORY_ENHANCEMENTS,
+							order = 80
+						},
+						secstat1 = createToggle(ITEM_MOD_CRIT_RATING_SHORT, "secondary;ITEM_MOD_CRIT_RATING_SHORT", 81),
+						secstat2 = createToggle(ITEM_MOD_CR_LIFESTEAL_SHORT, "secondary;ITEM_MOD_CR_LIFESTEAL_SHORT", 82),
+						secstat3 = createToggle(ITEM_MOD_HASTE_RATING_SHORT, "secondary;ITEM_MOD_HASTE_RATING_SHORT", 83),
+						secstat4 = createToggle(ITEM_MOD_CR_MULTISTRIKE_SHORT, "secondary;ITEM_MOD_CR_MULTISTRIKE_SHORT", 84),
+						secstat5 = createToggle(ITEM_MOD_MASTERY_RATING_SHORT, "secondary;ITEM_MOD_MASTERY_RATING_SHORT", 85),
+						secstat6 = createToggle(ITEM_MOD_VERSATILITY, "secondary;ITEM_MOD_VERSATILITY", 86),
+						secstat7 = createToggle(ITEM_MOD_SPELL_POWER_SHORT, "secondary;ITEM_MOD_SPELL_POWER_SHORT", 85),
+						-- secstat8 = createToggle(ITEM_MOD_SPIRIT_SHORT, "secondary;ITEM_MOD_SPIRIT_SHORT", 86),
 					},
 				},
 			}
 		},
 	},
 }
+
 
 -- Option DB https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial
 -- Option GUI https://www.wowace.com/projects/ace3/pages/ace-config-3-0-options-tables
