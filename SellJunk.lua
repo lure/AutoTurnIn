@@ -1,5 +1,5 @@
 --[[
-* Adds a button "sell junk" to every merchant window. 
+* Adds a button "sell junk" to every merchant window.
 * Pressing tat button playr are able to sell all grey-quality items from his backpacks
 ]]--
 local _, ptable = ...
@@ -23,7 +23,7 @@ SellButton:SetScript("OnClick", function()
 	selljunk.amount= 0
 
 	for container = 0, NUM_BAG_SLOTS do
-		numSlots = GetContainerNumSlots(container)
+		numSlots = C_Container.GetContainerNumSlots(container)
 		for slot = 1, numSlots do
 
 			if (not selljunk.vendorAvailable and selljunk.amount > 0) then
@@ -31,15 +31,19 @@ SellButton:SetScript("OnClick", function()
 				return
 			end
 
-			local _, count, _, _, _, _, link = GetContainerItemInfo(container, slot)
-			if (link) then 
+			local link = C_Container.GetContainerItemLink(container, slot)
+
+			if (link) then
 				_, _, quality, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(link)
 			end
 
-			if (link and quality == 0) then
+			if (link and quality == Enum.ItemQuality.Poor) then
+				local itemInfo = C_Container.GetContainerItemInfo(container, slot)
+				local count = itemInfo.stackCount
+
 				selljunk.amount = selljunk.amount + (vendorPrice * count)
 				selljunk.count = selljunk.count + 1
-				UseContainerItem(container, slot)
+				C_Container.UseContainerItem(container, slot)
 			end
 		end
 	end
