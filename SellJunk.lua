@@ -43,8 +43,15 @@ SellButton:SetScript("OnClick", function()
 			end
 
 			if (link and quality == Enum.ItemQuality.Poor) then
-				local itemInfo = GetContainerItemInfo(container, slot)
-				local count = itemInfo.stackCount
+				local itemInfo, count = GetContainerItemInfo(container, slot)
+
+				local stackCount = 0
+
+				if (type(itemInfo) == 'table') then
+					stackCount = itemInfo.stackCount
+				else
+					stackCount = count
+				end
 
 				selljunk.amount = selljunk.amount + (vendorPrice * count)
 				selljunk.count = selljunk.count + 1
