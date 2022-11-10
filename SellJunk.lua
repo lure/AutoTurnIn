@@ -1,5 +1,5 @@
 --[[
-* Adds a button "sell junk" to every merchant window. 
+* Adds a button "sell junk" to every merchant window.
 * Pressing tat button playr are able to sell all grey-quality items from his backpacks
 ]]--
 local _, ptable = ...
@@ -11,6 +11,11 @@ AutoTurnIn.SellJunk = {
 }
 local selljunk = AutoTurnIn.SellJunk
 local _ = nil
+
+local GetContainerNumSlots = C_Container and C_Container.GetContainerNumSlots or GetContainerNumSlots
+local GetContainerItemLink = C_Container and C_Container.GetContainerItemLink or GetContainerItemLink
+local GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo or GetContainerItemInfo
+local UseContainerItem = C_Container and C_Container.UseContainerItem or UseContainerItem
 
 -- Moves localized repair string to bottom a bit
 MerchantRepairText:SetPoint("BOTTOMLEFT", 14, 35)
@@ -31,12 +36,19 @@ SellButton:SetScript("OnClick", function()
 				return
 			end
 
-			local _, count, _, _, _, _, link = GetContainerItemInfo(container, slot)
-			if (link) then 
+			local link = GetContainerItemLink(container, slot)
+
+			if (link) then
 				_, _, quality, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(link)
 			end
 
-			if (link and quality == 0) then
+			if (link and quality == Enum.ItemQuality.Poor) then
+				local itemInfo, count = GetContainerItemInfo(container, slot)
+
+				if (type(itemInfo) == 'table') then
+					count = itemInfo.stackCount
+				end
+
 				selljunk.amount = selljunk.amount + (vendorPrice * count)
 				selljunk.count = selljunk.count + 1
 				UseContainerItem(container, slot)
