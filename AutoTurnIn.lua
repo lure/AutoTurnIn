@@ -3,8 +3,6 @@ Feel free to use this source code for any purpose ( except developing nuclear we
 Please keep original author statement.
 @author Alex Shubert (alex.shubert@gmail.com)
 ]]--
-local _G = _G 	--Rumors say that global _G is called by lookup in a super-global table. Have no idea whether it is true.
-local _ 		--Sometimes blizzard exposes "_" variable as a global.
 local addonName, ptable = ...
 local L, C = ptable.L, ptable.CONST
 local Q_DAILY, Q_EXCEPTDAILY = 2, 3
@@ -384,34 +382,9 @@ function AutoTurnIn:OnInitialize()
 	db = self.db.profile
 
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("AutoTurnIn", options)
-	self:RegisterChatCommand("au", function() LibStub("AceConfigDialog-3.0"):Open("AutoTurnIn") end)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("AutoTurnIn", "AutoTurnIn")
-
 	options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
-	options.args.profiles.disabled = options.args.overall_settings.disabled
-end
-
-function AutoTurnIn:OnProfileChanged(event, database, newProfileKey)
-	db = database.profile
-end
-
-function AutoTurnIn:SetEnabled(enabled)
-	db.enabled = not not enabled
-	-- AutoTurnInCharacterDB.enabled = not not enabled
-	if self.ldb then
-		self.ldb.text = (db.enabled) and '|cff00ff00on|r' or '|cffff0000off|r'
-	end
-
-	self:SwitchMapCoords(db.enabled and db.map_coords)
-	self:SwitchSellJunk(db.enabled and db.sell_junk)
-end
-
---[[
-	INIT: ENABLE quest autocomplete handlers and functions
---]]
-function AutoTurnIn:OnEnable()	
-	self:SetEnabled(db.enabled)
-	self:RegisterForEvents()
+	self:RegisterChatCommand("au", self.ShowOptions)
 	self:LibDataStructure()
 
 	-- See no way tp fix taint issues with quest special items.
@@ -419,8 +392,36 @@ function AutoTurnIn:OnEnable()
 	hooksecurefunc("QuestLogQuests_Update", AutoTurnIn.ShowQuestLevelInLog)
 end
 
+function AutoTurnIn:OnProfileChanged(event, database, newProfileKey)
+	db = database.profile
+end
+
+-- reuse :Enable() / :Disable() ?  https://www.wowace.com/projects/ace3/pages/api/ace-addon-3-0
+function AutoTurnIn:SetEnabled(enabled)
+	db.enabled = not not enabled
+
+	if self.ldb then
+		self.ldb.text = (db.enabled) and '|cff00ff00on|r' or '|cffff0000off|r'
+	end
+
+	if (db.enabled) then
+		self:SwitchMapCoords(db.enabled and db.map_coords)
+		self:SwitchSellJunk(db.enabled and db.sell_junk)
+		self:RegisterForEvents()
+	else
+		self:UnregisterAllEvents()
+	end
+end
+
+--[[
+	INIT: ENABLE quest autocomplete handlers and functions
+--]]
+function AutoTurnIn:OnEnable()
+	self:SetEnabled(db.enabled)
+end
+
 function AutoTurnIn:OnDisable()
-  self:UnregisterAllEvents()
+  self:Print("ADDON DISABLED !!!! ")
 end
 
 --[[
@@ -1324,19 +1325,19 @@ function AutoTurnIn:LibDataStructure()
 			AutoTurnIn.ldb = LDB:NewDataObject("AutoTurnIn", {
 				type = "data source",
 				icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
+				text =  (AutoTurnIn.db.profile.enabled) and '|cff00ff00on|r' or '|cffff0000off|r',
 				label = addonName,
 				OnClick = function(clickedframe, button)
-					-- if InCombatLockdown() then return end
 					if (button == "LeftButton") then
-						self:ShowOptions()
+						AutoTurnIn:ShowOptions()
 					else
-						self:SetEnabled(not db.enabled)
+						AutoTurnIn:SetEnabled(not db.enabled)
 					end
 				end,
-				OnTooltipShow = function()
-					self:AddLine(addonName)
-					self:AddLine("Left mouse button shows options.")
-					self:AddLine("Right mouse button toggle addon on/off.")
+				OnTooltipShow = function(tooltip)
+					tooltip:AddLine(addonName .. " quest helper", 1, 1, 1)
+					tooltip:AddLine("Left mouse button shows options.")
+					tooltip:AddLine("Right mouse button toggle addon on/off.")
 				end
 			})
 		end
@@ -1346,7 +1347,7 @@ end
 function AutoTurnIn:ShowOptions()
 	-- too much things became tainted if called in combat.
 	if InCombatLockdown() then return end
-	InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.OptionsPanel)
+	LibStub("AceConfigDialog-3.0"):Open("AutoTurnIn")
 
 	-- if (InterfaceOptionsFrame:IsVisible() and InterfaceOptionsFrameAddOns.selection) then
 	-- 	if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"

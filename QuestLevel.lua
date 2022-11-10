@@ -1,5 +1,3 @@
-local _ 		--Sometimes blizzard exposes "_" variable as a global.
-
 AutoTurnIn.QuestLevelFormat = " [%d] %s"
 AutoTurnIn.WatchFrameLevelFormat = "[%d%s%s] %s"
 AutoTurnIn.QuestTypesIndex = {
@@ -15,7 +13,7 @@ AutoTurnIn.QuestTypesIndex = {
 }
 
 function AutoTurnIn:ShowQuestLevelInLog()
-	if not AutoTurnIn.db.profile.questlevel then
+	if not (AutoTurnIn.db.profile.enabled and AutoTurnIn.db.profile.questlevel) then
 		return
 	end
 
@@ -32,16 +30,14 @@ function AutoTurnIn:ShowQuestLevelInLog()
 			end
 		end
 	end
-
 end
 
 --[[
 	FIXME: This thing taint the global frames. 
 	To check: ESC ->"Edit mode" and close the layout window. 
-
 --]]
 function AutoTurnIn:ShowQuestLevelInWatchFrame()
-	if InCombatLockdown() or not (AutoTurnIn.db.profile.watchlevel and ObjectiveTrackerFrame.initialized) then
+	if InCombatLockdown() or not (AutoTurnIn.db.profile.enabled and AutoTurnIn.db.profile.watchlevel and ObjectiveTrackerFrame.initialized) then
 		return
 	end
 

@@ -1,6 +1,6 @@
 ## Interface: 100000
 ## Title: AutoTurnIn
-## Version: 10.0.5
+## Version: 10.0.9
 ## Author: Alex Shubert
 ## Notes: Quest handling automation
 ## Notes-ruRU: Автоматическая обработка заданий
