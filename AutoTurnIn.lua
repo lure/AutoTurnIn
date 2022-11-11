@@ -574,7 +574,6 @@ end
 
 -- Old 'Quest NPC' interaction system. See http://wowprogramming.com/docs/events/QUEST_GREETING
 function AutoTurnIn:QUEST_GREETING()
-	self:Print("QUEST_GREETING")
 	if (not self:AllowedToHandle(true)) then
 		return
 	end
@@ -620,7 +619,6 @@ function AutoTurnIn:VarArgForActiveQuests(gossipInfos)
 	for _, questInfo in ipairs(gossipInfos) do
 		if (questInfo.isComplete) then
 			local questname = questInfo.title
-			self:Print("gossipInfo.questID", questInfo.questID)
 			if self:isAppropriate(questname, true) then
 				local quest = L.quests[questname]
 				if quest and quest.amount then
@@ -1119,12 +1117,12 @@ function AutoTurnIn:itemPoints(link)
 			end
 		end
 	end
-	
+
 	tinsert(info, "total " .. points)
 	if (db.debug) then
 		self:Print(table.concat(info, ", "))
 	end
-	
+
 	return points
 end
 
