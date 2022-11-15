@@ -3,6 +3,7 @@ privateTable.interface10 = select(4, GetBuildInfo()) >= 100000
 privateTable.defaults = {
 	profile = {
 		enabled = true,
+		admin = false,
 		all = 2,
 		trivial = false,
 		completeonly = false,
