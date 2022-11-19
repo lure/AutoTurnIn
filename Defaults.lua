@@ -31,6 +31,7 @@ privateTable.defaults = {
 		covenantswapgossipcompletion = false,
 		unsafe_item_wipe = false,
 		sell_junk = 2,
+		auto_repair = true,
 		map_coords = true,
 		IGNORED_NPC = {
 			["87391"] = "fate-twister-seress",

@@ -61,11 +61,14 @@ SellButton:SetScript("OnClick", function()
 	end
 end)
 
--- [[ hooking MailFrame ]]--
+-- [[ hooking Merchant Frame ]]--
 hooksecurefunc(MerchantFrame, "Show", function()
 	selljunk.vendorAvailable = true;
 	if AutoTurnIn.db.profile.sell_junk == 2 then
 		SellButton:Click()
+	end
+	if AutoTurnIn.db.profile.auto_repair and CanMerchantRepair() then
+		AutoTurnIn:RepairEquipment()
 	end
 end)
 hooksecurefunc(MerchantFrame, "Hide", function() selljunk.vendorAvailable = false; end)
@@ -75,5 +78,31 @@ function AutoTurnIn:SwitchSellJunk(flag)
 		SellButton:Show()
 	elseif flag == 1 then
 		SellButton:Hide()
+	end
+end
+
+--[[ 
+		AUTO REPAIR FUNCTIONALITY
+]]--
+function AutoTurnIn:RepairEquipment()
+	local repairCost = GetRepairAllCost()
+	if repairCost > 0 then
+
+		-- Blizzard_GuildBankUI.lua: If M >= 0 then it's a regualar member, otherwise it is guildmaster
+		-- there is a catch, sometimes the return is NaN. 
+		local canUseGuildMoney = false
+		if CanGuildBankRepair() then
+			local withdrawLimit = GetGuildBankWithdrawMoney() or -1
+			canUseGuildMoney = withdrawLimit < 0 or withdrawLimit >= repairCost
+		end
+
+		if canUseGuildMoney or GetMoney() >= repairCost then
+			RepairAllItems(guild)
+			self:Print("Repaired for:", GetCoinTextureString(repairCost))
+		end
+
+		if (GetRepairAllCost() > 0 ) then
+			AutoTurnIn:RepairEquipment()
+		end
 	end
 end
