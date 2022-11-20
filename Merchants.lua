@@ -101,8 +101,8 @@ function AutoTurnIn:RepairEquipment()
 			self:Print("Repaired for:", GetCoinTextureString(repairCost))
 		end
 
-		if (GetRepairAllCost() > 0 ) then
-			AutoTurnIn:RepairEquipment()
-		end
+		-- if (GetRepairAllCost() > 0 ) then
+		-- 	AutoTurnIn:RepairEquipment()
+		-- end
 	end
 end
