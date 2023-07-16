@@ -17,8 +17,6 @@ local GetContainerItemLink = C_Container and C_Container.GetContainerItemLink or
 local GetContainerItemInfo = C_Container and C_Container.GetContainerItemInfo or GetContainerItemInfo
 local UseContainerItem = C_Container and C_Container.UseContainerItem or UseContainerItem
 
--- Moves localized repair string to bottom a bit
-MerchantRepairText:SetPoint("BOTTOMLEFT", 14, 35)
 local SellButton = CreateFrame("Button", "MerchantFrameSellJunkButton", MerchantFrame, ptable.interface10 and "UIPanelButtonTemplate" or "OptionsButtonTemplate")
 SellButton:SetPoint("TOPRIGHT",  -200, -32)
 SellButton:SetText("Sell junk")

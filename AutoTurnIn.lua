@@ -609,7 +609,7 @@ end
 function AutoTurnIn:AllowedToHandle(forcecheck)
 	-- workaround for https://zygorguides.com/forum/forum/technical-support/zygor-guide-viewer/190851-new-lua-error-addon_action-blocked
 	-- Currently, blizzard UI fails to properly check in-combat. This is to enforce the checks (hopefully)
-	-- TODO: it is not clear why would I need global self.allowed
+	-- TODO: it is not clear why would I need global "self.allowed"
 	if ( InCombatLockdown() ) then
 		return false
 	end
