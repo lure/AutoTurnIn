@@ -9,6 +9,7 @@
 ## Notes-deDE: Auto akzeptieren und komplett täglich oder alle Quests
 ## Notes-itIT: Italian translators wanted!!!
 ## OptionalDeps: Ace3
+## IconTexture: Interface\AddOns\AutoTurnIn\icon.tga
 ## SavedVariables: AutoTurnInDB
 ## X-Date: 2016-07-21
 ## X-Category: Quest
