@@ -412,7 +412,7 @@ function AutoTurnIn:OnInitialize()
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("AutoTurnIn", options)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("AutoTurnIn", "AutoTurnIn")
 	options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
-	self:RegisterChatCommand("au", self.ShowOptions)
+	self:RegisterChatCommand("au", "ShowOptions")
 	self:LibDataStructure()
 
 	self:CinematickHooks()
@@ -1364,11 +1364,24 @@ function AutoTurnIn:LibDataStructure()
 	end
 end
 
-function AutoTurnIn:ShowOptions()
+function AutoTurnIn:ShowOptions(args)
 	-- too much things became tainted if called in combat.
 	if InCombatLockdown() then return end
-	LibStub("AceConfigDialog-3.0"):Open("AutoTurnIn")
 
+	local arg1 = AutoTurnIn:GetArgs(args, 1)
+	if arg1 == nil or arg1 == "" then
+		LibStub("AceConfigDialog-3.0"):Open("AutoTurnIn")
+	end
+
+	if arg1 == "on" and not db.enabled then
+		AutoTurnIn:SetEnabled(true)
+		self:Print("on")
+	end
+
+	if arg1 == "off" and db.enabled then
+		AutoTurnIn:SetEnabled(false)
+		self:Print(arg1)
+	end
 	-- if (InterfaceOptionsFrame:IsVisible() and InterfaceOptionsFrameAddOns.selection) then
 	-- 	if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"
 	-- 		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.RewardPanel)
