@@ -410,7 +410,7 @@ function AutoTurnIn:OnInitialize()
 	db = self.db.profile
 
 	LibStub("AceConfigRegistry-3.0"):RegisterOptionsTable("AutoTurnIn", options)
-	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("AutoTurnIn", "AutoTurnIn")
+	_, self.optionCategory =  LibStub("AceConfigDialog-3.0"):AddToBlizOptions("AutoTurnIn", "AutoTurnIn")
 	options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 	self:RegisterChatCommand("au", "ShowOptions")
 	self:LibDataStructure()
@@ -1344,12 +1344,12 @@ function AutoTurnIn:LibDataStructure()
 		if LDB then
 			AutoTurnIn.ldb = LDB:NewDataObject("AutoTurnIn", {
 				type = "data source",
-				icon = "Interface\\QUESTFRAME\\UI-QuestLog-BookIcon",
+				icon = "Interface\\AddOns\\AutoTurnIn\\Icon",
 				text =  (AutoTurnIn.db.profile.enabled) and '|cff00ff00on|r' or '|cffff0000off|r',
 				label = addonName,
 				OnClick = function(clickedframe, button)
 					if (button == "LeftButton") then
-						AutoTurnIn:ShowOptions()
+						AutoTurnIn:ShowOptions("")
 					else
 						AutoTurnIn:SetEnabled(not db.enabled)
 					end
@@ -1370,7 +1370,7 @@ function AutoTurnIn:ShowOptions(args)
 
 	local arg1 = AutoTurnIn:GetArgs(args, 1)
 	if arg1 == nil or arg1 == "" then
-		LibStub("AceConfigDialog-3.0"):Open("AutoTurnIn")
+		LibStub("AceConfigDialog-3.0"):Open(self.optionCategory)
 	end
 
 	if arg1 == "on" and not db.enabled then
@@ -1382,6 +1382,7 @@ function AutoTurnIn:ShowOptions(args)
 		AutoTurnIn:SetEnabled(false)
 		self:Print(arg1)
 	end
+	-- update from May 2024: now there is sort of Settings.OpenToCategory() and "See Blizzard_ImplementationReadme.lua for recommended setup."
 	-- if (InterfaceOptionsFrame:IsVisible() and InterfaceOptionsFrameAddOns.selection) then
 	-- 	if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"
 	-- 		InterfaceOptionsFrame_OpenToCategory(AutoTurnIn.RewardPanel)
