@@ -1,4 +1,36 @@
 function AutoTurnIn:CinematickHooks()
+    self:Print("HOOKED")
+    self:RegisterEvent("CINEMATIC_START")
+    self:RegisterEvent("PLAY_MOVIE")
+end
+
+local function shouldSkipVideo(flag)
+    return ((flag == 2 and IsInInstance()) or flag == 3)
+end
+
+function AutoTurnIn:CINEMATIC_START()
+    if shouldSkipVideo(AutoTurnIn.db.profile.skip_cinematics) then
+        CinematicFrame_CancelCinematic()
+        self:Print("cinematic skipped")
+    end
+end
+
+function AutoTurnIn:PLAY_MOVIE(...)
+    if shouldSkipVideo(AutoTurnIn.db.profile.skip_movies) then
+        _, AutoTurnIn.db.skippedMovieId = ...
+        GameMovieFinished()
+        self:Print("movie skipped. Replay avaialbe with /au replay")
+    end
+end
+
+
+-- https://legacy.curseforge.com/wow/addons/autoturnin?comment=855
+-- Elvui authors guessed that AU may incorrectly cancel the videos. 
+-- my guess is that reporter has DBM, which uses a bit different approach to stop movies
+-- interestingly, folks had to resort to another approach https://github.com/fubaWoW/fuba_CinematicSkip/issues/1
+function AutoTurnIn:DEPRECATED_CinematickHooks()
+    self:Print("CinematickHooks HOOKED")
+   
 	--[[ 
     	CINEMATICS OF ALL KINDS
     --]]

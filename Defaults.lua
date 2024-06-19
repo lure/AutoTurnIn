@@ -45,6 +45,25 @@ privateTable.defaults = {
 			["141584"] = "Zurvan", --seals of fate 
 			["111243"] = "Archmage Lan'dalock", --seals of fate
 		},
+		IGNORED_QUEST = {
+			["80442"] = "Aid the Sunreavers Onslaught (daily)",
+			["81749"] = "Aid the Kirin Tor Offensive",
+			["80443"] = "Aid the Kirin Tor Offensive (daily)",			
+			["80433"] = "Aid the August Celestials",
+			["80430"] = "Aid the August Celestials",
+			["80441"] = "Aid the Order of the Cloud Serpent",
+			["80431"] = "Aid the August Celestials",
+			["80429"] = "Aid the August Celestials",
+			["81748"] = "Aid the Sunreavers Onslaught",
+			["80439"] = "Aid the Alliance",
+			["80320"] = "Aid the Klaxxi",
+			["83793"] = "Aid the Jinyu",
+			["80427"] = "Aid the Golden Lotus",
+			["80426"] = "Aid the Shado-Pan",
+			["80444"] = "Aid the Anglers",
+			["80438"] = "Aid the Horde",
+			["83795"] = "Aid the Hozen",
+		},
 		WANTED_NPC = {
 			["167881"] = "Ta'lan the Antiquary",
 			["167880"] = "Finder Ta'sul",

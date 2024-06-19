@@ -583,10 +583,12 @@ function AutoTurnIn:CacheAsDaily(questname)
 	self.questCache[questname] = true
 end
 
-function AutoTurnIn:IsIgnoredQuest(quest)
+function AutoTurnIn:IsIgnoredQuest(quest, questId)
 	local function startsWith(str,template)
 		return (string.len(str) >= string.len(template)) and (string.sub(str,1,string.len(template))==template)
 	end
+
+	if db.IGNORED_QUEST[questId] then return true end
 
 	for q in pairs(L.ignoreList) do
 		if (startsWith(quest, q)) then
@@ -644,7 +646,7 @@ function AutoTurnIn:QUEST_GREETING()
             local triviaAndAllowedOrNotTrivia = (not isTrivial) or db.trivial
             local title = GetAvailableTitle(index)
             local quest = L.quests[title]
-            local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title)))
+            local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(title, nil)))
 
 			-- isDaily was a boolean, but is a number now. but maybe it's still a boolean somewhere
 			if (type(isDaily) == "number" and isDaily ~= 0) then isDaily = true else isDaily = false end
@@ -690,7 +692,7 @@ function AutoTurnIn:VarArgForAvailableQuests(gossipInfos)
 	for i,questInfo in ipairs(gossipInfos) do		
 		local triviaAndAllowedOrNotTrivial = (not questInfo.isTrivial) or db.trivial
 		local quest = L.quests[questInfo.title] -- this quest exists in addons quest DB. There are mostly daily quests
-		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(questInfo.title)))
+		local notBlackListed = not (quest and (quest.donotaccept or AutoTurnIn:IsIgnoredQuest(questInfo.title, questInfo.questID)))
 		local isDaily = self:_isDaily(questInfo)		
 		-- for unknown reason the questInfo is different from what is seen in QuestCache:Get(questID);
 		if isDaily then
@@ -1375,13 +1377,22 @@ function AutoTurnIn:ShowOptions(args)
 
 	if arg1 == "on" and not db.enabled then
 		AutoTurnIn:SetEnabled(true)
-		self:Print("on")
+		self:Print(arg1)
 	end
 
 	if arg1 == "off" and db.enabled then
 		AutoTurnIn:SetEnabled(false)
 		self:Print(arg1)
 	end
+
+	if arg1 == "replay" then
+		if AutoTurnIn.db.skippedMovieId > 0 then
+			MovieFrame_PlayMovie(MovieFrame, AutoTurnIn.db.skippedMovieId)
+		else
+			self:Print("Nothing to replay")
+		end		
+	end
+
 	-- update from May 2024: now there is sort of Settings.OpenToCategory() and "See Blizzard_ImplementationReadme.lua for recommended setup."
 	-- if (InterfaceOptionsFrame:IsVisible() and InterfaceOptionsFrameAddOns.selection) then
 	-- 	if (InterfaceOptionsFrameAddOns.selection:GetName() == AutoTurnIn.OptionsPanel:GetName()) then --"AutoTurnInOptionsPanel"
