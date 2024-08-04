@@ -417,8 +417,9 @@ function AutoTurnIn:OnInitialize()
 
 	self:CinematickHooks()
 	-- See no way tp fix taint issues with quest special items.
-	hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
-	hooksecurefunc("QuestLogQuests_Update", AutoTurnIn.ShowQuestLevelInLog)
+	-- TODO : THE WAR WITHIN HAS BROKEN BOTH THINGS
+	-- hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
+	-- hooksecurefunc("QuestLogQuests_Update", AutoTurnIn.ShowQuestLevelInLog)
 end
 
 function AutoTurnIn:OnProfileChanged(event, database, newProfileKey)

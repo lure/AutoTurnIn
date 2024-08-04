@@ -1,5 +1,4 @@
 function AutoTurnIn:CinematickHooks()
-    self:Print("HOOKED")
     self:RegisterEvent("CINEMATIC_START")
     self:RegisterEvent("PLAY_MOVIE")
 end

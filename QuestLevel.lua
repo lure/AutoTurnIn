@@ -18,6 +18,7 @@ function AutoTurnIn:ShowQuestLevelInLog()
 	end
 
 	for button in QuestMapFrame.QuestsFrame.titleFramePool:EnumerateActive() do
+		self:Print(button)
 		if (button and button.questLogIndex) then
 			local questInfo = C_QuestLog.GetInfo(button.questLogIndex)
 			local text = button.Text:GetText()
