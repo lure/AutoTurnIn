@@ -14,7 +14,7 @@ local title = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge
 title:SetText(addonName .." ".. AutoTurnIn.defaults.version)
 
 -- Description
-local notes = GetAddOnMetadata(addonName, "Notes-" .. GetLocale()) or GetAddOnMetadata(addonName, "Notes")
+local notes = C_AddOns.GetAddOnMetadata(addonName, "Notes-" .. GetLocale()) or C_AddOns.GetAddOnMetadata(addonName, "Notes")
 local subText = OptionsPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 subText:SetText(notes)
 

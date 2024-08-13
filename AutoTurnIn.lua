@@ -43,11 +43,11 @@ end
 local options = {
 	type = "group",
 	name = "AutoTurnIn",
-	desc = GetAddOnMetadata(addonName, "Notes-" .. GetLocale()) or GetAddOnMetadata(addonName, "Notes"),
+	desc = C_AddOns.GetAddOnMetadata(addonName, "Notes-" .. GetLocale()) or C_AddOns.GetAddOnMetadata(addonName, "Notes"),
 	args = {
 		enabled = {
 			type = "toggle",
-			name = L["enabled"].." (version "..GetAddOnMetadata(addonName, "Version") .. ")",
+			name = L["enabled"].." (version "..C_AddOns.GetAddOnMetadata(addonName, "Version") .. ")",
 			desc = L["usage1"],
 			order = 1,
 			width  = 1.5,
