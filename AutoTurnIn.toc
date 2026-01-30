@@ -1,4 +1,4 @@
-## Interface: 100207
+## Interface: 120000, 120001
 ## Title: AutoTurnIn
 ## Version: 10.0.14
 ## Author: Alex Shubert
