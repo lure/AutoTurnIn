@@ -108,14 +108,24 @@ function AutoTurnIn:RepairEquipment()
 		-- Blizzard_GuildBankUI.lua: If M >= 0 then it's a regualar member, otherwise it is guildmaster
 		-- there is a catch, sometimes the return is NaN. 
 		local canUseGuildMoney = false
+		local usedGuildMoney = false
 		if CanGuildBankRepair() then
-			local withdrawLimit = GetGuildBankWithdrawMoney() or -1
-			canUseGuildMoney = withdrawLimit < 0 or withdrawLimit >= repairCost
+			local GUILD_WITHDRAW_UNLIMITED = 2^64
+			local withdrawLimit = GetGuildBankWithdrawMoney() or 0
+			local unlimited = withdrawLimit >= GUILD_WITHDRAW_UNLIMITED
+			canUseGuildMoney = unlimited or withdrawLimit >= repairCost
 		end
 
-		if canUseGuildMoney or GetMoney() >= repairCost then
-			RepairAllItems(guild)
+		if canUseGuildMoney then
+			usedGuildMoney = true
+			RepairAllItems(true)
 			self:Print("Repaired for:", GetCoinTextureString(repairCost))
+		elseif GetMoney() >= repairCost then
+			RepairAllItems(false)
+			self:Print("Repaired for:", GetCoinTextureString(repairCost))
+		end
+		if AutoTurnIn.db.profile.debug then
+			AutoTurnIn:DebugPrint(usedGuildMoney and "Repair used guild funds" or "Repair used personal funds")
 		end
 
 		-- if (GetRepairAllCost() > 0 ) then
