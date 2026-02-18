@@ -9,6 +9,10 @@ end
 
 function AutoTurnIn:CINEMATIC_START()
     if shouldSkipVideo(AutoTurnIn.db.profile.skip_cinematics) then
+        if InCombatLockdown() then
+            AutoTurnIn.defer.cinematic = true
+            return
+        end
         CinematicFrame_CancelCinematic()
         self:Print("cinematic skipped")
     end
@@ -16,7 +20,12 @@ end
 
 function AutoTurnIn:PLAY_MOVIE(...)
     if shouldSkipVideo(AutoTurnIn.db.profile.skip_movies) then
-        _, AutoTurnIn.db.skippedMovieId = ...
+        local _, movieId = ...
+        if InCombatLockdown() then
+            AutoTurnIn.defer.movieId = movieId
+            return
+        end
+        AutoTurnIn.db.skippedMovieId = movieId
         GameMovieFinished()
         self:Print("movie skipped. Replay avaialbe with /au replay")
     end

@@ -62,11 +62,16 @@ end)
 -- [[ hooking Merchant Frame ]]--
 hooksecurefunc(MerchantFrame, "Show", function()
 	selljunk.vendorAvailable = true;
-	if AutoTurnIn.db.profile.sell_junk == 2 then
-		SellButton:Click()
-	end
-	if AutoTurnIn.db.profile.auto_repair and CanMerchantRepair() then
-		AutoTurnIn:RepairEquipment()
+	if not InCombatLockdown() then
+		if AutoTurnIn.db.profile.sell_junk == 2 then
+			SellButton:Click()
+		end
+		if AutoTurnIn.db.profile.auto_repair and CanMerchantRepair() then
+			AutoTurnIn:RepairEquipment()
+		end
+	else
+		AutoTurnIn.defer.merchant.sell = AutoTurnIn.db.profile.sell_junk == 2
+		AutoTurnIn.defer.merchant.repair = AutoTurnIn.db.profile.auto_repair and CanMerchantRepair()
 	end
 end)
 hooksecurefunc(MerchantFrame, "Hide", function() selljunk.vendorAvailable = false; end)
@@ -76,6 +81,20 @@ function AutoTurnIn:SwitchSellJunk(flag)
 		SellButton:Show()
 	elseif flag == 1 then
 		SellButton:Hide()
+	end
+end
+
+function AutoTurnIn:HandleMerchantDeferred()
+	if not MerchantFrame or not MerchantFrame:IsShown() or InCombatLockdown() then
+		return
+	end
+	if self.defer.merchant.sell and self.db.profile.sell_junk == 2 then
+		self.defer.merchant.sell = false
+		SellButton:Click()
+	end
+	if self.defer.merchant.repair and self.db.profile.auto_repair and CanMerchantRepair() then
+		self.defer.merchant.repair = false
+		self:RepairEquipment()
 	end
 end
 

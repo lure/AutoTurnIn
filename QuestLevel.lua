@@ -13,6 +13,10 @@ AutoTurnIn.QuestTypesIndex = {
 }
 
 function AutoTurnIn:ShowQuestLevelInLog()
+	if InCombatLockdown() then
+		AutoTurnIn.defer.questLog = true
+		return
+	end
 	if not (AutoTurnIn.db.profile.enabled and AutoTurnIn.db.profile.questlevel) then
 		return
 	end
@@ -38,7 +42,11 @@ end
 	To check: ESC ->"Edit mode" and close the layout window. 
 --]]
 function AutoTurnIn:ShowQuestLevelInWatchFrame()
-	if InCombatLockdown() or not (AutoTurnIn.db.profile.enabled and AutoTurnIn.db.profile.watchlevel and ObjectiveTrackerFrame.initialized) then
+	if InCombatLockdown() then
+		AutoTurnIn.defer.watch = true
+		return
+	end
+	if not (AutoTurnIn.db.profile.enabled and AutoTurnIn.db.profile.watchlevel and ObjectiveTrackerFrame.initialized) then
 		return
 	end
 

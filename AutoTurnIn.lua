@@ -18,6 +18,17 @@ AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's 
 AutoTurnIn.knownGossips={}
 AutoTurnIn.ERRORVALUE = nil
 AutoTurnIn.IgnoreButton = {["quest"] = nil, ["gossip"] = nil}
+AutoTurnIn.defer = {
+	questLog = false,
+	watch = false,
+	ignore = {["quest"] = false, ["gossip"] = false},
+	merchant = {sell = false, repair = false},
+	cinematic = false,
+	movieId = nil,
+	acceptQuest = false,
+	completeQuest = false,
+	getQuestRewardIndex = nil,
+}
 
 --[[
 	INIT: INITIALIZE
@@ -467,6 +478,7 @@ function AutoTurnIn:RegisterForEvents()
 	self:RegisterEvent("QUEST_COMPLETE")
 	self:RegisterEvent("QUEST_LOG_UPDATE")
 	self:RegisterEvent("QUEST_ACCEPTED")
+	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	if db.reviveBattlePet --[[ and select(2, UnitClass("player")) == "HUNTER" ]] then
 		self:RegisterEvent("GOSSIP_CONFIRM")
 	end
@@ -490,14 +502,18 @@ function AutoTurnIn:RegisterGossipOptionClicker()
 			--accept available quest first, then teleport
 			AutoTurnIn:Print("Teleporting to " .. L["Darkmoon Island"])
 			C_GossipInfo.SelectOption(__getGossipId(1))
-			StaticPopup1Button1:Click()
+			if not InCombatLockdown() and StaticPopup1Button1 then
+				StaticPopup1Button1:Click()
+			end
 		end
 	end
 	local gossipFunc4 = function()
 		if db.darkmoonteleport then
 			AutoTurnIn:Print("Teleporting to cannon")
 			C_GossipInfo.SelectOption(__getGossipId(1))
-			StaticPopup1Button1:Click()
+			if not InCombatLockdown() and StaticPopup1Button1 then
+				StaticPopup1Button1:Click()
+			end
 		end
 	end
 	local gossipFunc5 = function()
@@ -510,7 +526,9 @@ function AutoTurnIn:RegisterGossipOptionClicker()
 		if db.covenantswapgossipcompletion then
 			C_GossipInfo.SelectOption(__getGossipId(1))
 			C_GossipInfo.SelectOption(__getGossipId(1))
-			StaticPopup1Button1:Click()
+			if not InCombatLockdown() and StaticPopup1Button1 then
+				StaticPopup1Button1:Click()
+			end
 		end
 	end
 	AutoTurnIn.knownGossips = {
@@ -771,13 +789,19 @@ function AutoTurnIn:QUEST_DETAIL()
 	else
 		if self:AllowedToHandle() and self:isAppropriateQuest() and (not db.completeonly) then
 			--ignore trivial quests
-			if (not C_QuestLog.IsQuestTrivial(GetQuestID()) or db.trivial) then
-				QuestInfoDescriptionText:SetAlphaGradient(0, 5000)
-				QuestInfoDescriptionText:SetAlpha(1)
-				AcceptQuest()
-				return
+				if (not C_QuestLog.IsQuestTrivial(GetQuestID()) or db.trivial) then
+					if not InCombatLockdown() then
+						QuestInfoDescriptionText:SetAlphaGradient(0, 5000)
+						QuestInfoDescriptionText:SetAlpha(1)
+					end
+					if InCombatLockdown() then
+						self.defer.acceptQuest = true
+						return
+					end
+					AcceptQuest()
+					return
+				end
 			end
-		end
 		--quest level on detail frame
 		if db.questlevel then
 			local qid = GetQuestID()
@@ -789,7 +813,9 @@ function AutoTurnIn:QUEST_DETAIL()
 					local levelFormat = "[%d] %s"
 					--trivial display
 					if C_QuestLog.IsQuestTrivial(qid) then text = TRIVIAL_QUEST_DISPLAY:format(text) end
-					QuestInfoTitleHeader:SetText(levelFormat:format(level, text))
+					if not InCombatLockdown() then
+						QuestInfoTitleHeader:SetText(levelFormat:format(level, text))
+					end
 				else
 					if (not not trivialNoText[qid]) then
 						trivialNoText[qid] = true
@@ -811,6 +837,10 @@ end
 
 function AutoTurnIn:QUEST_PROGRESS()
     if  (self:AllowedToHandle() and IsQuestCompletable() and (self:isAppropriateQuest() or self:IsWantedQuest(GetQuestID()))) then
+		if InCombatLockdown() then
+			self.defer.completeQuest = true
+			return
+		end
 		CompleteQuest()
     end
 end
@@ -946,6 +976,10 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 			self:DebugPrint("turning quest in, no choice required")
 		end
     else
+		if InCombatLockdown() then
+			self.defer.getQuestRewardIndex = rewardIndex
+			return
+		end
 		GetQuestReward(rewardIndex)
 	end
 end
@@ -1243,6 +1277,10 @@ function AutoTurnIn:IsDefaultIgnoredNPC()
 end
 
 function AutoTurnIn:ShowIgnoreButton(frame)
+	if InCombatLockdown() then
+		self.defer.ignore[frame] = true
+		return
+	end
 	questNPCName = UnitName("target")
 
 	local GlobalFrame = nil
@@ -1272,11 +1310,67 @@ function AutoTurnIn:ShowIgnoreButton(frame)
 	end)
 	if (AutoTurnIn:IsDefaultIgnoredNPC()) then
 		IgnoreButton:Disable()
-		GameTooltip:SetOwner(IgnoreButton, "ANCHOR_RIGHT");
-		GameTooltip:SetText(L["cantstopignore"]);
-		GameTooltip:Show()
+		if not InCombatLockdown() then
+			GameTooltip:SetOwner(IgnoreButton, "ANCHOR_RIGHT");
+			GameTooltip:SetText(L["cantstopignore"]);
+			GameTooltip:Show()
+		end
 	else
 		IgnoreButton:Enable()
+	end
+end
+
+function AutoTurnIn:PLAYER_REGEN_ENABLED()
+	if self.defer.questLog then
+		self.defer.questLog = false
+		self:ShowQuestLevelInLog()
+	end
+	if self.defer.watch then
+		self.defer.watch = false
+		self:ShowQuestLevelInWatchFrame()
+	end
+	if self.defer.ignore.quest and QuestFrame and QuestFrame:IsShown() then
+		self.defer.ignore.quest = false
+		self:ShowIgnoreButton("quest")
+	end
+	if self.defer.ignore.gossip and GossipFrame and GossipFrame:IsShown() then
+		self.defer.ignore.gossip = false
+		self:ShowIgnoreButton("gossip")
+	end
+	if (self.defer.merchant.sell or self.defer.merchant.repair) and self.HandleMerchantDeferred then
+		self:HandleMerchantDeferred()
+	end
+	if self.defer.cinematic and CinematicFrame and CinematicFrame:IsShown() then
+		self.defer.cinematic = false
+		CinematicFrame_CancelCinematic()
+	end
+	if self.defer.movieId and MovieFrame and MovieFrame:IsShown() then
+		local movieId = self.defer.movieId
+		self.defer.movieId = nil
+		self.db.skippedMovieId = movieId
+		GameMovieFinished()
+	end
+	if self.defer.acceptQuest and QuestFrame and QuestFrame:IsShown() then
+		if not InCombatLockdown() and not QuestGetAutoAccept() then
+			self.defer.acceptQuest = false
+			AcceptQuest()
+		end
+	end
+	if self.defer.completeQuest and QuestFrame and QuestFrame:IsShown() then
+		if not InCombatLockdown() and IsQuestCompletable() then
+			self.defer.completeQuest = false
+			CompleteQuest()
+		end
+	end
+	if self.defer.getQuestRewardIndex and QuestFrame and QuestFrame:IsShown() then
+		if not InCombatLockdown() then
+			local idx = self.defer.getQuestRewardIndex
+			local numChoices = GetNumQuestChoices()
+			if numChoices == 0 or (idx and idx >= 1 and idx <= numChoices) then
+				self.defer.getQuestRewardIndex = nil
+				GetQuestReward(idx or 1)
+			end
+		end
 	end
 end
 
