@@ -18,6 +18,17 @@ AutoTurnIn.questCache={}	-- daily quest cache. Initially is built from player's 
 AutoTurnIn.knownGossips={}
 AutoTurnIn.ERRORVALUE = nil
 AutoTurnIn.IgnoreButton = {["quest"] = nil, ["gossip"] = nil}
+AutoTurnIn.defer = {
+	questLog = false,
+	watch = false,
+	ignore = {["quest"] = false, ["gossip"] = false},
+	merchant = {sell = false, repair = false},
+	cinematic = false,
+	movieId = nil,
+	acceptQuest = false,
+	completeQuest = false,
+	getQuestRewardIndex = nil,
+}
 
 --[[
 	INIT: INITIALIZE
@@ -715,7 +726,14 @@ end
 -- Extracts GUID from the NPC which dialog window is currenty displayed
 function AutoTurnIn:GetNPCGUID()
 	local a = UnitGUID("npc")
-	return a and select(3, a:find("Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-")) or nil
+	if not a then return nil end
+
+	-- Use pcall to safely handle tainted/secret strings from protected NPCs
+	local success, _, _, _, _, _, guid = pcall(string.find, a, "Creature%-(%d+)%-(%d+)%-(%d+)%-(%d+)%-(%d+)%-")
+	if success and guid then
+		return guid
+	end
+	return nil
 end
 
 function AutoTurnIn:isDarkmoonAndAllowed(questCount)
