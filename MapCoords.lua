@@ -1,10 +1,15 @@
---[[ 	
-	Adds player's coordinates to the map WorldMapFrameCloseButton
+--[[
+	Adds player's coordinates to the WorldMap
 ]]--
-local coordMouse = WorldMapFrameCloseButton:CreateFontString(nil, "BORDER", "GameFontNormal")
+-- Use a plain addon-owned frame as parent to avoid tainting WorldMapFrameCloseButton's
+-- layout calculations. Parenting FontStrings directly to a protected Blizzard button caused
+-- tainted heights to propagate through LayoutFrame.lua into UIWidget tooltips and blocked
+-- SetPropagateMouseClicks via contaminated layout execution context.
+local coordOverlay = CreateFrame("Frame", nil, WorldMapFrame)
+local coordMouse = coordOverlay:CreateFontString(nil, "BORDER", "GameFontNormal")
 coordMouse:SetPoint("TOPLEFT", WorldMapFrame.BorderFrame.Tutorial, "TOPRIGHT", -5, -25)
 coordMouse:SetJustifyH("LEFT")
-local coordPlayer = WorldMapFrameCloseButton:CreateFontString(nil, "BORDER", "GameFontNormal")
+local coordPlayer = coordOverlay:CreateFontString(nil, "BORDER", "GameFontNormal")
 coordPlayer:SetPoint("TOPLEFT", WorldMapFrame.BorderFrame.Tutorial, "TOPRIGHT", 125, -25)
 coordPlayer:SetJustifyH("LEFT")
 
