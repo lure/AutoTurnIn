@@ -35,6 +35,7 @@ privateTable.defaults = {
 		skip_cinematics = 1,
 		skip_movies = 1,
 		map_coords = true,
+		minimap_coords = false,
 		IGNORED_NPC = {
 			["87391"] = "fate-twister-seress",
 			["88570"] = "Fate-Twister Tiklal",

@@ -295,6 +295,15 @@ local options = {
 							set = function(info, v) AutoTurnIn:SwitchMapCoords(v); db[info.arg] = v end,
 							order = 70,
 						},
+						minimap_coords = {
+							type = "toggle",
+							name = "Display player coordinates under minimap",
+							arg = "minimap_coords",
+							width  = "full",
+							get = function(info) return db[info.arg] end,
+							set = function(info, v) AutoTurnIn:SwitchMiniMapCoords(v); db[info.arg] = v end,
+							order = 80,
+						},
 						-- unsafe_item_wipe = {
 						-- 	type = "toggle",
 						-- 	name = "Wipe item in the bag by ALT + Click",
@@ -447,6 +456,7 @@ function AutoTurnIn:SetEnabled(enabled)
 
 	if (db.enabled) then
 		self:SwitchMapCoords(db.enabled and db.map_coords)
+		self:SwitchMiniMapCoords(db.enabled and db.minimap_coords)
 		self:SwitchSellJunk(db.enabled and db.sell_junk)
 		self:RegisterForEvents()
 	else
@@ -1427,3 +1437,4 @@ function AutoTurnIn:ShowOptions(args)
 	-- end
 end
 -- DevTools_DumpCommand("C_GossipInfo.GetAvailableQuests()")
+
