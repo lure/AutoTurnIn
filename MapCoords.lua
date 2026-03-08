@@ -1,9 +1,9 @@
 --[[
 	Adds player's coordinates to the WorldMap and Minimap
 ]] --
-local updater = CreateFrame("Frame")
+local updater = CreateFrame("Frame", "AutoTurnIn_CoordOverlay_Updater", UIParent)
 
-local coordOverlay = CreateFrame("Frame", nil, WorldMapFrame)
+local coordOverlay = CreateFrame("Frame", "AutoTurnIn_CoordOverlay", UIParent)
 coordOverlay:SetPoint("LEFT", WorldMapFrame.BorderFrame, "BOTTOMLEFT", 2, 10)
 coordOverlay:SetSize(260, 16)
 coordOverlay:SetFrameStrata("FULLSCREEN_DIALOG")
