@@ -40,8 +40,8 @@ privateTable.L = setmetatable({
 	["Darkmoon Faire Mystic Mage"]="Maga Mistica di Lunacupa",
 	
 	["ReviveBattlePetLabel"]="Guarigione Mascotte da Combattimento",
-	["ReviveBattlePetQ"]="Vorrei curare e rianimare le mie Mascotte da combattimento",
-	["ReviveBattlePetA"]="È richiesta una piccola somma per i materiali",
+	["ReviveBattlePetQ"]="Vorrei resuscitare e curare le mie mascotte da combattimento",
+	["ReviveBattlePetA"]="Richiediamo un piccolo contributo per i reagenti",
 	
 	["DismissKyrianStewardLabel"]="Congeda Factotum",
 	
@@ -52,7 +52,7 @@ privateTable.L = setmetatable({
 	["questlevel"]="Mostra il livello della missione",
 	["watchlevel"]="Mostra livello missione tracciata",
 	["autoequip"]="Equipaggia ricompensa ricevuta",
-	["togglekey"]="Tasto di abilitazione/disablilitazione",
+	["togglekey"]="Tasto di abilitazione/disabilitazione",
 	
 	['Gioielli']="Gioielli",
 	["rewardlootoptions"]="Condizioni di selezione ricompensa",
@@ -136,10 +136,10 @@ privateTable.L.quests = {
 ["Altre sacche di veleno"]={item="Sacca di Veleno di Malazanna", amount=8, currency=false},
 --Scryer
 ["Altri Anelli con Sigillo di Alardente"]={item="Anello con Sigillo di Alardente", amount=10, currency=false},
-["Altri Anelli con Sigillo dei Furia del Sole"]={item="Sunfury Signet", amount=10, currency=false},
+["Altri Anelli con Sigillo dei Furia del Sole"]={item="Anello con Sigillo dei Furia del Sole", amount=10, currency=false},
 ["Arcane Tomes"]={item="Arcane Tome", amount=1, currency=false},
-["Gli Anelli con Sigillo di Alardente"]={item="Anello con Sigillo di Alardente", amount=1, currency=false},
-["Gli Anelli con Sigillo dei Furia del Sole"]={item="Anello con Sigillo dei Furia del Sole", amount=1, currency=false},
+["Singolo Anello con Sigillo di Alardente"]={item="Anello con Sigillo di Alardente", amount=1, currency=false},
+["Singolo Anello con Sigillo dei Furia del Sole"]={item="Anello con Sigillo dei Furia del Sole", amount=1, currency=false},
 ["Altri Occhi di Basilisco"]={item="Occhio di Basilisco Scagliaumida", amount=8, currency=false},
 --Skettis
 ["Altra polvere d'ombra"]={item="Polvere d'Ombra", amount=6, currency=false},
