@@ -545,8 +545,9 @@ end
 
 function AutoTurnIn:RegisterGossipOptionClicker()
 	local function __getGossipId(index)
-		-- SOmetimes quest comletition removes the options. SelectOption does not throws exception on unavailable index
-		return #C_GossipInfo.GetOptions() > 0 and C_GossipInfo.GetOptions()[index].gossipOptionID or -1
+		-- Quest completion can remove options while this gossip is being handled.
+		local option = C_GossipInfo.GetOptions()[index]
+		return option and option.gossipOptionID or -1
 	end
 	local gossipFunc1 = function()
 		C_GossipInfo.SelectOption( __getGossipId(1) )
@@ -555,18 +556,19 @@ function AutoTurnIn:RegisterGossipOptionClicker()
 		if (C_GossipInfo.GetNumOptions and C_GossipInfo.GetNumOptions() == 2) then C_GossipInfo.SelectOption(__getGossipId(1)) end
 	end
 	local gossipFunc3 = function()
-		if (db.todarkmoon and GetRealZoneText() ~= L["Darkmoon Island"] and C_GossipInfo.GetNumAvailableQuests() == 0) then
+		local optionID = __getGossipId(1)
+		if (db.todarkmoon and optionID ~= -1 and GetRealZoneText() ~= L["Darkmoon Island"] and C_GossipInfo.GetNumAvailableQuests() == 0) then
 			--accept available quest first, then teleport
 			AutoTurnIn:Print("Teleporting to " .. L["Darkmoon Island"])
-			C_GossipInfo.SelectOption(__getGossipId(1))
-			StaticPopup1Button1:Click()
+			-- Confirm this teleport directly, without clicking an unrelated popup.
+			C_GossipInfo.SelectOption(optionID, "", true)
 		end
 	end
 	local gossipFunc4 = function()
-		if db.darkmoonteleport then
+		local optionID = __getGossipId(1)
+		if db.darkmoonteleport and optionID ~= -1 then
 			AutoTurnIn:Print("Teleporting to cannon")
-			C_GossipInfo.SelectOption(__getGossipId(1))
-			StaticPopup1Button1:Click()
+			C_GossipInfo.SelectOption(optionID, "", true)
 		end
 	end
 	local gossipFunc5 = function()
@@ -784,10 +786,11 @@ end
 -- Extracts GUID from the NPC which dialog window is currenty displayed
 function AutoTurnIn:GetNPCGUID()
 	local a = UnitGUID("npc")
+	if issecretvalue and issecretvalue(a) then return nil end
 	if not a then return nil end
 
-	-- Use pcall to safely handle tainted/secret strings from protected NPCs
-	local success, _, _, _, _, _, guid = pcall(string.find, a, "Creature%-(%d+)%-(%d+)%-(%d+)%-(%d+)%-(%d+)%-")
+	-- Capture only the NPC ID so pcall's success flag cannot shift the result.
+	local success, guid = pcall(string.match, a, "^Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-")
 	if success and guid then
 		return guid
 	end
@@ -828,7 +831,9 @@ function AutoTurnIn:GOSSIP_SHOW()
 	if self:isDarkmoonAndAllowed(questCount) then
 		local options = C_GossipInfo.GetOptions()
 		for _, gossipInfo in ipairs(options) do
-			if ((gossipInfo.type == "gossip") and strfind(gossipInfo.name, "|cFF0008E8%(")) then
+			-- Retail options no longer have a type field. Keep the token-cost
+			-- marker that distinguishes playing a game from its other options.
+			if gossipInfo.gossipOptionID and gossipInfo.name and gossipInfo.name:lower():find("|cff0008e8(", 1, true) then
 				return C_GossipInfo.SelectOption(gossipInfo.gossipOptionID)
 			end
 		end
