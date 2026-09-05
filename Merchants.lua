@@ -116,34 +116,28 @@ end
 		AUTO REPAIR FUNCTIONALITY
 ]]--
 function AutoTurnIn:RepairEquipment()
-	local repairCost = GetRepairAllCost()
-	if repairCost > 0 then
+	local repairCost, canRepair = GetRepairAllCost()
+	if not canRepair or not repairCost or repairCost <= 0 then
+		return
+	end
 
-		-- Blizzard_GuildBankUI.lua: If M >= 0 then it's a regualar member, otherwise it is guildmaster
-		-- there is a catch, sometimes the return is NaN. 
-		local canUseGuildMoney = false
-		local usedGuildMoney = false
-		if CanGuildBankRepair() then
-			local GUILD_WITHDRAW_UNLIMITED = 2^64
-			local withdrawLimit = GetGuildBankWithdrawMoney() or 0
-			local unlimited = withdrawLimit >= GUILD_WITHDRAW_UNLIMITED
-			canUseGuildMoney = unlimited or withdrawLimit >= repairCost
-		end
+	local useGuildMoney = false
+	if CanGuildBankRepair() then
+		local withdrawLimit = GetGuildBankWithdrawMoney() or 0
+		local guildMoney = GetGuildBankMoney() or 0
+		-- Blizzard uses a negative limit for unlimited withdrawals. Large unsigned
+		-- limits also pass the cost comparison; nil and NaN do not grant access.
+		useGuildMoney = guildMoney >= repairCost
+			and (withdrawLimit < 0 or withdrawLimit >= repairCost)
+	end
 
-		if canUseGuildMoney then
-			usedGuildMoney = true
-			RepairAllItems(true)
-			self:Print("Repaired for:", GetCoinTextureString(repairCost))
-		elseif GetMoney() >= repairCost then
-			RepairAllItems(false)
-			self:Print("Repaired for:", GetCoinTextureString(repairCost))
-		end
-		if AutoTurnIn.db.profile.debug then
-			AutoTurnIn:DebugPrint(usedGuildMoney and "Repair used guild funds" or "Repair used personal funds")
-		end
+	if not useGuildMoney and GetMoney() < repairCost then
+		return
+	end
 
-		-- if (GetRepairAllCost() > 0 ) then
-		-- 	AutoTurnIn:RepairEquipment()
-		-- end
+	RepairAllItems(useGuildMoney)
+	self:Print("Repaired for:", GetCoinTextureString(repairCost))
+	if self.db.profile.debug then
+		self:DebugPrint(useGuildMoney and "Repair used guild funds" or "Repair used personal funds")
 	end
 end
