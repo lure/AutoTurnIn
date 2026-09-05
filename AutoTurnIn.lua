@@ -487,10 +487,7 @@ function AutoTurnIn:OnInitialize()
 	self:LibDataStructure()
 
 	self:CinematickHooks()
-	-- See no way tp fix taint issues with quest special items.
-	-- TODO : THE WAR WITHIN HAS BROKEN BOTH THINGS
-	-- hooksecurefunc("ObjectiveTracker_Update", AutoTurnIn.ShowQuestLevelInWatchFrame)
-	-- hooksecurefunc("QuestLogQuests_Update", AutoTurnIn.ShowQuestLevelInLog)
+	self:QuestLevelHooks()
 end
 
 function AutoTurnIn:OnProfileChanged(event, database, newProfileKey)
