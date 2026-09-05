@@ -23,8 +23,16 @@ if Minimap then
     coordMiniMap:SetJustifyH("CENTER")
 end
 
+local function IsSecretValue(value)
+    return issecretvalue and issecretvalue(value)
+end
+
 local function GetMouseCoord()
     local adjustedX, adjustedY = WorldMapFrame:GetNormalizedCursorPosition()
+
+    if IsSecretValue(adjustedX) or IsSecretValue(adjustedY) then
+        return nil, nil
+    end
 
     if adjustedX and adjustedY and adjustedX >= 0 and adjustedY >= 0 and adjustedX <= 1 and adjustedY <= 1 then
         adjustedX = adjustedX * 100
@@ -35,6 +43,25 @@ local function GetMouseCoord()
     end
 
     return adjustedX, adjustedY
+end
+
+local function GetPlayerCoord()
+    local map = C_Map.GetBestMapForUnit("player")
+    if IsSecretValue(map) or not map then
+        return nil, nil
+    end
+
+    local pos = C_Map.GetPlayerMapPosition(map, "player")
+    if IsSecretValue(pos) or not pos then
+        return nil, nil
+    end
+
+    local x, y = pos:GetXY()
+    if IsSecretValue(x) or IsSecretValue(y) or not x or not y then
+        return nil, nil
+    end
+
+    return x * 100, y * 100
 end
 
 local elapsedSinceLast = 0
@@ -49,28 +76,23 @@ updater:SetScript("OnUpdate", function(_, elapsed)
         return
     end
 
-    if WorldMapFrame:IsShown() and AutoTurnIn.db.profile.map_coords then
+    local worldMapShown = WorldMapFrame:IsShown()
+    if not IsSecretValue(worldMapShown) and worldMapShown and AutoTurnIn.db.profile.map_coords then
         local mx, my = GetMouseCoord()
-        coordMouse:SetText(string.format("cursor = %04.1f / %04.1f", mx, my))
+        if mx and my then
+            coordMouse:SetText(string.format("cursor = %04.1f / %04.1f", mx, my))
+        end
 
-        local map = C_Map.GetBestMapForUnit("player")
-        if map then
-            local pos = C_Map.GetPlayerMapPosition(map, "player")
-            if pos then
-                local px, py = pos:GetXY()
-                coordPlayer:SetText(string.format("you = %04.1f / %04.1f", px * 100, py * 100))
-            end
+        local px, py = GetPlayerCoord()
+        if px and py then
+            coordPlayer:SetText(string.format("you = %04.1f / %04.1f", px, py))
         end
     end
 
     if coordMiniMap and AutoTurnIn.db.profile.minimap_coords then
-        local map = C_Map.GetBestMapForUnit("player")
-        if map then
-            local pos = C_Map.GetPlayerMapPosition(map, "player")
-            if pos then
-                local px, py = pos:GetXY()
-                coordMiniMap:SetText(string.format("%04.1f / %04.1f", px * 100, py * 100))
-            end
+        local px, py = GetPlayerCoord()
+        if px and py then
+            coordMiniMap:SetText(string.format("%04.1f / %04.1f", px, py))
         end
     end
 end)

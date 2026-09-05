@@ -30,6 +30,57 @@ AutoTurnIn.defer = {
 	getQuestRewardIndex = nil,
 }
 
+-- Frame Show/Hide hooks execute inside Blizzard's panel dispatch. Keep the
+-- hook itself small and run our UI work on the next tick, after that dispatch
+-- has completed. Actions are keyed so rapid Show/Hide transitions collapse to
+-- a single refresh of the frame's current state.
+AutoTurnIn.deferredHookActions = {}
+AutoTurnIn.deferredHookTimerPending = false
+AutoTurnIn.deferredHookFrame = CreateFrame("Frame")
+
+function AutoTurnIn:FlushDeferredHookActions()
+	if InCombatLockdown() then
+		self.deferredHookFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+		return
+	end
+
+	self.deferredHookFrame:UnregisterEvent("PLAYER_REGEN_ENABLED")
+	local actions = self.deferredHookActions
+	self.deferredHookActions = {}
+
+	for _, action in pairs(actions) do
+		xpcall(action, geterrorhandler())
+	end
+
+	-- An action may have scheduled another refresh while this batch ran.
+	if next(self.deferredHookActions) then
+		self:ScheduleDeferredHookFlush()
+	end
+end
+
+function AutoTurnIn:ScheduleDeferredHookFlush()
+	if self.deferredHookTimerPending then
+		return
+	end
+
+	self.deferredHookTimerPending = true
+	C_Timer.After(0, function()
+		AutoTurnIn.deferredHookTimerPending = false
+		AutoTurnIn:FlushDeferredHookActions()
+	end)
+end
+
+function AutoTurnIn:DeferHookAction(key, action)
+	self.deferredHookActions[key] = action
+	self:ScheduleDeferredHookFlush()
+end
+
+AutoTurnIn.deferredHookFrame:SetScript("OnEvent", function(_, event)
+	if event == "PLAYER_REGEN_ENABLED" then
+		AutoTurnIn:ScheduleDeferredHookFlush()
+	end
+end)
+
 --[[
 	INIT: INITIALIZE
 --]]
@@ -1314,18 +1365,53 @@ end
 
 -- gossip and quest interaction goes through a sequence of windows: gossip [shows a list of available quests] - quest[describes specified quest]
 -- sometimes some parts of this chain is skipped. For example, priest in Honor Hold show quest window directly. This is a trick to handle 'toggle key'
-hooksecurefunc(QuestFrame, "Hide", function()
-	AutoTurnIn.allowed = nil
-	GameTooltip:Hide()
-end)
+local function IsSecretValue(value)
+	return issecretvalue and issecretvalue(value)
+end
+
+local function RefreshQuestFrameState()
+	local shown = QuestFrame:IsShown()
+	if IsSecretValue(shown) then
+		return
+	end
+
+	if shown then
+		AutoTurnIn:ShowIgnoreButton("quest")
+	else
+		AutoTurnIn.allowed = nil
+		GameTooltip:Hide()
+	end
+end
+
+local function RefreshGossipFrameState()
+	local shown = GossipFrame:IsShown()
+	if IsSecretValue(shown) then
+		return
+	end
+
+	if shown then
+		AutoTurnIn:ShowIgnoreButton("gossip")
+	else
+		AutoTurnIn.allowed = nil
+		GameTooltip:Hide()
+	end
+end
+
+local function DeferQuestFrameRefresh()
+	AutoTurnIn:DeferHookAction("quest-frame", RefreshQuestFrameState)
+end
+
+local function DeferGossipFrameRefresh()
+	AutoTurnIn:DeferHookAction("gossip-frame", RefreshGossipFrameState)
+end
+
+
+hooksecurefunc(QuestFrame, "Hide", DeferQuestFrameRefresh)
 --GossipFrame sets allowed to true, after that 'toggle key' doesn't work
-hooksecurefunc(GossipFrame, "Hide", function()
-	AutoTurnIn.allowed = nil
-	GameTooltip:Hide()
-end)
+hooksecurefunc(GossipFrame, "Hide", DeferGossipFrameRefresh)
 --GossipFrame should show ignore button too
-hooksecurefunc(QuestFrame, "Show", function() AutoTurnIn:ShowIgnoreButton("quest") end)
-hooksecurefunc(GossipFrame, "Show", function() AutoTurnIn:ShowIgnoreButton("gossip") end)
+hooksecurefunc(QuestFrame, "Show", DeferQuestFrameRefresh)
+hooksecurefunc(GossipFrame, "Show", DeferGossipFrameRefresh)
 
 
 --[[
@@ -1437,4 +1523,3 @@ function AutoTurnIn:ShowOptions(args)
 	-- end
 end
 -- DevTools_DumpCommand("C_GossipInfo.GetAvailableQuests()")
-

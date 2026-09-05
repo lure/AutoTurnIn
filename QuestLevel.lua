@@ -37,10 +37,6 @@ function AutoTurnIn:ShowQuestLevelInLog()
 	end
 end
 
---[[
-	FIXME: This thing taint the global frames. 
-	To check: ESC ->"Edit mode" and close the layout window. 
---]]
 function AutoTurnIn:ShowQuestLevelInWatchFrame()
 	if InCombatLockdown() then
 		AutoTurnIn.defer.watch = true

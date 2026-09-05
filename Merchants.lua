@@ -60,21 +60,20 @@ SellButton:SetScript("OnClick", function()
 end)
 
 -- [[ hooking Merchant Frame ]]--
-hooksecurefunc(MerchantFrame, "Show", function()
-	selljunk.vendorAvailable = true;
-	if not InCombatLockdown() then
-		if AutoTurnIn.db.profile.sell_junk == 2 then
-			SellButton:Click()
-		end
-		if AutoTurnIn.db.profile.auto_repair and CanMerchantRepair() then
-			AutoTurnIn:RepairEquipment()
-		end
-	else
-		AutoTurnIn.defer.merchant.sell = AutoTurnIn.db.profile.sell_junk == 2
-		AutoTurnIn.defer.merchant.repair = AutoTurnIn.db.profile.auto_repair and CanMerchantRepair()
-	end
-end)
-hooksecurefunc(MerchantFrame, "Hide", function() selljunk.vendorAvailable = false; end)
+local function IsSecretValue(value)
+	return issecretvalue and issecretvalue(value)
+end
+
+local function RefreshMerchantFrameState()
+	AutoTurnIn:HandleMerchantDeferred()
+end
+
+local function DeferMerchantFrameRefresh()
+	AutoTurnIn:DeferHookAction("merchant-frame", RefreshMerchantFrameState)
+end
+
+hooksecurefunc(MerchantFrame, "Show", DeferMerchantFrameRefresh)
+hooksecurefunc(MerchantFrame, "Hide", DeferMerchantFrameRefresh)
 
 function AutoTurnIn:SwitchSellJunk(flag)
 	if flag == 3 then
@@ -85,15 +84,30 @@ function AutoTurnIn:SwitchSellJunk(flag)
 end
 
 function AutoTurnIn:HandleMerchantDeferred()
-	if not MerchantFrame or not MerchantFrame:IsShown() or InCombatLockdown() then
+	if not MerchantFrame then
 		return
 	end
-	if self.defer.merchant.sell and self.db.profile.sell_junk == 2 then
+
+	local shown = MerchantFrame:IsShown()
+	if IsSecretValue(shown) then
+		return
+	end
+
+	selljunk.vendorAvailable = shown
+	if not shown then
 		self.defer.merchant.sell = false
+		self.defer.merchant.repair = false
+		return
+	end
+
+	if not self.db or not self.db.profile or not self.db.profile.enabled then
+		return
+	end
+
+	if self.db.profile.sell_junk == 2 then
 		SellButton:Click()
 	end
-	if self.defer.merchant.repair and self.db.profile.auto_repair and CanMerchantRepair() then
-		self.defer.merchant.repair = false
+	if self.db.profile.auto_repair and CanMerchantRepair() then
 		self:RepairEquipment()
 	end
 end
