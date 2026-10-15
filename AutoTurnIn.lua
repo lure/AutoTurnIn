@@ -941,10 +941,10 @@ AutoTurnIn.delayFrame:SetScript('OnUpdate', function()
 		for slot=1, ContainerFrame_GetContainerNumSlots(bag), 1 do
 			local link = C_Container.GetContainerItemLink (bag, slot)
 			if ( link ) then
-				local name = GetItemInfo(link)
+				local name = C_Item.GetItemInfo(link)
 				if ( name and AutoTurnIn.autoEquipList[name] ) then
 					AutoTurnIn:Print(L["equipping reward"], link)
-					EquipItemByName(name, AutoTurnIn.autoEquipList[name])
+					C_Item.EquipItemByName(name, AutoTurnIn.autoEquipList[name])
 					AutoTurnIn.autoEquipList[name]=nil
 				end
 			end
@@ -958,12 +958,12 @@ function AutoTurnIn:ItemLevel(itemLink)
 		return 0
 	end
 	-- 7 for heirloom https://wowpedia.fandom.com/wiki/Enum.ItemQuality
-	local invQuality, invLevel = select(3, GetItemInfo(itemLink))
+	local invQuality, invLevel = select(3, C_Item.GetItemInfo(itemLink))
 	return (invQuality == 7) and math.huge or invLevel
 end
 
 function AutoTurnIn:swapEquip(itemLink)
-	local name = GetItemInfo(itemLink)
+	local name = C_Item.GetItemInfo(itemLink)
 	if (self.autoEquipList[name]) then
 		self.delayFrame.delay = time() + 2
 		self.delayFrame:Show()
@@ -992,8 +992,8 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 
 			-- if we have 2 items for same slot check which one is better
 			if (not not itemLink1 and (not not itemLink2)) then
-				local lootLevel1, _, _, _, _, equipSlot1 = select(4, GetItemInfo(itemLink1))
-				local lootLevel2, _, _, _, _, equipSlot2 = select(4, GetItemInfo(itemLink2))
+				local lootLevel1, _, _, _, _, equipSlot1 = select(4, C_Item.GetItemInfo(itemLink1))
+				local lootLevel2, _, _, _, _, equipSlot2 = select(4, C_Item.GetItemInfo(itemLink2))
 				if (equipSlot1 == equipSlot2) then
 					if lootLevel1 > lootLevel2 then
 						itemLink2 = nil
@@ -1005,7 +1005,7 @@ function AutoTurnIn:TurnInQuest(rewardIndex)
 			-- 'CHOICE' item is preferred
 			if (not not itemLink1) then
 				-- Could be already added to the equip frame by the AutoTurnIn:COMPLETE_QUEST funciton
-				local name = GetItemInfo(itemLink1)
+				local name = C_Item.GetItemInfo(itemLink1)
 				if (self.autoEquipList[name] or (not not self:isSuitableItem(itemLink1))) then
 					self:DebugPrint("register item for Auto-Equip", itemLink1)
 					-- side effect, may register the item as non-equipable
@@ -1040,7 +1040,7 @@ function AutoTurnIn:LootMostExpensive()
 		if ( link == nil ) then
 			return
 		end
-		local m = select(11, GetItemInfo(link))
+		local m = select(11, C_Item.GetItemInfo(link))
 		if m > money then
 			money = m
 			index = i
@@ -1106,9 +1106,9 @@ function AutoTurnIn:isSuitableItem(link)
 		return false
 	end
 
-	local name, _, _, _, _, class, subclass, _, invType = GetItemInfo(link)
+	local name, _, _, _, _, class, subclass, _, invType = C_Item.GetItemInfo(link)
 	--effective loot level
-	local lootLevel = GetDetailedItemLevelInfo(link)
+	local lootLevel = C_Item.GetDetailedItemLevelInfo(link)
 	-- non equippable items
 	if (invType == "") then
 		return nil
@@ -1140,7 +1140,7 @@ function AutoTurnIn:isSuitableItem(link)
 				if slot[1] == "SecondaryHandSlot" then
 					-- will not equip offhand if main hand has 2h-weapon
 					local mainHandLink = GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot"))
-					local mainHandType = select(9, GetItemInfo(mainHandLink))
+					local mainHandType = select(9, C_Item.GetItemInfo(mainHandLink))
 					if mainHandType == "INVTYPE_2HWEAPON" then						
 						self:DebugPrint(link, "can not be equipped over", mainHandLink)
 						return nil
@@ -1155,7 +1155,7 @@ function AutoTurnIn:isSuitableItem(link)
 
 			local eqLevel = self:ItemLevel(invLink)
 			local invPoints = self:itemPoints(invLink)
-			local equipInvType = select(9, GetItemInfo(invLink))
+			local equipInvType = select(9, C_Item.GetItemInfo(invLink))
 			-- If reward is a ring, trinket or one-handed weapon all slots must be checked in order to swap one with a lesser item-level
 			if (invType == equipInvType and #slot > 1) then
 				local secondSlot = GetInventorySlotInfo(slot[2])
@@ -1204,7 +1204,7 @@ function AutoTurnIn:itemPoints(link)
 		return points
 	end
 
-	local subclass, _, invType, _, _, classId, subclassId = select(7, GetItemInfo(link))
+	local subclass, _, invType, _, _, classId, subclassId = select(7, C_Item.GetItemInfo(link))
 	if (invType == "") then
 		return points
 	end
@@ -1230,7 +1230,9 @@ function AutoTurnIn:itemPoints(link)
 		local OkBySecondary = not next(db.secondary) -- true if table is empty
 		if (not (OkByStat and OkBySecondary)) then
 			wipe(self.stattable)
-			GetItemStats(link, self.stattable)
+			for k, v in pairs(C_Item.GetItemStats(link)) do
+				self.stattable[k] = v
+			end
 			for stat, value in pairs(self.stattable) do
 				if (db.stat[stat]) then
 					points = points + (5 * value)

@@ -30,14 +30,14 @@ SellButton:SetScript("OnClick", function()
 		for slot = 1, numSlots do
 
 			if (not selljunk.vendorAvailable and selljunk.amount > 0) then
-				AutoTurnIn:Print(selljunk.total_template:format(selljunk.count, GetCoinTextureString(selljunk.amount)))
+				AutoTurnIn:Print(selljunk.total_template:format(selljunk.count, C_CurrencyInfo.GetCoinTextureString(selljunk.amount)))
 				return
 			end
 
 			local link = GetContainerItemLink(container, slot)
 
 			if (link) then
-				_, _, quality, _, _, _, _, _, _, _, vendorPrice = GetItemInfo(link)
+				_, _, quality, _, _, _, _, _, _, _, vendorPrice = C_Item.GetItemInfo(link)
 			end
 
 			if (link and quality == Enum.ItemQuality.Poor) then
@@ -55,7 +55,7 @@ SellButton:SetScript("OnClick", function()
 	end
 
 	if (selljunk.amount > 0) then
-		AutoTurnIn:Print(selljunk.total_template:format(selljunk.count, GetCoinTextureString(selljunk.amount)))
+		AutoTurnIn:Print(selljunk.total_template:format(selljunk.count, C_CurrencyInfo.GetCoinTextureString(selljunk.amount)))
 	end
 end)
 
@@ -136,7 +136,7 @@ function AutoTurnIn:RepairEquipment()
 	end
 
 	RepairAllItems(useGuildMoney)
-	self:Print("Repaired for:", GetCoinTextureString(repairCost))
+	self:Print("Repaired for:", C_CurrencyInfo.GetCoinTextureString(repairCost))
 	if self.db.profile.debug then
 		self:DebugPrint(useGuildMoney and "Repair used guild funds" or "Repair used personal funds")
 	end
