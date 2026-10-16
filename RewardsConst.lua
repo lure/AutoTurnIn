@@ -6,14 +6,14 @@ local C = ptable.CONST
 -- Enum.ItemClass / Enum.ItemWeaponSubclass / Enum.ItemArmorSubclass / Enum.ItemGemSubclass
 C.armor, C.weapon = {}, {}
 for k = 0, 20 do
-	C.weapon[k] = GetItemSubClassInfo(Enum.ItemClass.Weapon,k)
+	C.weapon[k] = C_Item.GetItemSubClassInfo(Enum.ItemClass.Weapon,k)
 end
 for k = 1, 6 do
-	C.armor[k] = GetItemSubClassInfo(Enum.ItemClass.Armor,k)
+	C.armor[k] = C_Item.GetItemSubClassInfo(Enum.ItemClass.Armor,k)
 end
 
-C.WEAPONLABEL = GetItemClassInfo(Enum.ItemClass.Weapon)
-C.ARMORLABEL = GetItemClassInfo(Enum.ItemClass.Armor)
+C.WEAPONLABEL = C_Item.GetItemClassInfo(Enum.ItemClass.Weapon)
+C.ARMORLABEL = C_Item.GetItemClassInfo(Enum.ItemClass.Armor)
 C.JEWELRY = {['INVTYPE_FINGER']='', ['INVTYPE_NECK']=''}
 
 -- Most of the constants are never used but it's convinient to have them here as a reminder and shortcut
