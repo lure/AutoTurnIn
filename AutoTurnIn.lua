@@ -975,7 +975,9 @@ end
 -- equips received reward if such option selected
 function AutoTurnIn:TurnInQuest(rewardIndex)
 	if (db.showrewardtext) then
-		self:Print((UnitName("target") and UnitName("target") or '')..'\n', GetRewardText())
+		local npcName = UnitName("target")
+		if (not npcName or (issecretvalue and issecretvalue(npcName))) then npcName = '' end
+		self:Print(npcName..'\n', GetRewardText())
 	end
 
 	if (self.forceGreed) then
@@ -1327,6 +1329,7 @@ end
 
 function AutoTurnIn:ShowIgnoreButton(frame)
 	questNPCName = UnitName("target")
+	if (issecretvalue and issecretvalue(questNPCName)) then questNPCName = '' end
 
 	local GlobalFrame = nil
 	if (frame == "quest") then
