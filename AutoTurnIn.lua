@@ -673,7 +673,7 @@ end
 
 -- returns specified item count on player character. It may be some sort of currency or present in inventory as real items.
 function AutoTurnIn:GetItemAmount(isCurrency, item)
-	local amount = isCurrency and C_CurrencyInfo.GetCurrencyInfo(item).quantity or GetItemCount(item, nil, true)
+	local amount = isCurrency and C_CurrencyInfo.GetCurrencyInfo(item).quantity or C_Item.GetItemCount(item, nil, true)
 	return amount and amount or 0
 end
 
@@ -1288,7 +1288,7 @@ function AutoTurnIn:QUEST_COMPLETE()
 					local link = GetQuestItemLink("choice", i)
 					local itemID = link and link:match("%b::"):gsub(":", "") or self.ERRORVALUE
 
-					if (link and db.artifactpowertoggle and IsArtifactPowerItem(itemID)) then
+					if (link and db.artifactpowertoggle and C_Item.IsArtifactPowerItem(itemID)) then
 						self:Print(L["You chose not to complete quests with Artifact Powers among rewards"], link)
 						return
 					end
